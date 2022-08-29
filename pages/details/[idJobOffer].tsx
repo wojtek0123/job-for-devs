@@ -1,4 +1,4 @@
-import { NextPage } from 'next';
+// import { NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import detailsBg from '../../public/images/details-bg.jpg';
@@ -6,8 +6,11 @@ import backArrowIcon from '../../public/icons/arrow-left-solid.svg';
 import sackIcon from '../../public/icons/sack-dollar-solid.svg';
 import locationIcon from '../../public/icons/location-dot-solid.svg';
 import buildingIcon from '../../public/icons/building-solid.svg';
+import { ReactElement } from 'react';
+import Layout from '../../components/layout';
+import { NextPageWithLayout } from '../_app';
 
-const JobOfferDetails: NextPage = () => {
+const JobOfferDetails: NextPageWithLayout = () => {
   return (
     <div className='max-w-7xl mx-auto w-full mt-3'>
       <Link href='/'>
@@ -192,6 +195,10 @@ const JobOfferDetails: NextPage = () => {
       </div>
     </div>
   );
+};
+
+JobOfferDetails.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default JobOfferDetails;

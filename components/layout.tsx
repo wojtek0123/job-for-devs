@@ -1,9 +1,16 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
 
 const currentYear = new Date().getFullYear();
 
 const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
+  const { data: session } = useSession();
+
+  const singOutHandler = async (): Promise<any> => {
+    await signOut();
+  };
+
   return (
     <>
       <Head>
@@ -16,35 +23,45 @@ const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
         <link rel='icon' href='/icons/looking-for-job.svg' />
       </Head>
 
-        <header className='bg-slate-800 py-5 px-2 flex items-center justify-center w-full text-white selection:bg-green-500 selection:text-white'>
-          <div className='max-w-7xl flex justify-between w-full'>
-            <Link href='/'>
-              <h1 className='text-2xl cursor-pointer'>Job for Devs</h1>
-            </Link>
-            <div className='ml-3 flex items-center justify-center'>
-              <button
-                type='button'
-                className='mr-1 bg-white text-slate-800 px-3 py-1 w-max rounded-lg text-base md:text-lg sm:mr-2 hover:bg-slate-200 transition-colors duration-200'
-              >
-                Post a job
-              </button>
+      <header className='bg-slate-800 py-5 px-2 flex items-center justify-center w-full text-white selection:bg-green-500 selection:text-white'>
+        <div className='max-w-7xl flex justify-between w-full'>
+          <Link href='/'>
+            <h1 className='text-2xl cursor-pointer'>Job for Devs</h1>
+          </Link>
+          <div className='ml-3 flex items-center justify-center'>
+            <button
+              type='button'
+              className='mr-1 bg-white text-slate-800 px-3 py-1 w-max rounded-lg text-base md:text-lg sm:mr-2 hover:bg-slate-200 transition-colors duration-200'
+            >
+              Post a job
+            </button>
+            {!session && (
+              <Link href='/login'>
+                <a className='ml-1 bg-green-500 text-white px-3 py-1 rounded-lg text-base md:text-lg sm:ml-2 hover:bg-green-600 transition-colors duration-200'>
+                  Login
+                </a>
+              </Link>
+            )}
+            {session && (
               <button
                 type='button'
                 className='ml-1 bg-green-500 text-white px-3 py-1 rounded-lg text-base md:text-lg sm:ml-2 hover:bg-green-600 transition-colors duration-200'
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onClick={singOutHandler}
               >
-                Login
+                Logout
               </button>
-            </div>
+            )}
           </div>
-        </header>
-        <main className='overflow-x-hidden min-h-[81vh] selection:bg-green-500 selection:text-white'>
-          {children}
-        </main>
-        <footer className='bg-slate-800 rounded-t-lg mt-10 py-2 text-center text-white'>
-          <p>Created and designed by Wojciech Pietraszuk</p>
-          <p>&copy; {currentYear}</p>
-        </footer>
-
+        </div>
+      </header>
+      <main className='overflow-x-hidden min-h-[82vh] selection:bg-green-500 selection:text-white'>
+        {children}
+      </main>
+      <footer className='bg-slate-800 rounded-t-lg mt-10 py-2 text-center text-white'>
+        <p>Created and designed by Wojciech Pietraszuk</p>
+        <p>&copy; {currentYear}</p>
+      </footer>
     </>
   );
 };

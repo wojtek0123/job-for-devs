@@ -1,4 +1,5 @@
-import type { NextPage } from 'next';
+// import type { NextPage } from 'next';
+import type { NextPageWithLayout } from './_app';
 import Image from 'next/image';
 import Link from 'next/link';
 import searchIcon from '../public/icons/search-icon.svg';
@@ -6,26 +7,28 @@ import locationIcon from '../public/icons/location-dot-solid.svg';
 import sackIcon from '../public/icons/sack-dollar-solid.svg';
 import buildingIcon from '../public/icons/building-solid.svg';
 import timeIcon from '../public/icons/business-time-solid.svg';
+import Layout from '../components/layout';
+import { ReactElement } from 'react';
 
-const Home: NextPage = () => {
+const Home: NextPageWithLayout = () => {
   return (
     <div className=''>
       <div className='w-full bg-slate-800 flex flex-col items-center justify-center md:pt-10 rounded-b-lg pb-3'>
         <h2 className='text-white my-3 text-3xl font-light md:mb-8 md:mt-0 md:text-5xl text-center'>
           Find Your Deam Job
         </h2>
-        <form className='flex flex-col px-5 pb-4 pt-3 rounded-b-lg max-w-7xl w-full md:items-center md:justify-center xl:px-0'>
+        <form className='flex flex-col px-5 pb-4 pt-3 rounded-b-lg max-w-7xl w-full items-center md:justify-center xl:px-0'>
           <input
             type='text'
             placeholder='Filter by title...'
             id='title'
             className='border my-2 px-4 py-2 rounded-lg w-full max-w-xl mx-auto text-lg md:my-0 md:mx-2'
           />
-          <div className='flex flex-col items-center md:flex-row md:items-stretch md:mt-5'>
+          <div className='flex my-2 items-center justify-center flex-row max-w-xl  md:mt-5'>
             <select
               id='language'
               title='language'
-              className='border my-2 px-4 py-1 rounded-lg md:my-0 md:mr-2 w-full max-w-xl'
+              className='border mr-1 sm:px-4 py-1 rounded-lg md:mr-2 w-full max-w-xl'
               defaultValue='default'
             >
               <option value='default'>Technologies</option>
@@ -42,7 +45,7 @@ const Home: NextPage = () => {
             <select
               id='job-seniority'
               title='job seniority'
-              className='border my-2 px-4 py-1 rounded-lg md:my-0 md:mx-2 max-w-xl w-full'
+              className='border mx-2 sm:px-4 py-1 rounded-lg md:mx-2 max-w-xl w-full'
               defaultValue='default'
             >
               <option value='default'>Experience</option>
@@ -57,7 +60,7 @@ const Home: NextPage = () => {
               placeholder='Filter by location'
               id='location'
               title='location'
-              className='border my-2 px-4 py-1 rounded-lg md:my-0 md:mx-2 max-w-xl w-full'
+              className='border mx-1 sm:px-4 py-1 rounded-lg md:mx-2 max-w-xl w-full'
               defaultValue='default'
             >
               <option value='default'>Location</option>
@@ -84,7 +87,7 @@ const Home: NextPage = () => {
             <button
               type='submit'
               aria-label='search button'
-              className='flex items-center justify-center rounded-lg px-4 py-1 mt-2 bg-white text-black md:mt-0 md:ml-2 max-w-xl min-w-max hover:bg-slate-200 transition-colors duration-200'
+              className='items-center justify-center rounded-lg px-4 py-1 bg-white text-black md:mt-0 sm:ml-2 max-w-xl min-w-max hover:bg-slate-200 transition-colors duration-200 hidden sm:flex'
             >
               <Image
                 src={searchIcon}
@@ -95,6 +98,14 @@ const Home: NextPage = () => {
               <span className='ml-2'>Search</span>
             </button>
           </div>
+          <button
+            type='submit'
+            aria-label='search button'
+            className='flex items-center justify-center rounded-lg px-4 py-1 mt-2 bg-white text-black sm:mt-0 sm:ml-2 max-w-xl min-w-max hover:bg-slate-200 transition-colors duration-200 sm:hidden'
+          >
+            <Image src={searchIcon} alt='search icon' width={15} height={15} />
+            <span className='ml-2'>Search</span>
+          </button>
         </form>
       </div>
 
@@ -156,6 +167,10 @@ const Home: NextPage = () => {
       </div>
     </div>
   );
+};
+
+Home.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default Home;
