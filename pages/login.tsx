@@ -44,9 +44,9 @@ const Login: NextPage = () => {
       <h1 className='text-center mb-6 mt-2 text-2xl'>
         Sign in to Job for Devs
       </h1>
-      <div className='flex flex-col justify-center'>
+      <div className='flex flex-col justify-center w-full items-center'>
         <button
-          className='bg-white text-slate-800 w-full max-w-xs py-1 my-2 rounded-lg'
+          className='bg-white text-slate-800 w-full max-w-[13rem] py-2 my-2 rounded-lg hover:bg-slate-200 transition-colors duration-200'
           type='button'
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={signInWithGithub}
@@ -54,7 +54,7 @@ const Login: NextPage = () => {
           Sign in with GitHub
         </button>
         <button
-          className='bg-white text-slate-800 w-full max-w-xs py-1 my-2 rounded-lg'
+          className='bg-white text-slate-800 w-full max-w-[13rem] py-2 my-2 rounded-lg hover:bg-slate-200 transition-colors duration-200'
           type='button'
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={signInWithGoogle}
