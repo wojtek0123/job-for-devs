@@ -18,14 +18,16 @@ model Offer {
   companyName  String
   address      String
   city         String
-  minSalary    Float
-  maxSalary    Float
-  description  String
-  stack        String
-  task         String
-  requirements String
-  advantage    String
-  benefit      String
+  minSalary    String
+  maxSalary    String
+  salary       String
+  category     String
+  technologies String
+  description  String @db.VarChar(2000)
+  obligations  String @db.VarChar(500)
+  requirements String @db.VarChar(500)
+  advantage    String @db.VarChar(500)
+  benefit      String @db.VarChar(500)
 }
 
 model Account {

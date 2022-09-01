@@ -7,7 +7,7 @@ import sackIcon from '../../public/icons/sack-dollar-solid.svg';
 import locationIcon from '../../public/icons/location-dot-solid.svg';
 import buildingIcon from '../../public/icons/building-solid.svg';
 import { ReactElement } from 'react';
-import Layout from '../../components/layouts/Layout';
+import Layout from '../../components/layouts/layout';
 import { NextPageWithLayout } from '../_app';
 
 const JobOfferDetails: NextPageWithLayout = () => {
