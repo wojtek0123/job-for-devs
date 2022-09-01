@@ -1,33 +1,29 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { FormData, Offer } from '../../helpers/types';
+import { technologies, seniorities } from '../../helpers/constants';
 
-export const technologies = [
-  'JavaScript',
-  'TypeScript',
-  'NextJS',
-  'React',
-  'GraphQL',
-  'tRPC',
-  'Angular',
-  'Vue',
-  'Node.js',
-  'Spring',
-  '.Net',
-  'SQL',
-  'Python',
-  'C++',
-  'PHP',
-  'Laravel',
-];
-const allCategory = ['Frontend', 'Backend', 'Fullstack'];
-export const seniorities = ['stażysta', 'junior', 'mid', 'senior'];
+const categories = ['Frontend', 'Backend', 'Fullstack'];
 const workingHours = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
 
-const OfferDetails: React.FC = () => {
+const OfferDetails: React.FC<{
+  handleButtons: (
+    event: React.FormEvent<HTMLButtonElement>,
+    input: string
+  ) => void;
+  handleInputs: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    input: string
+  ) => void;
+  handleTextarea: (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+    input: string
+  ) => void;
+  data: FormData;
+}> = ({ handleButtons, data, handleInputs, handleTextarea }) => {
   const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
     []
   );
-  const [selectedCategory, setSelectedCategory] = useState('');
 
   const changeSelectedTechnologies = (
     event: React.FormEvent<HTMLButtonElement>
@@ -45,13 +41,6 @@ const OfferDetails: React.FC = () => {
     setSelectedTechnologies((prevState) => [...prevState, text]);
   };
 
-  const changeSelectedCategories = (
-    event: React.FormEvent<HTMLButtonElement>
-  ): void => {
-    const text: string = event.currentTarget?.textContent?.toLowerCase() ?? '';
-    setSelectedCategory(text);
-  };
-
   return (
     <>
       <h2 className='text-3xl mt-3 mb-5 col-span-2 lg:mb-10 lg:mt-5'>
@@ -63,16 +52,16 @@ const OfferDetails: React.FC = () => {
           <span className='ml-1 text-red-600'>*</span>
         </p>
         <div className='flex flex-wrap items-center text-base text-black col-start-2 col-end-3'>
-          {allCategory.map((category, index) => (
+          {categories.map((category, index) => (
             <button
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                selectedCategory.includes(category.toLowerCase())
+                data.category.includes(category.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={changeSelectedCategories}
+              onClick={(event) => handleButtons(event, Offer.Category)}
             >
               {category}
             </button>
@@ -120,6 +109,7 @@ const OfferDetails: React.FC = () => {
               maxLength={5}
               className='rounded-lg text-black p-3 max-w-[10rem] min-w-max w-full outline-green-500 bg-gray-100'
               autoComplete='off'
+              onChange={(event) => handleInputs(event, Offer.MinSalary)}
             />
             <div className='mx-2'>-</div>
             <input
@@ -131,6 +121,7 @@ const OfferDetails: React.FC = () => {
               maxLength={5}
               className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-max bg-gray-100 outline-green-500'
               autoComplete='off'
+              onChange={(event) => handleInputs(event, Offer.MaxSalary)}
             />
           </div>
           <span className='flex min-w-min justify-start ml-1 my-2 sm:my-0 md:my-2 lg:my-0 sm:justify-center md:justify-start lg:justify-end lg:mr-10  xl:mr-0 xl:justify-center items-center lg:ml-0'>
@@ -145,6 +136,7 @@ const OfferDetails: React.FC = () => {
             maxLength={5}
             className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-max bg-gray-100 outline-green-500'
             autoComplete='off'
+            onChange={(event) => handleInputs(event, Offer.ExactSalary)}
           />
         </div>
       </div>
@@ -161,10 +153,11 @@ const OfferDetails: React.FC = () => {
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                selectedCategory.includes(location.toLowerCase())
+                data.location.includes(location.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
+              onClick={(event) => handleButtons(event, Offer.Location)}
             >
               {location}
             </button>
@@ -183,10 +176,11 @@ const OfferDetails: React.FC = () => {
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                selectedCategory.includes(workingHour.toLowerCase())
+                data.workingHour.includes(workingHour.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
+              onClick={(event) => handleButtons(event, Offer.WorkingHour)}
             >
               {workingHour}
             </button>
@@ -206,10 +200,11 @@ const OfferDetails: React.FC = () => {
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                selectedCategory.includes(seniority.toLowerCase())
+                data.seniority.includes(seniority.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
+              onClick={(event) => handleButtons(event, Offer.Seniority)}
             >
               {seniority}
             </button>
@@ -230,6 +225,7 @@ const OfferDetails: React.FC = () => {
           id='benefits'
           maxLength={500}
           className='py-1 px-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
+          onChange={(event) => handleTextarea(event, Offer.Benefits)}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
           Maksymalnie 500 znaków
@@ -249,6 +245,7 @@ const OfferDetails: React.FC = () => {
           id='title'
           className='p-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
+          onChange={(event) => handleInputs(event, Offer.JobTitle)}
         />
       </div>
     </>

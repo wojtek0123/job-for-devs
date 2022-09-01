@@ -1,25 +1,17 @@
-export const cities = [
-  'Warszawa',
-  'Kraków',
-  'Wrocław',
-  'Poznań',
-  'Trójmiasto',
-  'Białystok',
-  'Bielsko-Biała',
-  'Bydgoszcz',
-  'Częstochowa',
-  'Kielce',
-  'Lublin',
-  'Łódź',
-  'Olsztyn',
-  'Opole',
-  'Rzeszów',
-  'Szczecin',
-  'Toruń',
-  'Zielona góra',
-];
+import { FormData, Offer } from '../../helpers/types';
+import { cities } from '../../helpers/constants';
 
-const ComapnyInfo: React.FC = () => {
+const ComapnyInfo: React.FC<{
+  handleButtons: (
+    event: React.FormEvent<HTMLButtonElement>,
+    input: string
+  ) => void;
+  handleInputs: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    input: string
+  ) => void;
+  data: FormData;
+}> = ({ handleButtons, handleInputs, data }) => {
   return (
     <>
       <h2 className='text-3xl mt-3 mb-5 col-span-2 lg:mb-10 lg:mt-5'>
@@ -39,6 +31,7 @@ const ComapnyInfo: React.FC = () => {
           className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
           placeholder='Nazwa firmy'
+          onChange={(event) => handleInputs(event, Offer.CompanyName)}
         />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
@@ -52,7 +45,12 @@ const ComapnyInfo: React.FC = () => {
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 bg-gray-200`}
+              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+                data.city.includes(city.toLowerCase())
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gray-200 text-black'
+              }`}
+              onClick={(event) => handleButtons(event, Offer.City)}
             >
               {city}
             </button>
@@ -68,6 +66,7 @@ const ComapnyInfo: React.FC = () => {
           placeholder='Inne miasto'
           className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
+          onChange={(event) => handleInputs(event, Offer.City)}
         />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
@@ -86,6 +85,7 @@ const ComapnyInfo: React.FC = () => {
           maxLength={100}
           className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
+          onChange={(event) => handleInputs(event, Offer.Street)}
         />
 
         <div className='flex flex-col border border-white rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
@@ -98,6 +98,7 @@ const ComapnyInfo: React.FC = () => {
               maxLength={7}
               className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] mr-1 sm:mr-0'
               autoComplete='off'
+              onChange={(event) => handleInputs(event, Offer.BuildingNumber)}
             />
             <input
               type='text'
@@ -107,6 +108,7 @@ const ComapnyInfo: React.FC = () => {
               maxLength={7}
               className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] ml-1 sm:ml-0'
               autoComplete='off'
+              onChange={(event) => handleInputs(event, Offer.HouseNumber)}
             />
           </div>
         </div>

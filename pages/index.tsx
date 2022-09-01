@@ -9,9 +9,7 @@ import buildingIcon from '../public/icons/building-solid.svg';
 import timeIcon from '../public/icons/business-time-solid.svg';
 import Layout from '../components/layouts/layout';
 import { ReactElement, useState } from 'react';
-
-import { technologies, seniorities } from '../components/new-post/OfferDetails';
-import { cities } from '../components/new-post/CompanyInfo';
+import { technologies, seniorities, cities } from '../helpers/constants';
 import Modal from '../components/modal/Modal';
 
 const Home: NextPageWithLayout = () => {

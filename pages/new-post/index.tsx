@@ -1,9 +1,10 @@
 import { NextPage } from 'next';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import OfferDetails from '../../components/new-post/OfferDetails';
 import OfferInfo from '../../components/new-post/OfferInfo';
 import ComapnyInfo from '../../components/new-post/CompanyInfo';
+import { FormData } from '../../helpers/types';
 
 const stepsInfo = [
   'Szczegóły oferty',
@@ -14,6 +15,65 @@ const stepsInfo = [
 
 const NewPost: NextPage = () => {
   const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState<FormData>({
+    category: '',
+    technologies: [],
+    minSalary: '',
+    maxSalary: '',
+    exactSalary: '',
+    location: '',
+    workingHour: '',
+    seniority: '',
+    benefits: '',
+    jobTitle: '',
+    description: '',
+    obligation: '',
+    requirements: '',
+    advantages: '',
+    companyName: '',
+    city: '',
+    street: '',
+    building: '',
+    house: '',
+  });
+
+  const handleButtonData = (
+    event: React.FormEvent<HTMLButtonElement>,
+    input: string
+  ): void => {
+    setFormData({
+      ...formData,
+      [input]: event.currentTarget?.textContent?.toLowerCase(),
+    });
+  };
+
+  const handleInputData = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    input: string
+  ): void => {
+    if (event.currentTarget.valueAsNumber) {
+      setFormData({
+        ...formData,
+        [input]: event.currentTarget.valueAsNumber.toString(),
+      });
+    }
+    if (event.currentTarget.value) {
+      setFormData({
+        ...formData,
+        [input]: event.currentTarget.value,
+      });
+    }
+  };
+
+  const handleTextareaData = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+    input: string
+  ): void => {
+    setFormData({
+      ...formData,
+      [input]: event.target.value,
+    });
+  };
 
   const onPreviousStep = (): void => {
     if (step === 1) {
@@ -30,9 +90,22 @@ const NewPost: NextPage = () => {
   };
 
   const content = {
-    1: <OfferDetails />,
-    2: <OfferInfo />,
-    3: <ComapnyInfo />,
+    1: (
+      <OfferDetails
+        handleButtons={handleButtonData}
+        handleInputs={handleInputData}
+        handleTextarea={handleTextareaData}
+        data={formData}
+      />
+    ),
+    2: <OfferInfo handleTextarea={handleTextareaData} />,
+    3: (
+      <ComapnyInfo
+        handleButtons={handleButtonData}
+        handleInputs={handleInputData}
+        data={formData}
+      />
+    ),
     4: <></>,
   }[step];
 
@@ -57,6 +130,10 @@ const NewPost: NextPage = () => {
       </p>
     </div>
   ));
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   return (
     <>
