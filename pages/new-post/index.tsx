@@ -86,8 +86,7 @@ const NewPost: NextPage = () => {
         >
           {step === 1 && (
             <Link href='/'>
-              <a className='border border-bg-gray-200 bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center'>
-                {/* <Image src={backArrowIcon} alt='back' width={15} height={15} /> */}
+              <a className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center hover:bg-slate-200 transition-colors duration-300  border border-gray-200'>
                 <span className=''>powrót</span>
               </a>
             </Link>
@@ -96,7 +95,7 @@ const NewPost: NextPage = () => {
             <button
               type='button'
               onClick={onPreviousStep}
-              className='border border-gray-200 bg-white text-black px-8 py-1 rounded-lg text-lg mx-3'
+              className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 hover:bg-slate-200 transition-colors duration-300 border border-gray-200'
             >
               wstecz
             </button>
@@ -105,7 +104,7 @@ const NewPost: NextPage = () => {
             <button
               type='button'
               onClick={onNextStep}
-              className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3'
+              className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
             >
               dalej
             </button>
@@ -113,7 +112,7 @@ const NewPost: NextPage = () => {
           {step === stepsInfo.length && (
             <button
               type='submit'
-              className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3'
+              className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
             >
               Opublikuj
             </button>

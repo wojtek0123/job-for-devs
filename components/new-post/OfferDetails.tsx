@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const allTechnologies = [
+export const technologies = [
   'JavaScript',
   'TypeScript',
   'NextJS',
@@ -19,7 +19,7 @@ const allTechnologies = [
   'Laravel',
 ];
 const allCategory = ['Frontend', 'Backend', 'Fullstack'];
-const seniorities = ['stażysta', 'junior', 'mid', 'senior'];
+export const seniorities = ['stażysta', 'junior', 'mid', 'senior'];
 const workingHours = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
 
@@ -62,7 +62,7 @@ const OfferDetails: React.FC = () => {
           Kategoria
           <span className='ml-1 text-red-600'>*</span>
         </p>
-        <div className='flex flex-wrap items-center text-black col-start-2 col-end-3'>
+        <div className='flex flex-wrap items-center text-base text-black col-start-2 col-end-3'>
           {allCategory.map((category, index) => (
             <button
               type='button'
@@ -85,8 +85,8 @@ const OfferDetails: React.FC = () => {
           Technologie
           <span className='ml-1 text-red-600'>*</span>
         </p>
-        <div className='flex flex-wrap items-center text-black col-start-2 col-end-3'>
-          {allTechnologies.map((technology, index) => (
+        <div className='flex flex-wrap items-center text-black col-start-2 col-end-3  text-base'>
+          {technologies.map((technology, index) => (
             <button
               type='button'
               key={index}
@@ -118,7 +118,7 @@ const OfferDetails: React.FC = () => {
               min={2800}
               max={500000}
               maxLength={5}
-              className='rounded-lg text-black px-1 py-1 max-w-[10rem] min-w-max w-full border border-gray-200 outline-green-500 bg-gray-100'
+              className='rounded-lg text-black p-3 max-w-[10rem] min-w-max w-full outline-green-500 bg-gray-100'
               autoComplete='off'
             />
             <div className='mx-2'>-</div>
@@ -129,7 +129,7 @@ const OfferDetails: React.FC = () => {
               placeholder='Do'
               max={500000}
               maxLength={5}
-              className='rounded-lg text-black px-1 py-1 w-full max-w-[10rem] min-w-max border border-gray-200 bg-gray-100 outline-green-500'
+              className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-max bg-gray-100 outline-green-500'
               autoComplete='off'
             />
           </div>
@@ -143,7 +143,7 @@ const OfferDetails: React.FC = () => {
             min={2800}
             max={500000}
             maxLength={5}
-            className='rounded-lg text-black px-1 py-1 w-full max-w-[10rem] min-w-max border border-gray-200 bg-gray-100 outline-green-500'
+            className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-max bg-gray-100 outline-green-500'
             autoComplete='off'
           />
         </div>
@@ -155,7 +155,7 @@ const OfferDetails: React.FC = () => {
           Lokalizacja
           <span className='ml-1 text-red-600'>*</span>
         </p>
-        <div className='flex flex-wrap text-black col-start-2 col-end-3'>
+        <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
           {locations.map((location, index) => (
             <button
               type='button'
@@ -176,9 +176,8 @@ const OfferDetails: React.FC = () => {
       <div className='flex flex-col lg:flex-row mt-3 md:grid md:grid-cols-2 col-span-2 md:mb-6'>
         <p className='text-lg mb-2 mt-4 col-start-1 col-end-2 lg:text-xl'>
           Wymiar czasu pracy
-          {/* <span className='ml-1 text-red-600'>*</span> */}
         </p>
-        <div className='flex flex-wrap text-black col-start-2 col-end-3'>
+        <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
           {workingHours.map((workingHour, index) => (
             <button
               type='button'
@@ -201,7 +200,7 @@ const OfferDetails: React.FC = () => {
           Doświadczenie
           <span className='ml-1 text-red-600'>*</span>
         </p>
-        <div className='flex flex-wrap text-black col-start-2 col-end-3'>
+        <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
           {seniorities.map((seniority, index) => (
             <button
               type='button'
@@ -230,12 +229,15 @@ const OfferDetails: React.FC = () => {
           name='benefits'
           id='benefits'
           maxLength={500}
-          className='py-1 px-3 rounded-lg text-black text-base h-28 resize-none border border-gray-200 outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
+          className='py-1 px-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
         ></textarea>
+        <small className='col-span-2 flex justify-end mt-1'>
+          Maksymalnie 500 znaków
+        </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
-      <div className='flex flex-col border border-white rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
+      <div className='flex flex-col rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
         <label
           className='text-lg mb-2 mt-4 col-start-1 col-end-2 lg:text-xl'
           htmlFor='title'
@@ -245,10 +247,9 @@ const OfferDetails: React.FC = () => {
         <input
           type='text'
           id='title'
-          className='py-1 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
+          className='p-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
         />
-        <small className='block h-4 text-red-600'>{}</small>
       </div>
     </>
   );

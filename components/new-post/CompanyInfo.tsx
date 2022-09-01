@@ -1,4 +1,4 @@
-const cities = [
+export const cities = [
   'Warszawa',
   'Kraków',
   'Wrocław',
@@ -25,7 +25,7 @@ const ComapnyInfo: React.FC = () => {
       <h2 className='text-3xl mt-3 mb-5 col-span-2 lg:mb-10 lg:mt-5'>
         Dane administracyjne
       </h2>
-      <div className='flex flex-col border border-white rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
+      <div className='flex flex-col rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
         <label
           htmlFor='company-name'
           className='text-lg mb-2 mt-4 col-start-1 col-end-2 lg:text-xl'
@@ -36,18 +36,18 @@ const ComapnyInfo: React.FC = () => {
           type='text'
           id='company-name'
           maxLength={100}
-          className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
+          className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
           placeholder='Nazwa firmy'
         />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
-      <div className='flex flex-col border border-white rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
+      <div className='flex flex-col rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
         <label className='text-lg mb-2 mt-4 col-start-1 col-end-2 lg:text-xl'>
-          Location <span className='text-red-600'>*</span>
+          Miasto <span className='text-red-600'>*</span>
         </label>
-        <div className='flex flex-wrap items-center text-black col-start-2 col-end-3'>
+        <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
           {cities.map((city, index) => (
             <button
               type='button'
@@ -66,13 +66,13 @@ const ComapnyInfo: React.FC = () => {
           type='text'
           id='input-location'
           placeholder='Inne miasto'
-          className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-200 col-start-2 col-end-3'
+          className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
         />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
-      <div className='flex flex-col border border-white rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
+      <div className='flex flex-col rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
         <label
           htmlFor='street'
           className='text-lg mb-2 mt-4 col-start-1 col-end-2 lg:text-xl'
@@ -84,7 +84,7 @@ const ComapnyInfo: React.FC = () => {
           id='street'
           placeholder='Nazwa ulicy'
           maxLength={100}
-          className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
+          className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
         />
 

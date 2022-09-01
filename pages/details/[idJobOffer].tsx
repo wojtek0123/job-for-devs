@@ -7,19 +7,19 @@ import sackIcon from '../../public/icons/sack-dollar-solid.svg';
 import locationIcon from '../../public/icons/location-dot-solid.svg';
 import buildingIcon from '../../public/icons/building-solid.svg';
 import { ReactElement } from 'react';
-import Layout from '../../components/layout';
+import Layout from '../../components/layouts/Layout';
 import { NextPageWithLayout } from '../_app';
 
 const JobOfferDetails: NextPageWithLayout = () => {
   return (
-    <div className='max-w-7xl mx-auto w-full mt-3'>
+    <div className='max-w-7xl mx-auto w-full mt-5'>
       <Link href='/'>
-        <a className='bg-white border border-slate-800 text-slate-800 px-4 py-1 rounded-lg ml-2 xl:ml-0 text-lg hover:bg-slate-200 transition-colors duration-200'>
+        <a className='bg-gray-200 border text-black shadow px-4 py-1 rounded-lg ml-2 xl:ml-0 text-lg hover:bg-gray-300 transition-colors duration-300'>
           <Image src={backArrowIcon} alt='back' width={15} height={15} />
           <span className='ml-2'>back</span>
         </a>
       </Link>
-      <div className='rounded-b-lg relative mt-3'>
+      <div className='rounded-b-lg relative mt-5'>
         <Image
           src={detailsBg}
           alt='Group of workers think together how to solve a problem in code'
@@ -46,44 +46,52 @@ const JobOfferDetails: NextPageWithLayout = () => {
           </p>
         </div>
       </div>
-      <div className='px-5 xl:px-0'>
-        <section className='mt-6 border-slate-800 border p-3 rounded-lg'>
-          <p className='uppercase text-xl font-bold'>Stack</p>
-          <div className='flex flex-wrap mt-4'>
-            <span className='bg-green-500 rounded-lg text-white py-1 px-2 mr-2 my-1 text-base'>
+      <div className='px-5 xl:px-0 w-full grid grid-cols-1 mt-5'>
+        <div className='flex flex-col lg:flex-row col-span-2 md:grid md:grid-cols-2 md:mb-6'>
+          <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
+            Technologie
+          </p>
+          <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
+            <span className='bg-gray-200 rounded-lg py-1 px-2 mr-2 my-1'>
               React
             </span>
-            <span className='bg-green-500 rounded-lg text-white py-1 px-2 mr-2 my-1 text-base'>
+            <span className='bg-gray-200 rounded-lg py-1 px-2 mr-2 my-1'>
               GraphQL
             </span>
-            <span className='bg-green-500 rounded-lg text-white py-1 px-2 mr-2 my-1 text-base'>
+            <span className='bg-gray-200 rounded-lg py-1 px-2 mr-2 my-1'>
               Tailwindcss
             </span>
-            <span className='bg-green-500 rounded-lg text-white py-1 px-2 mr-2 my-1 text-base'>
+            <span className='bg-gray-200 rounded-lg py-1 px-2 mr-2 my-1'>
               TypeScript
             </span>
-            <span className='bg-green-500 rounded-lg text-white py-1 px-2 mr-2 my-1 text-base'>
+            <span className='bg-gray-200 rounded-lg py-1 px-2 mr-2 my-1'>
               TypeScript
             </span>
-            <span className='bg-green-500 rounded-lg text-white py-1 px-2 mr-2 my-1 text-base'>
+            <span className='bg-gray-200 rounded-lg py-1 px-2 mr-2 my-1'>
               TypeScript
             </span>
-            <span className='bg-green-500 rounded-lg text-white py-1 px-2 mr-2 my-1 text-base'>
+            <span className='bg-gray-200 rounded-lg py-1 px-2 mr-2 my-1'>
               TypeScript
             </span>
           </div>
-        </section>
-        <section className='mt-6 border-slate-800 border p-3 rounded-lg'>
-          <p className='uppercase text-xl font-bold'>Description</p>
-          <p>
+        </div>
+        <hr className='hidden md:block mb-3 col-span-2' />
+
+        <div className='mt-3 flex flex-col col-span-2 md:grid md:grid-cols-2 md:mb-6'>
+          <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>Opis</p>
+          <div className='lg:col-start-2 lg:col-end-3'>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti
             eveniet vel iure minus ab laudantium iusto veniam incidunt omnis
             aperiam cum ipsa commodi nemo, magni repellat consequuntur, nostrum
             sint soluta nihil, porro illum vitae recusandae? Obcaecati
+          </div>
+        </div>
+        <hr className='hidden md:block mb-3 col-span-2' />
+
+        <div className='mt-3 flex flex-col col-span-2 md:grid md:grid-cols-2 md:mb-6'>
+          <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
+            Twoje podstawowe zadania
           </p>
-        </section>
-        <section className='mt-6 border-slate-800 border p-3 rounded-lg'>
-          <p className='uppercase text-xl font-bold'>What you will do</p>
 
           <ul className='list-disc pl-7'>
             <li>
@@ -99,9 +107,11 @@ const JobOfferDetails: NextPageWithLayout = () => {
               and contribute to best practices
             </li>
           </ul>
-        </section>
-        <section className='mt-6 border-slate-800 border p-3 rounded-lg'>
-          <p className='uppercase text-xl font-bold'>Requirements</p>
+        </div>
+        <hr className='hidden md:block mb-3 col-span-2' />
+
+        <div className='mt-3 flex flex-col col-span-2 md:grid md:grid-cols-2 md:mb-6'>
+          <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>Wymagania</p>
           <ul className='list-disc pl-7'>
             <li>4+ years experience</li>
             <li>
@@ -125,17 +135,25 @@ const JobOfferDetails: NextPageWithLayout = () => {
               Libraries)
             </li>
           </ul>
-        </section>
-        <section className='mt-6 border-slate-800 border p-3 rounded-lg'>
-          <p className='uppercase text-xl font-bold'>Nice to have</p>
+        </div>
+        <hr className='hidden md:block mb-3 col-span-2' />
+
+        <div className='mt-3 flex flex-col col-span-2 md:grid md:grid-cols-2 md:mb-6'>
+          <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
+            Dobrze mieć
+          </p>
           <ul className='list-disc pl-7'>
             <li>Graphical sense of orientation</li>
             <li>Experience in a similar position or in Fintech</li>
             <li>AWS knowledge</li>
           </ul>
-        </section>
-        <section className='mt-6 border-slate-800 border p-3 rounded-lg'>
-          <p className='uppercase text-xl font-bold'>What we offer</p>
+        </div>
+        <hr className='hidden md:block mb-3 col-span-2' />
+
+        <div className='mt-3 flex flex-col col-span-2 md:grid md:grid-cols-2 md:mb-6'>
+          <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
+            Co oferujemy
+          </p>
           <ul className='list-disc pl-7'>
             <li>
               Flexible work-time from office, remote or hybrid work — it’s up to
@@ -155,43 +173,50 @@ const JobOfferDetails: NextPageWithLayout = () => {
               in-person time with the team.
             </li>
           </ul>
-        </section>
+        </div>
 
-        <section className='mt-6 bg-slate-800 px-5 rounded-lg pt-3 pb-3'>
-          <p className='uppercase text-2xl text-white mb-3 font-bold'>Apply</p>
+        <div className='lg:col-span-2 mt-6 bg-slate-800 px-5 rounded-t-lg pt-3 pb-3'>
+          <p className='uppercase text-2xl text-white mb-3 font-bold lg:col-start-1 lg:col-end-2'>
+            Aplikuj
+          </p>
           <form className='flex flex-col'>
-            <input
-              type='text'
-              title='name'
-              placeholder='First and last name'
-              className='border border-white py-1 px-2 rounded-lg my-1 outline-green-500'
-            />
-            <input
-              type='email'
-              title='email'
-              placeholder='Your email'
-              className='border border-white py-1 px-2 rounded-lg my-1 outline-green-500'
-            />
+            <div className='flex flex-col md:flex-row md:justify-between'>
+              <input
+                type='text'
+                title='name'
+                placeholder='Imie i nazwisko'
+                className='border border-white p-3 rounded-lg my-1 outline-green-500 min-w-max w-full md:mr-5'
+              />
+              <input
+                type='email'
+                title='email'
+                placeholder='Twój email'
+                className='border border-white p-3 rounded-lg my-1 outline-green-500 min-w-max w-full md:ml-5'
+              />
+            </div>
             <textarea
               aria-label='your message to the employer'
-              placeholder='Message to employer'
-              className='border border-white py-1 px-2 rounded-lg my-1 max-h-52 min-h-[13rem] resize-none outline-green-500'
-              maxLength={300}
+              placeholder='Wiadomość dla pracodawcy'
+              className='border border-white p-3 rounded-lg my-1 max-h-52 min-h-[13rem] resize-none outline-green-500'
+              maxLength={500}
             />
+            <small className='flex justify-end mt-1 text-white'>
+              Maksymalnie 500 znaków
+            </small>
             <input
               type='file'
               title='cv'
-              className='border border-white my-1 rounded-lg py-1 px-2 bg-white outline-green-500'
+              className='border border-white my-1 rounded-lg p-3 bg-white outline-green-500'
               accept='.pdf, .doc, .docx'
             />
             <button
               type='submit'
-              className='bg-white text-slate-800 py-1 px-2 rounded-lg my-1 outline-green-500 hover:bg-slate-200 transition-colors duration-200'
+              className='bg-white text-slate-800 p-3 rounded-lg my-1 outline-green-500 hover:bg-slate-200 transition-colors duration-200'
             >
-              Apply
+              Aplikuj
             </button>
           </form>
-        </section>
+        </div>
       </div>
     </div>
   );

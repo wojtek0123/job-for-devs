@@ -36,7 +36,7 @@ const Login: NextPage = () => {
   return (
     <div className='flex flex-col bg-slate-800 p-10 text-white sm:rounded-lg absolute inset-0 justify-center items-center md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 max-w-md'>
       <Link href='/'>
-        <a className='bg-white border border-slate-800 text-slate-800 px-4 py-1 rounded-lg ml-2 xl:ml-0 text-lg hover:bg-slate-200 transition-colors duration-200 absolute top-4 left-4'>
+        <a className='bg-gray-200 border absolute top-4 left-4 text-black shadow px-4 py-1 rounded-lg ml-2 xl:ml-0 text-lg hover:bg-gray-300 transition-colors duration-300'>
           <Image src={arrowIcon} alt='back' width={15} height={15} />
           <span className='ml-2'>back</span>
         </a>
