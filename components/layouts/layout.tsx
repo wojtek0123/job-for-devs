@@ -21,14 +21,14 @@ const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
         <link rel='icon' href='/icons/looking-for-job.svg' />
       </Head>
 
-      <header className='bg-slate-800 py-5 px-2 flex items-center justify-center w-full text-white selection:bg-green-500 selection:text-white'>
-        <div className='max-w-7xl flex justify-between w-full'>
+      <header className='bg-white p-5 flex items-center justify-center w-full text-black selection:bg-green-500 selection:text-white border-b-2 border-gray-200'>
+        <div className='max-w-7xl w-full flex justify-between'>
           <Link href='/'>
-            <h1 className='text-2xl cursor-pointer'>Job for Devs</h1>
+            <h1 className='text-3xl min-w-max cursor-pointer'>Job for Devs</h1>
           </Link>
           <div className='ml-3 flex items-center justify-center'>
             <Link href='/new-post'>
-              <a className='mr-1 bg-white text-slate-800 px-3 py-1 w-max rounded-lg text-base md:text-lg sm:mr-2 hover:bg-slate-200 transition-colors duration-200'>
+              <a className='mr-1 bg-gray-200 text-black px-3 py-1 w-max rounded-lg text-base md:text-lg sm:mr-2 hover:bg-gray-300 transition-colors duration-200'>
                 Opublikuj
               </a>
             </Link>
