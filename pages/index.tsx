@@ -25,11 +25,11 @@ const Home: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className='w-full bg-white flex flex-col items-center justify-center md:pt-10 rounded-b-lg pb-3'>
+      <div className='w-full bg-white flex flex-col items-center justify-center md:pt-10 rounded-b-lg pb-3 px-5 xl:px-0'>
         <h2 className='text-black my-3 text-3xl font-light md:mb-8 md:mt-0 md:text-5xl text-center'>
           Find Your Deam Job
         </h2>
-        <form className='flex flex-row lg:flex-row px-5 pb-4 pt-3 rounded-b-lg max-w-7xl w-full items-center md:justify-center xl:px-0'>
+        <form className='flex flex-row lg:flex-row pb-4 pt-3 rounded-b-lg max-w-7xl w-full items-center md:justify-center'>
           <input
             type='text'
             placeholder='Filtruj po tytule'
@@ -47,7 +47,7 @@ const Home: NextPageWithLayout = () => {
         </form>
         <button
           type='button'
-          className='bg-gray-200 px-6 py-3 rounded-lg md:hidden hover:bg-gray-300 transition-colors duration-300'
+          className='bg-gray-200 py-3 w-full rounded-lg md:hidden hover:bg-gray-300 transition-colors duration-300'
           onClick={showFiltersHandler}
         >
           Filtruj
@@ -102,7 +102,7 @@ const Home: NextPageWithLayout = () => {
           </div>
           <button
             type='button'
-            className='bg-green-500 text-white px-4 py-1 rounded-lg mt-10 w-full hover:bg-green-600 transition-colors duration-300'
+            className='bg-green-500 text-white py-3 rounded-lg mt-10 w-full hover:bg-green-600 transition-colors duration-300'
           >
             Filtruj
           </button>
@@ -126,25 +126,22 @@ const Home: NextPageWithLayout = () => {
                   </div>
                 </div>
                 <div className='flex flex-wrap text-black mt-5 md:mt-0 md:ml-2'>
-                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-xs lg:text-base md:mr-0 shadow'>
+                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-base md:mr-0 shadow'>
                     React
                   </span>
-                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-xs lg:text-base md:mr-0 shadow'>
+                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-base md:mr-0 shadow'>
                     GraphQL
                   </span>
-                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-xs lg:text-base md:mr-0 shadow'>
+                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-base md:mr-0 shadow'>
                     Tailwindcss
                   </span>
-                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-xs lg:text-base md:mr-0 shadow'>
+                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-base md:mr-0 shadow'>
                     TypeScript
                   </span>
-                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-xs lg:text-base md:mr-0 shadow'>
+                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-base md:mr-0 shadow'>
                     TypeScript
                   </span>
-                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-xs lg:text-base md:mr-0 shadow'>
-                    TypeScript
-                  </span>
-                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-xs lg:text-base md:mr-0 shadow'>
+                  <span className='bg-white rounded-lg py-1 px-2 mx-1 my-1 sm:my-2 text-base md:mr-0 shadow'>
                     TypeScript
                   </span>
                 </div>

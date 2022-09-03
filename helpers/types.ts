@@ -41,3 +41,24 @@ export interface FormData {
   building: string;
   house: string;
 }
+
+export interface SecondStepError {
+  obligation: string;
+  requirements: string;
+}
+
+export interface FirstStepError {
+  category: string;
+  technologies: string;
+  minSalary: string;
+  location: string;
+  seniority: string;
+  jobTitle: string;
+}
+
+export interface ThirdStepError {
+  companyName: string;
+  city: string;
+  street: string;
+  building: string;
+}

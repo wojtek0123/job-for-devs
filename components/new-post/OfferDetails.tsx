@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FormData, Offer } from '../../helpers/types';
+import React from 'react';
+import { FormData, Offer, FirstStepError } from '../../helpers/types';
 import { technologies, seniorities } from '../../helpers/constants';
 
 const categories = ['Frontend', 'Backend', 'Fullstack'];
@@ -13,34 +13,16 @@ const OfferDetails: React.FC<{
   ) => void;
   handleInputs: (
     event: React.ChangeEvent<HTMLInputElement>,
-    input: string
+    input: string,
+    type: 'number' | 'text'
   ) => void;
   handleTextarea: (
     event: React.ChangeEvent<HTMLTextAreaElement>,
     input: string
   ) => void;
   data: FormData;
-}> = ({ handleButtons, data, handleInputs, handleTextarea }) => {
-  const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
-    []
-  );
-
-  const changeSelectedTechnologies = (
-    event: React.FormEvent<HTMLButtonElement>
-  ): void => {
-    const text: string = event.currentTarget?.textContent?.toLowerCase() ?? '';
-
-    if (selectedTechnologies.includes(text)) {
-      const filtredTechnologies = selectedTechnologies.filter(
-        (technology) => technology !== text
-      );
-      setSelectedTechnologies(filtredTechnologies);
-      return;
-    }
-
-    setSelectedTechnologies((prevState) => [...prevState, text]);
-  };
-
+  errorMsgs: FirstStepError;
+}> = ({ handleButtons, data, handleInputs, handleTextarea, errorMsgs }) => {
   return (
     <>
       <h2 className='text-3xl mt-3 mb-5 col-span-2 lg:mb-10 lg:mt-5'>
@@ -67,6 +49,9 @@ const OfferDetails: React.FC<{
             </button>
           ))}
         </div>
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.category}
+        </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
       <div className='mt-3 flex flex-col w-full col-span-2 md:grid md:grid-cols-2 md:mb-6'>
@@ -80,16 +65,22 @@ const OfferDetails: React.FC<{
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                selectedTechnologies.includes(technology.toLowerCase())
+                data.technologies.includes(technology.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={changeSelectedTechnologies}
+              onClick={(event) => handleButtons(event, Offer.Technologies)}
             >
               {technology}
             </button>
           ))}
         </div>
+        <small className='col-span-2 flex justify-end mt-1'>
+          Maks. 6 technologii
+        </small>
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.technologies}
+        </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -98,7 +89,7 @@ const OfferDetails: React.FC<{
           Wynagrodzenie
           <span className='ml-1 text-red-600'>*</span>
         </p>
-        <div className='flex sm:justify-between items-start sm:items-center flex-col sm:flex-row md:flex-col md:items-start lg:items-center lg:flex-row lg:grid w-full col-start-2 col-end-3 lg:grid-cols-3'>
+        <div className='flex flex-col items-start sm:justify-between sm:items-center sm:flex-row md:flex-col md:items-start lg:items-center lg:flex-row w-full col-start-2 col-end-3 lg:grid-cols-3'>
           <div className='flex items-center'>
             <input
               type='number'
@@ -107,9 +98,12 @@ const OfferDetails: React.FC<{
               min={2800}
               max={500000}
               maxLength={5}
-              className='rounded-lg text-black p-3 max-w-[10rem] min-w-max w-full outline-green-500 bg-gray-100'
+              className='rounded-lg text-black p-3 max-w-[10rem] min-w-fit w-full outline-green-500 bg-gray-100'
               autoComplete='off'
-              onChange={(event) => handleInputs(event, Offer.MinSalary)}
+              value={data.minSalary}
+              onChange={(event) =>
+                handleInputs(event, Offer.MinSalary, 'number')
+              }
             />
             <div className='mx-2'>-</div>
             <input
@@ -119,14 +113,15 @@ const OfferDetails: React.FC<{
               placeholder='Do'
               max={500000}
               maxLength={5}
-              className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-max bg-gray-100 outline-green-500'
+              className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-fit bg-gray-100 outline-green-500'
               autoComplete='off'
-              onChange={(event) => handleInputs(event, Offer.MaxSalary)}
+              value={data.maxSalary}
+              onChange={(event) =>
+                handleInputs(event, Offer.MaxSalary, 'number')
+              }
             />
           </div>
-          <span className='flex min-w-min justify-start ml-1 my-2 sm:my-0 md:my-2 lg:my-0 sm:justify-center md:justify-start lg:justify-end lg:mr-10  xl:mr-0 xl:justify-center items-center lg:ml-0'>
-            lub
-          </span>
+          <span className='my-2'>lub</span>
           <input
             type='number'
             id='salary'
@@ -136,9 +131,15 @@ const OfferDetails: React.FC<{
             maxLength={5}
             className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-max bg-gray-100 outline-green-500'
             autoComplete='off'
-            onChange={(event) => handleInputs(event, Offer.ExactSalary)}
+            value={data.exactSalary}
+            onChange={(event) =>
+              handleInputs(event, Offer.ExactSalary, 'number')
+            }
           />
         </div>
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.minSalary}
+        </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -163,6 +164,9 @@ const OfferDetails: React.FC<{
             </button>
           ))}
         </div>
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.location}
+        </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -210,6 +214,9 @@ const OfferDetails: React.FC<{
             </button>
           ))}
         </div>
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.seniority}
+        </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -226,9 +233,10 @@ const OfferDetails: React.FC<{
           maxLength={500}
           className='py-1 px-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
           onChange={(event) => handleTextarea(event, Offer.Benefits)}
+          value={data.benefits}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
-          Maksymalnie 500 znaków
+          {data.benefits.length}/500
         </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
@@ -245,8 +253,12 @@ const OfferDetails: React.FC<{
           id='title'
           className='p-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
-          onChange={(event) => handleInputs(event, Offer.JobTitle)}
+          onChange={(event) => handleInputs(event, Offer.JobTitle, 'text')}
+          value={data.jobTitle}
         />
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.jobTitle}
+        </small>
       </div>
     </>
   );

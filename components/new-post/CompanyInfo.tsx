@@ -1,5 +1,7 @@
-import { FormData, Offer } from '../../helpers/types';
+import { FormData, Offer, ThirdStepError } from '../../helpers/types';
 import { cities } from '../../helpers/constants';
+
+const citiesLowerCase = cities.map((city) => city.toLowerCase());
 
 const ComapnyInfo: React.FC<{
   handleButtons: (
@@ -8,10 +10,12 @@ const ComapnyInfo: React.FC<{
   ) => void;
   handleInputs: (
     event: React.ChangeEvent<HTMLInputElement>,
-    input: string
+    input: string,
+    type: 'number' | 'text'
   ) => void;
   data: FormData;
-}> = ({ handleButtons, handleInputs, data }) => {
+  errorMsgs: ThirdStepError;
+}> = ({ handleButtons, handleInputs, data, errorMsgs }) => {
   return (
     <>
       <h2 className='text-3xl mt-3 mb-5 col-span-2 lg:mb-10 lg:mt-5'>
@@ -31,8 +35,12 @@ const ComapnyInfo: React.FC<{
           className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
           placeholder='Nazwa firmy'
-          onChange={(event) => handleInputs(event, Offer.CompanyName)}
+          onChange={(event) => handleInputs(event, Offer.CompanyName, 'text')}
+          value={data.companyName}
         />
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.companyName}
+        </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -59,15 +67,21 @@ const ComapnyInfo: React.FC<{
       </div>
 
       <div className='col-span-2 md:col-start-2 md:col-end-3 mb-4'>
-        <div className='w-full flex items-center justify-start mb-3'>lub</div>
+        <span className='w-full flex items-center justify-start mb-3'>lub</span>
         <input
           type='text'
           id='input-location'
           placeholder='Inne miasto'
           className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
-          onChange={(event) => handleInputs(event, Offer.City)}
+          value={
+            citiesLowerCase.includes(data.city.toLowerCase()) ? '' : data.city
+          }
+          onChange={(event) => handleInputs(event, Offer.City, 'text')}
         />
+        <small className='col-span-2 flex md:justify-end text-left md:text-right text-red-600'>
+          {errorMsgs.city}
+        </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -85,8 +99,12 @@ const ComapnyInfo: React.FC<{
           maxLength={100}
           className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
-          onChange={(event) => handleInputs(event, Offer.Street)}
+          value={data.street}
+          onChange={(event) => handleInputs(event, Offer.Street, 'text')}
         />
+        {/* <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.street}
+        </small> */}
 
         <div className='flex flex-col border border-white rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
           <div className='flex justify-between col-start-2 col-end-3 text-lg lg:text-xl mb-4'>
@@ -98,7 +116,10 @@ const ComapnyInfo: React.FC<{
               maxLength={7}
               className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] mr-1 sm:mr-0'
               autoComplete='off'
-              onChange={(event) => handleInputs(event, Offer.BuildingNumber)}
+              value={data.building}
+              onChange={(event) =>
+                handleInputs(event, Offer.BuildingNumber, 'text')
+              }
             />
             <input
               type='text'
@@ -108,10 +129,16 @@ const ComapnyInfo: React.FC<{
               maxLength={7}
               className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] ml-1 sm:ml-0'
               autoComplete='off'
-              onChange={(event) => handleInputs(event, Offer.HouseNumber)}
+              value={data.house}
+              onChange={(event) =>
+                handleInputs(event, Offer.HouseNumber, 'text')
+              }
             />
           </div>
         </div>
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.building}
+        </small>
       </div>
     </>
   );

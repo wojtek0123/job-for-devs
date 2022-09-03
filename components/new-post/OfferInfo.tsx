@@ -1,11 +1,13 @@
-import { Offer } from '../../helpers/types';
+import { Offer, FormData, SecondStepError } from '../../helpers/types';
 
 const OfferInfo: React.FC<{
   handleTextarea: (
     event: React.ChangeEvent<HTMLTextAreaElement>,
     input: string
   ) => void;
-}> = ({ handleTextarea }) => {
+  data: FormData;
+  errorMsgs: SecondStepError;
+}> = ({ handleTextarea, data, errorMsgs }) => {
   return (
     <>
       <h2 className='text-3xl mt-3 mb-5 col-span-2 lg:mb-10 lg:mt-5'>
@@ -24,9 +26,10 @@ const OfferInfo: React.FC<{
           maxLength={2000}
           className='p-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
           onChange={(event) => handleTextarea(event, Offer.Description)}
+          value={data.description}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
-          Maksymalnie 2000 znaków
+          {data.description.length}/2000
         </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
@@ -43,10 +46,14 @@ const OfferInfo: React.FC<{
           id='obligation'
           maxLength={500}
           className='p-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
+          value={data.obligation}
           onChange={(event) => handleTextarea(event, Offer.Obligation)}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
-          Maksymalnie 500 znaków
+          {data.obligation.length}/500
+        </small>
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.obligation}
         </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
@@ -63,10 +70,14 @@ const OfferInfo: React.FC<{
           id='requirements'
           maxLength={500}
           className='p-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
+          value={data.requirements}
           onChange={(event) => handleTextarea(event, Offer.Requirements)}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
-          Maksymalnie 500 znaków
+          {data.requirements.length}/500
+        </small>
+        <small className='col-span-2 text-left md:text-right text-red-600'>
+          {errorMsgs.requirements}
         </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
@@ -84,9 +95,10 @@ const OfferInfo: React.FC<{
           maxLength={500}
           className='p-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
           onChange={(event) => handleTextarea(event, Offer.Advantages)}
+          value={data.advantages}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
-          Maksymalnie 500 znaków
+          {data.advantages.length}/500
         </small>
       </div>
     </>

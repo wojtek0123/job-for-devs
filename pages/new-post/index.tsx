@@ -1,10 +1,17 @@
 import { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 import OfferDetails from '../../components/new-post/OfferDetails';
 import OfferInfo from '../../components/new-post/OfferInfo';
 import ComapnyInfo from '../../components/new-post/CompanyInfo';
-import { FormData } from '../../helpers/types';
+import {
+  FirstStepError,
+  FormData,
+  Offer,
+  SecondStepError,
+  ThirdStepError,
+} from '../../helpers/types';
 
 const stepsInfo = [
   'Szczegóły oferty',
@@ -36,11 +43,56 @@ const NewPost: NextPage = () => {
     building: '',
     house: '',
   });
+  const [formDataErrorsFirstStep, setFormDataErrorsFirstStep] =
+    useState<FirstStepError>({
+      category: '',
+      technologies: '',
+      minSalary: '',
+      location: '',
+      seniority: '',
+      jobTitle: '',
+    });
+  const [formDataErrorsSecondStep, setFormDataErrorsSecondStep] =
+    useState<SecondStepError>({
+      obligation: '',
+      requirements: '',
+    });
+  const [formDataErrorsThirdStep, setFormDataErrorsThirdStep] =
+    useState<ThirdStepError>({
+      companyName: '',
+      city: '',
+      street: '',
+      building: '',
+    });
 
   const handleButtonData = (
     event: React.FormEvent<HTMLButtonElement>,
     input: string
   ): void => {
+    if (input === Offer.Technologies) {
+      const text = event.currentTarget?.textContent?.toLowerCase() ?? '';
+      if (formData.technologies.includes(text)) {
+        const filteredTechnologies = formData.technologies.filter(
+          (technology) => technology !== text
+        );
+
+        setFormData({ ...formData, technologies: filteredTechnologies });
+        return;
+      }
+
+      if (formData.technologies.length > 5) {
+        return;
+      }
+
+      setFormData({
+        ...formData,
+        [input]: [
+          ...formData.technologies,
+          event.currentTarget?.textContent?.toLowerCase() ?? '',
+        ],
+      });
+      return;
+    }
     setFormData({
       ...formData,
       [input]: event.currentTarget?.textContent?.toLowerCase(),
@@ -49,18 +101,22 @@ const NewPost: NextPage = () => {
 
   const handleInputData = (
     event: React.ChangeEvent<HTMLInputElement>,
-    input: string
+    input: string,
+    type: 'number' | 'text'
   ): void => {
-    if (event.currentTarget.valueAsNumber) {
+    if (type === 'number') {
+      const value = isNaN(+event.currentTarget.value)
+        ? ''
+        : event.currentTarget.value.toString();
+
       setFormData({
         ...formData,
-        [input]: event.currentTarget.valueAsNumber.toString(),
+        [input]: value,
       });
-    }
-    if (event.currentTarget.value) {
+    } else {
       setFormData({
         ...formData,
-        [input]: event.currentTarget.value,
+        [input]: event.currentTarget.value.trim(),
       });
     }
   };
@@ -71,7 +127,7 @@ const NewPost: NextPage = () => {
   ): void => {
     setFormData({
       ...formData,
-      [input]: event.target.value,
+      [input]: event.target.value.trim(),
     });
   };
 
@@ -83,10 +139,96 @@ const NewPost: NextPage = () => {
   };
 
   const onNextStep = (): void => {
+    let counter = 0;
     if (step === stepsInfo.length) {
       return;
     }
-    setStep((prevState) => prevState + 1);
+
+    if (step === 1) {
+      for (const key in formDataErrorsFirstStep) {
+        const isEmpty = formData[key as keyof FormData] === '';
+
+        if (isEmpty) {
+          counter += 1;
+          setFormDataErrorsFirstStep((prevState) => ({
+            ...prevState,
+            [key]: 'To pole jest wymagane',
+          }));
+        } else {
+          setFormDataErrorsFirstStep((prevState) => ({
+            ...prevState,
+            [key]: '',
+          }));
+        }
+
+        if (
+          formData.exactSalary !== '' &&
+          (formData.minSalary !== '' || formData.maxSalary !== '')
+        ) {
+          setFormDataErrorsFirstStep((prevState) => ({
+            ...prevState,
+            minSalary: 'Wybierz widełki lub dokładną wartość',
+          }));
+        }
+
+        if (formData.minSalary !== '' && formData.maxSalary !== '') {
+          if (formData.minSalary > formData.maxSalary) {
+            setFormDataErrorsFirstStep((prevState) => ({
+              ...prevState,
+              minSalary: 'Wartość maks. musi być większa od min.',
+            }));
+          }
+        }
+
+        if (
+          key.replace('Error', '') === Offer.Technologies &&
+          formData[key as keyof FormData].length === 0
+        ) {
+          setFormDataErrorsFirstStep((prevState) => ({
+            ...prevState,
+            technologies: 'Zaznacz co najmniej jedną technologię',
+          }));
+        }
+      }
+    } else if (step === 2) {
+      for (const key in formDataErrorsSecondStep) {
+        const isEmpty = formData[key as keyof FormData] === '';
+
+        if (isEmpty) {
+          counter += 1;
+          setFormDataErrorsSecondStep((prevState) => ({
+            ...prevState,
+            [key]: 'To pole jest wymagane',
+          }));
+        } else {
+          setFormDataErrorsSecondStep((prevState) => ({
+            ...prevState,
+            [key]: '',
+          }));
+        }
+      }
+    } else if (step === 3) {
+      for (const key in formDataErrorsThirdStep) {
+        const isEmpty = formData[key as keyof FormData] === '';
+
+        if (isEmpty) {
+          counter += 1;
+          setFormDataErrorsThirdStep((prevState) => ({
+            ...prevState,
+            [key]: 'To pole jest wymagane',
+          }));
+        } else {
+          setFormDataErrorsThirdStep((prevState) => ({
+            ...prevState,
+            [key]: '',
+          }));
+        }
+      }
+    }
+
+    if (counter === 0) {
+      setStep((prevState) => prevState + 1);
+    }
   };
 
   const content = {
@@ -96,14 +238,22 @@ const NewPost: NextPage = () => {
         handleInputs={handleInputData}
         handleTextarea={handleTextareaData}
         data={formData}
+        errorMsgs={formDataErrorsFirstStep}
       />
     ),
-    2: <OfferInfo handleTextarea={handleTextareaData} />,
+    2: (
+      <OfferInfo
+        handleTextarea={handleTextareaData}
+        data={formData}
+        errorMsgs={formDataErrorsSecondStep}
+      />
+    ),
     3: (
       <ComapnyInfo
         handleButtons={handleButtonData}
         handleInputs={handleInputData}
         data={formData}
+        errorMsgs={formDataErrorsThirdStep}
       />
     ),
     4: <></>,
@@ -131,12 +281,18 @@ const NewPost: NextPage = () => {
     </div>
   ));
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   return (
     <>
+      <Head>
+        <title>Job for devs</title>
+        <meta charSet='UTF-8' />
+        <meta
+          name='description'
+          content='App to help devs find a job or for employers to find a employees'
+        />
+        <link rel='icon' href='/icons/looking-for-job.svg' />
+      </Head>
+
       <header className='bg-white p-5 flex items-center justify-center w-full text-black selection:bg-green-500 selection:text-white border-b-2 border-gray-200'>
         <div className='max-w-7xl w-full flex justify-between'>
           <Link href='/'>
@@ -151,50 +307,54 @@ const NewPost: NextPage = () => {
           </div>
         </div>
       </header>
-
-      <main className='w-full max-w-7xl mx-auto px-5 xl:px-0  grid grid-cols-1 md:grid-cols-2'>
-        {content}
-        <div className='col-span-2 flex items-center'>
-          *<span className='w-[0.35rem] h-[0.05rem] mx-1 bg-black block'></span>{' '}
-          pole wymagane
-        </div>
-        <div
-          className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
-        >
-          {step === 1 && (
-            <Link href='/'>
-              <a className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center hover:bg-slate-200 transition-colors duration-300  border border-gray-200'>
-                <span className=''>powrót</span>
-              </a>
-            </Link>
-          )}
-          {step !== 1 && (
-            <button
-              type='button'
-              onClick={onPreviousStep}
-              className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 hover:bg-slate-200 transition-colors duration-300 border border-gray-200'
-            >
-              wstecz
-            </button>
-          )}
+      <main className='w-full max-w-7xl mx-auto px-5 xl:px-0'>
+        <form className='grid grid-cols-1 md:grid-cols-2'>
+          {content}
           {step !== stepsInfo.length && (
-            <button
-              type='button'
-              onClick={onNextStep}
-              className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
-            >
-              dalej
-            </button>
+            <div className='col-span-2 flex items-center'>
+              *
+              <span className='w-[0.35rem] h-[0.05rem] mx-1 bg-black block'></span>
+              pole wymagane
+            </div>
           )}
-          {step === stepsInfo.length && (
-            <button
-              type='submit'
-              className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
-            >
-              Opublikuj
-            </button>
-          )}
-        </div>
+          <div
+            className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
+          >
+            {step === 1 && (
+              <Link href='/'>
+                <a className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center hover:bg-slate-200 transition-colors duration-300  border border-gray-200'>
+                  <span className=''>powrót</span>
+                </a>
+              </Link>
+            )}
+            {step !== 1 && (
+              <button
+                type='button'
+                onClick={onPreviousStep}
+                className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 hover:bg-slate-200 transition-colors duration-300 border border-gray-200'
+              >
+                wstecz
+              </button>
+            )}
+            {step !== stepsInfo.length && (
+              <button
+                type='button'
+                onClick={onNextStep}
+                className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
+              >
+                dalej
+              </button>
+            )}
+            {step === stepsInfo.length && (
+              <button
+                type='submit'
+                className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
+              >
+                Opublikuj
+              </button>
+            )}
+          </div>
+        </form>
       </main>
     </>
   );
