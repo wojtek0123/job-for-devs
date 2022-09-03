@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import OfferDetails from '../../components/new-post/OfferDetails';
@@ -29,7 +29,7 @@ const NewPost: NextPage = () => {
     maxSalary: '',
     exactSalary: '',
     location: '',
-    workingHour: '',
+    typeOfDayJob: '',
     seniority: '',
     benefits: '',
     jobTitle: '',
@@ -67,13 +67,13 @@ const NewPost: NextPage = () => {
 
   const handleButtonData = (
     event: React.FormEvent<HTMLButtonElement>,
-    input: string
+    input: Offer
   ): void => {
     if (input === Offer.Technologies) {
       const text = event.currentTarget?.textContent?.toLowerCase() ?? '';
       if (formData.technologies.includes(text)) {
         const filteredTechnologies = formData.technologies.filter(
-          (technology) => technology !== text
+          (technology) => technology.toLowerCase() !== text
         );
 
         setFormData({ ...formData, technologies: filteredTechnologies });
@@ -116,7 +116,7 @@ const NewPost: NextPage = () => {
     } else {
       setFormData({
         ...formData,
-        [input]: event.currentTarget.value.trim(),
+        [input]: event.currentTarget.value,
       });
     }
   };
@@ -127,7 +127,7 @@ const NewPost: NextPage = () => {
   ): void => {
     setFormData({
       ...formData,
-      [input]: event.target.value.trim(),
+      [input]: event.target.value,
     });
   };
 
@@ -146,6 +146,14 @@ const NewPost: NextPage = () => {
 
     if (step === 1) {
       for (const key in formDataErrorsFirstStep) {
+        if (key === Offer.Technologies && formData.technologies.length === 0) {
+          counter += 1;
+          setFormDataErrorsFirstStep((prevState) => ({
+            ...prevState,
+            technologies: 'Zaznacz co najmniej jedną technologię',
+          }));
+        }
+
         const isEmpty = formData[key as keyof FormData] === '';
 
         if (isEmpty) {
@@ -160,35 +168,50 @@ const NewPost: NextPage = () => {
             [key]: '',
           }));
         }
+      }
 
-        if (
-          formData.exactSalary !== '' &&
-          (formData.minSalary !== '' || formData.maxSalary !== '')
-        ) {
+      if (
+        formData.exactSalary !== '' &&
+        (formData.minSalary !== '' || formData.maxSalary !== '')
+      ) {
+        counter += 1;
+        setFormDataErrorsFirstStep((prevState) => ({
+          ...prevState,
+          minSalary: 'Wybierz widełki lub dokładną wartość',
+        }));
+      }
+
+      if (
+        formData.exactSalary !== '' &&
+        formData.minSalary === '' &&
+        formData.maxSalary === ''
+      ) {
+        counter -= 1;
+        setFormDataErrorsFirstStep((prevState) => ({
+          ...prevState,
+          minSalary: '',
+        }));
+      }
+
+      if (formData.minSalary !== '' && formData.maxSalary !== '') {
+        if (formData.minSalary >= formData.maxSalary) {
+          counter += 1;
           setFormDataErrorsFirstStep((prevState) => ({
             ...prevState,
-            minSalary: 'Wybierz widełki lub dokładną wartość',
+            minSalary: 'Wartość maks. musi być większa od min.',
           }));
         }
+      }
 
-        if (formData.minSalary !== '' && formData.maxSalary !== '') {
-          if (formData.minSalary > formData.maxSalary) {
-            setFormDataErrorsFirstStep((prevState) => ({
-              ...prevState,
-              minSalary: 'Wartość maks. musi być większa od min.',
-            }));
-          }
-        }
-
-        if (
-          key.replace('Error', '') === Offer.Technologies &&
-          formData[key as keyof FormData].length === 0
-        ) {
-          setFormDataErrorsFirstStep((prevState) => ({
-            ...prevState,
-            technologies: 'Zaznacz co najmniej jedną technologię',
-          }));
-        }
+      if (
+        (formData.minSalary === '' && formData.maxSalary !== '') ||
+        (formData.minSalary !== '' && formData.maxSalary === '')
+      ) {
+        counter += 1;
+        setFormDataErrorsFirstStep((prevState) => ({
+          ...prevState,
+          minSalary: 'Uzupełnij widełki lub wpisz tylko dokładną wartość',
+        }));
       }
     } else if (step === 2) {
       for (const key in formDataErrorsSecondStep) {
@@ -230,6 +253,11 @@ const NewPost: NextPage = () => {
       setStep((prevState) => prevState + 1);
     }
   };
+
+  useEffect(
+    () => console.log(formDataErrorsFirstStep),
+    [formDataErrorsFirstStep]
+  );
 
   const content = {
     1: (

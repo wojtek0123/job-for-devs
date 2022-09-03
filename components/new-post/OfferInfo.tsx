@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Offer, FormData, SecondStepError } from '../../helpers/types';
 
 const OfferInfo: React.FC<{
@@ -8,6 +9,10 @@ const OfferInfo: React.FC<{
   data: FormData;
   errorMsgs: SecondStepError;
 }> = ({ handleTextarea, data, errorMsgs }) => {
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+  }, []);
+
   return (
     <>
       <h2 className='text-3xl mt-3 mb-5 col-span-2 lg:mb-10 lg:mt-5'>

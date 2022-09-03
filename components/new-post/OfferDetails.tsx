@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FormData, Offer, FirstStepError } from '../../helpers/types';
 import { technologies, seniorities } from '../../helpers/constants';
 
 const categories = ['Frontend', 'Backend', 'Fullstack'];
-const workingHours = ['pełny etat', 'połowa etatu', 'częściowy etat'];
+const TypeOfDayJobs = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
 
 const OfferDetails: React.FC<{
   handleButtons: (
     event: React.FormEvent<HTMLButtonElement>,
-    input: string
+    input: Offer
   ) => void;
   handleInputs: (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -23,6 +23,10 @@ const OfferDetails: React.FC<{
   data: FormData;
   errorMsgs: FirstStepError;
 }> = ({ handleButtons, data, handleInputs, handleTextarea, errorMsgs }) => {
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+  }, []);
+
   return (
     <>
       <h2 className='text-3xl mt-3 mb-5 col-span-2 lg:mb-10 lg:mt-5'>
@@ -76,7 +80,7 @@ const OfferDetails: React.FC<{
           ))}
         </div>
         <small className='col-span-2 flex justify-end mt-1'>
-          Maks. 6 technologii
+          {data.technologies.length}/6
         </small>
         <small className='col-span-2 text-left md:text-right text-red-600'>
           {errorMsgs.technologies}
@@ -175,18 +179,18 @@ const OfferDetails: React.FC<{
           Wymiar czasu pracy
         </p>
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
-          {workingHours.map((workingHour, index) => (
+          {TypeOfDayJobs.map((typeOfDayJob, index) => (
             <button
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                data.workingHour.includes(workingHour.toLowerCase())
+                data.typeOfDayJob.includes(typeOfDayJob.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={(event) => handleButtons(event, Offer.WorkingHour)}
+              onClick={(event) => handleButtons(event, Offer.TypeOfDayJob)}
             >
-              {workingHour}
+              {typeOfDayJob}
             </button>
           ))}
         </div>
@@ -233,7 +237,7 @@ const OfferDetails: React.FC<{
           maxLength={500}
           className='py-1 px-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
           onChange={(event) => handleTextarea(event, Offer.Benefits)}
-          value={data.benefits}
+          value={data.benefits.split(' ').join('\n -')}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
           {data.benefits.length}/500

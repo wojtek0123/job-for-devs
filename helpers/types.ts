@@ -5,7 +5,7 @@ export enum Offer {
   MaxSalary = 'maxSalary',
   ExactSalary = 'exactSalary',
   Location = 'location',
-  WorkingHour = 'workingHour',
+  TypeOfDayJob = 'typeOfDayJob',
   Seniority = 'seniority',
   Benefits = 'benefits',
   JobTitle = 'jobTitle',
@@ -27,7 +27,7 @@ export interface FormData {
   maxSalary: string;
   exactSalary: string;
   location: string;
-  workingHour: string;
+  typeOfDayJob: string;
   seniority: string;
   benefits: string;
   jobTitle: string;

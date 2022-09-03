@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { FormData, Offer, ThirdStepError } from '../../helpers/types';
 import { cities } from '../../helpers/constants';
 
@@ -6,7 +7,7 @@ const citiesLowerCase = cities.map((city) => city.toLowerCase());
 const ComapnyInfo: React.FC<{
   handleButtons: (
     event: React.FormEvent<HTMLButtonElement>,
-    input: string
+    input: Offer
   ) => void;
   handleInputs: (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -16,6 +17,10 @@ const ComapnyInfo: React.FC<{
   data: FormData;
   errorMsgs: ThirdStepError;
 }> = ({ handleButtons, handleInputs, data, errorMsgs }) => {
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+  }, []);
+
   return (
     <>
       <h2 className='text-3xl mt-3 mb-5 col-span-2 lg:mb-10 lg:mt-5'>
