@@ -21,6 +21,7 @@ export enum Offer {
 }
 
 export interface FormData {
+  id: string;
   category: string;
   technologies: string[];
   minSalary: string;

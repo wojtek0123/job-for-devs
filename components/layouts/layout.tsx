@@ -24,7 +24,7 @@ const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
       <header className='bg-white p-5 flex items-center justify-center w-full text-black selection:bg-green-500 selection:text-white border-b-2 border-gray-200'>
         <div className='max-w-7xl w-full flex justify-between'>
           <Link href='/'>
-            <h1 className='text-3xl min-w-max cursor-pointer'>Job for Devs</h1>
+            <h1 className='text-xl sm:text-3xl min-w-max cursor-pointer'>Job for Devs</h1>
           </Link>
           <div className='ml-3 flex items-center justify-center'>
             <Link href='/new-post'>
