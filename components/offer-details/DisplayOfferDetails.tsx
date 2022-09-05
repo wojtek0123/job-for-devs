@@ -56,9 +56,7 @@ const DisplayOfferDetails: React.FC<{
                 <svg className='w-4 h-4 fill-white' viewBox='0 0 384 512'>
                   <path d='M168.3 499.2C116.1 435 0 279.4 0 192 0 85.96 85.96 0 192 0c106 0 192 85.96 192 192 0 87.4-117 243-168.3 307.2-12.3 15.3-35.1 15.3-47.4 0zM192 256c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64z' />
                 </svg>
-                <span className='ml-2'>
-                  {displayAddress}
-                </span>
+                <span className='ml-2'>{displayAddress}</span>
               </div>
               <div className='flex items-center text-white text-base lg:text-lg xl:text-2xl xl:my-1'>
                 <svg className='w-4 h-4 fill-white' viewBox='0 0 512 512'>
@@ -133,7 +131,7 @@ const DisplayOfferDetails: React.FC<{
           <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
             Twoje podstawowe zadania
           </p>
-          <DisplayAsTextOrList text={offer.obligation} />
+          <DisplayAsTextOrList text={offer.obligations} />
         </div>
         <hr className='hidden md:block mb-3 col-span-2' />
 

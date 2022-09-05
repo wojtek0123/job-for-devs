@@ -35,7 +35,7 @@ const NewPost: NextPage = () => {
     benefits: '',
     jobTitle: '',
     description: '',
-    obligation: '',
+    obligations: '',
     requirements: '',
     advantages: '',
     companyName: '',
@@ -55,7 +55,7 @@ const NewPost: NextPage = () => {
     });
   const [formDataErrorsSecondStep, setFormDataErrorsSecondStep] =
     useState<SecondStepError>({
-      obligation: '',
+      obligations: '',
       requirements: '',
     });
   const [formDataErrorsThirdStep, setFormDataErrorsThirdStep] =

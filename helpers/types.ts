@@ -34,7 +34,7 @@ export interface OfferData {
   benefits: string;
   jobTitle: string;
   description: string;
-  obligation: string;
+  obligations: string;
   requirements: string;
   advantages: string;
   companyName: string;
@@ -57,7 +57,7 @@ export interface FormData {
   benefits: string;
   jobTitle: string;
   description: string;
-  obligation: string;
+  obligations: string;
   requirements: string;
   advantages: string;
   companyName: string;
@@ -69,7 +69,7 @@ export interface FormData {
 
 export interface SecondStepError {
   [index: string]: string;
-  obligation: string;
+  obligations: string;
   requirements: string;
 }
 

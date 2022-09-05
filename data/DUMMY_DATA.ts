@@ -14,7 +14,7 @@ export const DUMMY_DATA = [
     jobTitle: 'Mid Frontend Developer',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Corruptieveniet vel iure minus ab laudantium iusto veniam incidunt omnisaperiam cum ipsa commnemomagni repellat consequuntur, nostrumsint soluta nihil, porro illum vitae recusandae? Obcaecati',
-    obligation:
+    obligations:
       'Design the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performantuser-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiencyand contribute to best practices\nDesign the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performant user-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiency and contribute to best practices',
     requirements:
       '4+ years experience\nGreat knowledge of JavaScript and experience in working with Vue 3and its Composition API.\nProficiency in HTML and selected specifications (Web Components,Shadow DOM)\nExperience with REST APIs, Nuxt.js and Server Side Rendering (JAMStack)\nExperience creating micro-frontends (Vue Component Libraries)\nKnowledge of the latest CSS standards (+ SASS)\nKnowledge of basic UX concepts (Style Guides, ComponentsLibraries)',
@@ -41,7 +41,7 @@ export const DUMMY_DATA = [
     jobTitle: 'Junior Frontend Developer',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Corruptieveniet vel iure minus ab laudantium iusto veniam incidunt omnisaperiam cum ipsa commnemomagni repellat consequuntur, nostrumsint soluta nihil, porro illum vitae recusandae? Obcaecati',
-    obligation:
+    obligations:
       'Design the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performantuser-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiencyand contribute to best practices\nDesign the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performant user-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiency and contribute to best practices',
     requirements:
       '4+ years experience\nGreat knowledge of JavaScript and experience in working with Vue 3and its Composition API.\nProficiency in HTML and selected specifications (Web Components,Shadow DOM)\nExperience with REST APIs, Nuxt.js and Server Side Rendering (JAMStack)\nExperience creating micro-frontends (Vue Component Libraries)\nKnowledge of the latest CSS standards (+ SASS)\nKnowledge of basic UX concepts (Style Guides, ComponentsLibraries)',
@@ -68,7 +68,7 @@ export const DUMMY_DATA = [
     jobTitle: 'Senior Backend Developer',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Corruptieveniet vel iure minus ab laudantium iusto veniam incidunt omnisaperiam cum ipsa commnemomagni repellat consequuntur, nostrumsint soluta nihil, porro illum vitae recusandae? Obcaecati',
-    obligation:
+    obligations:
       'Design the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performantuser-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiencyand contribute to best practices\nDesign the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performant user-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiency and contribute to best practices',
     requirements:
       '4+ years experience\nGreat knowledge of JavaScript and experience in working with Vue 3and its Composition API.\nProficiency in HTML and selected specifications (Web Components,Shadow DOM)\nExperience with REST APIs, Nuxt.js and Server Side Rendering (JAMStack)\nExperience creating micro-frontends (Vue Component Libraries)\nKnowledge of the latest CSS standards (+ SASS)\nKnowledge of basic UX concepts (Style Guides, ComponentsLibraries)',
@@ -95,7 +95,7 @@ export const DUMMY_DATA = [
     jobTitle: 'Mid Frontend Developer',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Corruptieveniet vel iure minus ab laudantium iusto veniam incidunt omnisaperiam cum ipsa commnemomagni repellat consequuntur, nostrumsint soluta nihil, porro illum vitae recusandae? Obcaecati',
-    obligation:
+    obligations:
       'Design the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performantuser-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiencyand contribute to best practices\nDesign the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performant user-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiency and contribute to best practices',
     requirements:
       '4+ years experience\nGreat knowledge of JavaScript and experience in working with Vue 3and its Composition API.\nProficiency in HTML and selected specifications (Web Components,Shadow DOM)\nExperience with REST APIs, Nuxt.js and Server Side Rendering (JAMStack)\nExperience creating micro-frontends (Vue Component Libraries)\nKnowledge of the latest CSS standards (+ SASS)\nKnowledge of basic UX concepts (Style Guides, ComponentsLibraries)',
@@ -122,7 +122,7 @@ export const DUMMY_DATA = [
     jobTitle: 'Mid Fullstack Developer',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Corruptieveniet vel iure minus ab laudantium iusto veniam incidunt omnisaperiam cum ipsa commnemomagni repellat consequuntur, nostrumsint soluta nihil, porro illum vitae recusandae? Obcaecati',
-    obligation:
+    obligations:
       'Design the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performantuser-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiencyand contribute to best practices\nDesign the frontend architecture and be involved in key decisionsto enable us to build for scale\nWorking with Product and Design to build intuitive and performant user-facing products and interfaces\nReview code, continuously raise the bar for engineering efficiency and contribute to best practices',
     requirements:
       '4+ years experience\nGreat knowledge of JavaScript and experience in working with Vue 3and its Composition API.\nProficiency in HTML and selected specifications (Web Components,Shadow DOM)\nExperience with REST APIs, Nuxt.js and Server Side Rendering (JAMStack)\nExperience creating micro-frontends (Vue Component Libraries)\nKnowledge of the latest CSS standards (+ SASS)\nKnowledge of basic UX concepts (Style Guides, ComponentsLibraries)',
