@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormData } from '../../helpers/types';
+import { OfferData } from '../../helpers/types';
 import { technologies, seniorities, cities } from '../../helpers/constants';
 import { DUMMY_DATA } from '../../data/DUMMY_DATA';
 
@@ -9,8 +9,8 @@ interface IFilters {
 }
 
 const Filters: React.FC<{
-  offers: FormData[];
-  onFilterOffers: (offers: FormData[]) => void;
+  offers: OfferData[];
+  onFilterOffers: (offers: OfferData[]) => void;
   closeModal?: () => void;
 }> = ({ offers, onFilterOffers, closeModal }) => {
   const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
@@ -87,7 +87,7 @@ const Filters: React.FC<{
 
     const filteredData = filtered.filter((data) =>
       Object.entries(filters).every(
-        ([key, value]) => value === data[key as keyof FormData] || value === ''
+        ([key, value]) => value === data[key as keyof OfferData] || value === ''
       )
     );
     onFilterOffers(filteredData);

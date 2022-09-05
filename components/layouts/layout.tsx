@@ -24,10 +24,12 @@ const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
       <header className='bg-white p-5 flex items-center justify-center w-full text-black selection:bg-green-500 selection:text-white border-b-2 border-gray-200'>
         <div className='max-w-7xl w-full flex justify-between'>
           <Link href='/'>
-            <h1 className='text-xl sm:text-3xl min-w-max cursor-pointer'>Job for Devs</h1>
+            <h1 className='text-xl sm:text-3xl min-w-max cursor-pointer'>
+              Job for Devs
+            </h1>
           </Link>
           <div className='ml-3 flex items-center justify-center'>
-            <Link href='/new-post'>
+            <Link href='/new-offer'>
               <a className='mr-1 bg-gray-200 text-black px-3 py-1 w-max rounded-lg text-base md:text-lg sm:mr-2 hover:bg-gray-300 transition-colors duration-200'>
                 Opublikuj
               </a>

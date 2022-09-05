@@ -35,7 +35,7 @@ const Home: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className='w-full bg-white flex flex-col items-center justify-center md:pt-10 rounded-b-lg pb-3 px-5 xl:px-0'>
+      <div className='w-full bg-white flex flex-col items-center justify-center md:pt-10 rounded-b-lg pb-3 px-5 [1300px]:px-0'>
         <h2 className='text-black my-3 text-3xl font-light md:mb-8 md:mt-0 md:text-5xl text-center'>
           Find Your Deam Job
         </h2>

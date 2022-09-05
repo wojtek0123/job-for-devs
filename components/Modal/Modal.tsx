@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Filters from '../filters/Filters';
-import { FormData } from '../../helpers/types';
+import { OfferData } from '../../helpers/types';
 
 const Modal: React.FC<{
   show: boolean;
   close: () => void;
-  offers: FormData[];
-  onFilteredOffers: (offers: FormData[]) => void;
+  offers: OfferData[];
+  onFilteredOffers: (offers: OfferData[]) => void;
 }> = ({ show, close, offers, onFilteredOffers }) => {
   const [isBrowser, setIsBrowser] = useState(false);
 
@@ -28,7 +28,11 @@ const Modal: React.FC<{
         <h3 className='text-2xl mx-auto'>Filtruj oferty</h3>
       </div>
       <hr className='w-full mt-6' />
-      <Filters offers={offers} onFilterOffers={onFilteredOffers} closeModal={close} />
+      <Filters
+        offers={offers}
+        onFilterOffers={onFilteredOffers}
+        closeModal={close}
+      />
     </div>
   ) : null;
 
