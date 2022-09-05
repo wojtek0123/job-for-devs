@@ -229,7 +229,7 @@ const OfferDetails: React.FC<{
           className='text-lg mb-2 mt-4 col-start-1 col-end-2 lg:text-xl'
           htmlFor='benefits'
         >
-          Korzyści
+          Benefity
         </label>
         <textarea
           name='benefits'
