@@ -20,7 +20,8 @@ export enum Offer {
   HouseNumber = 'house',
 }
 
-export interface FormData {
+export interface OfferData {
+  [index: string]: string | string[];
   id: string;
   category: string;
   technologies: string[];
@@ -43,12 +44,37 @@ export interface FormData {
   house: string;
 }
 
+export interface FormData {
+  [index: string]: string | string[];
+  category: string;
+  technologies: string[];
+  minSalary: string;
+  maxSalary: string;
+  exactSalary: string;
+  location: string;
+  typeOfDayJob: string;
+  seniority: string;
+  benefits: string;
+  jobTitle: string;
+  description: string;
+  obligation: string;
+  requirements: string;
+  advantages: string;
+  companyName: string;
+  city: string;
+  street: string;
+  building: string;
+  house: string;
+}
+
 export interface SecondStepError {
+  [index: string]: string;
   obligation: string;
   requirements: string;
 }
 
 export interface FirstStepError {
+  [index: string]: string;
   category: string;
   technologies: string;
   minSalary: string;
@@ -58,6 +84,7 @@ export interface FirstStepError {
 }
 
 export interface ThirdStepError {
+  [index: string]: string;
   companyName: string;
   city: string;
   street: string;

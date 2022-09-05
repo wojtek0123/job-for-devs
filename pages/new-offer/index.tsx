@@ -155,7 +155,7 @@ const NewPost: NextPage = () => {
           }));
         }
 
-        const isEmpty = formData[key as keyof FormData] === '';
+        const isEmpty = formData[key] === '';
 
         if (isEmpty) {
           counter += 1;
@@ -216,7 +216,7 @@ const NewPost: NextPage = () => {
       }
     } else if (step === 2) {
       for (const key in formDataErrorsSecondStep) {
-        const isEmpty = formData[key as keyof FormData] === '';
+        const isEmpty = formData[key] === '';
 
         if (isEmpty) {
           counter += 1;
@@ -233,7 +233,7 @@ const NewPost: NextPage = () => {
       }
     } else if (step === 3) {
       for (const key in formDataErrorsThirdStep) {
-        const isEmpty = formData[key as keyof FormData] === '';
+        const isEmpty = formData[key] === '';
 
         if (isEmpty) {
           counter += 1;
@@ -288,7 +288,7 @@ const NewPost: NextPage = () => {
       />
     ),
     3: (
-      <ComapnyInfo 
+      <ComapnyInfo
         handleButtons={handleButtonData}
         handleInputs={handleInputData}
         data={formData}
