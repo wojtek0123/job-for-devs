@@ -2,9 +2,9 @@ import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
-import OfferDetails from '../../components/new-post/OfferDetails';
-import OfferInfo from '../../components/new-post/OfferInfo';
-import ComapnyInfo from '../../components/new-post/CompanyInfo';
+import OfferDetails from '../../components/new-offer/OfferDetails';
+import OfferInfo from '../../components/new-offer/OfferInfo';
+import ComapnyInfo from '../../components/new-offer/CompanyInfo';
 import {
   FirstStepError,
   FormData,
@@ -12,6 +12,7 @@ import {
   SecondStepError,
   ThirdStepError,
 } from '../../helpers/types';
+import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
 
 const stepsInfo = [
   'Szczegóły oferty',
@@ -95,7 +96,7 @@ const NewPost: NextPage = () => {
     }
     setFormData({
       ...formData,
-      [input]: event.currentTarget?.textContent?.toLowerCase(),
+      [input]: event.currentTarget?.textContent?.toLowerCase() ?? '',
     });
   };
 
@@ -254,10 +255,20 @@ const NewPost: NextPage = () => {
     }
   };
 
-  useEffect(
-    () => console.log(formDataErrorsFirstStep),
-    [formDataErrorsFirstStep]
-  );
+  const submitHandler = (event: React.FormEvent): void => {
+    event.preventDefault();
+
+    const x = Object.keys(formData).map(
+      (key) =>
+        (formData[key] =
+          typeof formData[key] === 'string'
+            ? formData[key].toString().trim()
+            : formData[key])
+    );
+    console.log(x);
+  };
+
+  useEffect(() => console.log(formData), [formData]);
 
   const content = {
     1: (
@@ -277,14 +288,14 @@ const NewPost: NextPage = () => {
       />
     ),
     3: (
-      <ComapnyInfo
+      <ComapnyInfo 
         handleButtons={handleButtonData}
         handleInputs={handleInputData}
         data={formData}
         errorMsgs={formDataErrorsThirdStep}
       />
     ),
-    4: <></>,
+    4: <DisplayOfferDetails offer={formData} review={true} />,
   }[step];
 
   const renderStepsDetails = stepsInfo.map((stepInfo, index) => (
@@ -335,8 +346,11 @@ const NewPost: NextPage = () => {
           </div>
         </div>
       </header>
-      <main className='w-full max-w-7xl mx-auto px-5 xl:px-0'>
-        <form className='grid grid-cols-1 md:grid-cols-2'>
+      <main className='w-full max-w-7xl mx-auto px-5 [1300px]:px-0'>
+        <form
+          onSubmit={submitHandler}
+          className='grid grid-cols-1 md:grid-cols-2'
+        >
           {content}
           {step !== stepsInfo.length && (
             <div className='col-span-2 flex items-center'>

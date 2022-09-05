@@ -57,7 +57,7 @@ const OfferInfo: React.FC<{
         <small className='col-span-2 flex justify-end mt-1'>
           {data.obligation.length}/500
         </small>
-        <small className='col-span-2 text-left md:text-right text-red-600'>
+        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
           {errorMsgs.obligation}
         </small>
       </div>
@@ -81,7 +81,7 @@ const OfferInfo: React.FC<{
         <small className='col-span-2 flex justify-end mt-1'>
           {data.requirements.length}/500
         </small>
-        <small className='col-span-2 text-left md:text-right text-red-600'>
+        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
           {errorMsgs.requirements}
         </small>
       </div>
@@ -102,7 +102,7 @@ const OfferInfo: React.FC<{
           onChange={(event) => handleTextarea(event, Offer.Advantages)}
           value={data.advantages}
         ></textarea>
-        <small className='col-span-2 flex justify-end mt-1'>
+        <small className='col-span-2 flex justify-end mt-1 h-4'>
           {data.advantages.length}/500
         </small>
       </div>

@@ -53,7 +53,7 @@ const OfferDetails: React.FC<{
             </button>
           ))}
         </div>
-        <small className='col-span-2 text-left md:text-right text-red-600'>
+        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
           {errorMsgs.category}
         </small>
       </div>
@@ -82,7 +82,7 @@ const OfferDetails: React.FC<{
         <small className='col-span-2 flex justify-end mt-1'>
           {data.technologies.length}/6
         </small>
-        <small className='col-span-2 text-left md:text-right text-red-600'>
+        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
           {errorMsgs.technologies}
         </small>
       </div>
@@ -141,7 +141,7 @@ const OfferDetails: React.FC<{
             }
           />
         </div>
-        <small className='col-span-2 text-left md:text-right text-red-600'>
+        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
           {errorMsgs.minSalary}
         </small>
       </div>
@@ -168,7 +168,7 @@ const OfferDetails: React.FC<{
             </button>
           ))}
         </div>
-        <small className='col-span-2 text-left md:text-right text-red-600'>
+        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
           {errorMsgs.location}
         </small>
       </div>
@@ -218,7 +218,7 @@ const OfferDetails: React.FC<{
             </button>
           ))}
         </div>
-        <small className='col-span-2 text-left md:text-right text-red-600'>
+        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
           {errorMsgs.seniority}
         </small>
       </div>
@@ -237,7 +237,7 @@ const OfferDetails: React.FC<{
           maxLength={500}
           className='py-1 px-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
           onChange={(event) => handleTextarea(event, Offer.Benefits)}
-          value={data.benefits.split(' ').join('\n -')}
+          value={data.benefits}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
           {data.benefits.length}/500
@@ -260,7 +260,7 @@ const OfferDetails: React.FC<{
           onChange={(event) => handleInputs(event, Offer.JobTitle, 'text')}
           value={data.jobTitle}
         />
-        <small className='col-span-2 text-left md:text-right text-red-600'>
+        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
           {errorMsgs.jobTitle}
         </small>
       </div>
