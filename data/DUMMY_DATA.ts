@@ -2,7 +2,7 @@ export const DUMMY_DATA = [
   {
     id: '1',
     category: 'Frontend',
-    technologies: ['React', 'TypeScript', 'NextJS', 'Node.js'],
+    technologies: ['React', 'JavaScript', 'NextJS', 'Node.js'],
     minSalary: '4000',
     maxSalary: '6000',
     exactSalary: '',
@@ -11,7 +11,7 @@ export const DUMMY_DATA = [
     seniority: 'mid',
     benefits:
       "Flexible work-time from office, remote or hybrid work — it’s up to you (CET +/- 2 hours).\nAnnual personal development budget and the opportunity to bementored by Europe's top experts.\nExcellent team of highly qualified and motivated colleagues\nFor those in Poland, comfy office in Warsaw with drinks and snacks, free cab rides, Multisport, and private healthcare\nFor those remote, the option to fly in periodically and spend in-person time with the team.",
-    jobTitle: 'Min Frontend Developer',
+    jobTitle: 'Mid Frontend Developer',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Corruptieveniet vel iure minus ab laudantium iusto veniam incidunt omnisaperiam cum ipsa commnemomagni repellat consequuntur, nostrumsint soluta nihil, porro illum vitae recusandae? Obcaecati',
     obligation:
@@ -29,7 +29,7 @@ export const DUMMY_DATA = [
   {
     id: '2',
     category: 'Frontend',
-    technologies: ['React', 'TypeScript', 'NextJS', 'Node.js'],
+    technologies: ['React', 'JavaScript', 'SQL', 'PHP'],
     minSalary: '4000',
     maxSalary: '6000',
     exactSalary: '',
@@ -56,7 +56,7 @@ export const DUMMY_DATA = [
   {
     id: '3',
     category: 'Frontend',
-    technologies: ['React', 'TypeScript', 'NextJS', 'Node.js'],
+    technologies: ['Angular', 'TypeScript'],
     minSalary: '4000',
     maxSalary: '6000',
     exactSalary: '',
@@ -83,7 +83,7 @@ export const DUMMY_DATA = [
   {
     id: '4',
     category: 'Frontend',
-    technologies: ['React', 'TypeScript', 'NextJS', 'Node.js'],
+    technologies: ['React', 'TypeScript', 'NextJS'],
     minSalary: '4000',
     maxSalary: '6000',
     exactSalary: '',
