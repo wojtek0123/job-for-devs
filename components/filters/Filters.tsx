@@ -4,6 +4,7 @@ import { technologies, seniorities, cities } from '../../helpers/constants';
 import { DUMMY_DATA } from '../../data/DUMMY_DATA';
 
 interface IFilters {
+  [index: string]: string;
   city: string;
   seniority: string;
 }
@@ -73,24 +74,24 @@ const Filters: React.FC<{
       seniority: selectedSeniority,
     };
 
-    let filtered;
+    let filteredOffers;
 
     if (selectedTechnologies.length !== 0) {
-      filtered = offers.filter((data) =>
+      filteredOffers = DUMMY_DATA.filter((data) =>
         data.technologies.some((technology) =>
           selectedTechnologies.includes(technology.toLowerCase())
         )
       );
     } else {
-      filtered = offers;
+      filteredOffers = DUMMY_DATA;
     }
 
-    const filteredData = filtered.filter((data) =>
-      Object.entries(filters).every(
-        ([key, value]) => value === data[key as keyof OfferData] || value === ''
-      )
+    const filteredOffersByAllParameters = filteredOffers.filter(
+      (data) =>
+        (data.city === filters.city || filters.city === '') &&
+        (data.seniority === filters.seniority || filters.seniority === '')
     );
-    onFilterOffers(filteredData);
+    onFilterOffers(filteredOffersByAllParameters);
     if (closeModal !== undefined) {
       closeModal();
     }

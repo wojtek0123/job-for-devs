@@ -25,12 +25,19 @@ const Home: NextPageWithLayout = () => {
     if (titleInputRef.current === null) return;
 
     const enteredTitle = titleInputRef.current.value;
+    let filteredOffers;
 
-    const filteredByTitle = DUMMY_DATA.filter((data) =>
-      data.jobTitle.toLowerCase().includes(enteredTitle.toLowerCase().trim())
-    );
+    if (displayedData.length !== DUMMY_DATA.length) {
+      filteredOffers = displayedData.filter((data) =>
+        data.jobTitle.toLowerCase().includes(enteredTitle.toLowerCase().trim())
+      );
+    } else {
+      filteredOffers = DUMMY_DATA.filter((data) =>
+        data.jobTitle.toLowerCase().includes(enteredTitle.toLowerCase().trim())
+      );
+    }
 
-    setDisplayedData(filteredByTitle);
+    setDisplayedData(filteredOffers);
   };
 
   return (
@@ -129,7 +136,7 @@ const Home: NextPageWithLayout = () => {
                       <svg className='w-4 h-4 fill-black' viewBox='0 0 384 512'>
                         <path d='M168.3 499.2C116.1 435 0 279.4 0 192 0 85.96 85.96 0 192 0c106 0 192 85.96 192 192 0 87.4-117 243-168.3 307.2-12.3 15.3-35.1 15.3-47.4 0zM192 256c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64z' />
                       </svg>
-                      <span className='ml-2'>{offer.city}</span>
+                      <span className='ml-2 capitalize'>{offer.city}</span>
                     </div>
                     <div className='flex items-center'>
                       <svg className='w-4 h-4 fill-black' viewBox='0 0 640 512'>
