@@ -1,115 +1,39 @@
-import React, { useState } from 'react';
-import { OfferData } from '../../helpers/types';
+import React, { useContext } from 'react';
 import { technologies, seniorities, cities } from '../../helpers/constants';
-import { DUMMY_DATA } from '../../data/DUMMY_DATA';
+import FiltersContext from '../../context/filters-context';
 
-interface IFilters {
-  [index: string]: string;
-  city: string;
-  seniority: string;
-}
+const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
+  const {
+    changeCity,
+    changeTechnologies,
+    changeSeniority,
+    selectedCity,
+    selectedSeniority,
+    selectedTechnologies,
+    onFilter,
+  } = useContext(FiltersContext);
 
-const Filters: React.FC<{
-  offers: OfferData[];
-  onFilterOffers: (offers: OfferData[]) => void;
-  closeModal?: () => void;
-}> = ({ offers, onFilterOffers, closeModal }) => {
-  const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
-    []
-  );
-  const [selectedCity, setSelectedCity] = useState('');
-  const [selectedSeniority, setSelectedSeniority] = useState('');
-
-  const changeTechnologiesHandler = (
-    event: React.FormEvent<HTMLButtonElement>
-  ): void => {
-    const selectedTechnology =
-      event.currentTarget.textContent?.toLowerCase() ?? '';
-
-    if (selectedTechnologies.includes(selectedTechnology)) {
-      const filteredTechnologies = selectedTechnologies.filter(
-        (technology) => technology.toLowerCase() !== selectedTechnology
-      );
-
-      setSelectedTechnologies(filteredTechnologies);
-      return;
-    }
-
-    if (selectedTechnologies.length > 5) {
-      return;
-    }
-
-    setSelectedTechnologies((prevState) => [...prevState, selectedTechnology]);
-  };
-
-  const changeSeniorityHandler = (
-    event: React.FormEvent<HTMLButtonElement>
-  ): void => {
-    setSelectedSeniority(event.currentTarget.textContent?.toLowerCase() ?? '');
-  };
-
-  const changeCityHandler = (
-    event: React.FormEvent<HTMLButtonElement>
-  ): void => {
-    setSelectedCity(event.currentTarget.textContent?.toLowerCase() ?? '');
-  };
-
-  const filterByTechnologiesCitySeniority = (event: React.FormEvent): void => {
-    event.preventDefault();
-
-    if (
-      selectedCity.length === 0 &&
-      selectedSeniority.length === 0 &&
-      selectedTechnologies.length === 0
-    ) {
-      onFilterOffers(DUMMY_DATA);
-      if (closeModal !== undefined) {
-        closeModal();
-      }
-      return;
-    }
-
-    const filters: IFilters = {
-      city: selectedCity,
-      seniority: selectedSeniority,
-    };
-
-    let filteredOffers;
-
-    if (selectedTechnologies.length !== 0) {
-      filteredOffers = DUMMY_DATA.filter((data) =>
-        data.technologies.some((technology) =>
-          selectedTechnologies.includes(technology.toLowerCase())
-        )
-      );
-    } else {
-      filteredOffers = DUMMY_DATA;
-    }
-
-    const filteredOffersByAllParameters = filteredOffers.filter(
-      (data) =>
-        (data.city === filters.city || filters.city === '') &&
-        (data.seniority === filters.seniority || filters.seniority === '')
-    );
-    onFilterOffers(filteredOffersByAllParameters);
-    if (closeModal !== undefined) {
-      closeModal();
+  const submitHandler = (event: React.FormEvent): void => {
+    onFilter(event);
+    if (close) {
+      close();
     }
   };
 
   return (
-    <form onSubmit={filterByTechnologiesCitySeniority} className='bg-white'>
+    <form onSubmit={submitHandler} className='bg-white'>
       <div className='mt-3'>
         <p className='text-lg'>Technologie</p>
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3'>
           <button
             type='button'
+            id='clear-technologies'
             className={`px-3 py-1 rounded-lg mr-1 my-1 ${
               selectedTechnologies.length === 0
                 ? 'bg-green-500 text-white'
                 : 'bg-gray-200 text-black'
             }`}
-            onClick={() => setSelectedTechnologies([])}
+            onClick={changeTechnologies}
           >
             All
           </button>
@@ -122,7 +46,7 @@ const Filters: React.FC<{
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={changeTechnologiesHandler}
+              onClick={changeTechnologies}
             >
               {technology}
             </button>
@@ -134,12 +58,13 @@ const Filters: React.FC<{
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3'>
           <button
             type='button'
+            id='clear-city'
             className={`px-3 py-1 rounded-lg mr-1 my-1 ${
               selectedCity === ''
                 ? 'bg-green-500 text-white'
                 : 'bg-gray-200 text-black'
             }`}
-            onClick={() => setSelectedCity('')}
+            onClick={changeCity}
           >
             All
           </button>
@@ -152,7 +77,7 @@ const Filters: React.FC<{
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200'
               }`}
-              onClick={changeCityHandler}
+              onClick={changeCity}
             >
               {city}
             </button>
@@ -165,12 +90,13 @@ const Filters: React.FC<{
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3'>
           <button
             type='button'
+            id='clear-seniority'
             className={`px-3 py-1 rounded-lg mr-1 my-1 ${
               selectedSeniority === ''
                 ? 'bg-green-500 text-white'
                 : 'bg-gray-200 text-black'
             }`}
-            onClick={() => setSelectedSeniority('')}
+            onClick={changeSeniority}
           >
             All
           </button>
@@ -183,7 +109,7 @@ const Filters: React.FC<{
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200'
               }`}
-              onClick={changeSeniorityHandler}
+              onClick={changeSeniority}
             >
               {seniority}
             </button>

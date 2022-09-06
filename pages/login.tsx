@@ -3,22 +3,26 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import React from 'react';
+import { useRouter } from 'next/router';
 
 const Login: NextPage = () => {
   // const emailInputRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter();
 
-  const signInWithGoogle = async (): Promise<any> => {
-    await signIn('google', {
-      callbackUrl: window.location.href,
+  const signInWithGoogle = async (): Promise<void> => {
+    const data = await signIn('google', {
       redirect: false,
+      callbackUrl: '/',
     });
+    await router.push(data?.url ?? '');
   };
 
-  const signInWithGithub = async (): Promise<any> => {
-    await signIn('github', {
-      callbackUrl: window.location.href,
+  const signInWithGithub = async (): Promise<void> => {
+    const data = await signIn('github', {
       redirect: false,
+      callbackUrl: '/',
     });
+    await router.push(data?.url ?? '');
   };
 
   // const signInWithEmail = async (event: React.FormEvent): Promise<any> => {
@@ -48,7 +52,6 @@ const Login: NextPage = () => {
         <button
           className='bg-white text-black w-full max-w-[13rem] py-2 my-2 rounded-lg hover:bg-gray-300 transition-colors duration-300'
           type='button'
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={signInWithGithub}
         >
           Sign in with GitHub
@@ -56,7 +59,6 @@ const Login: NextPage = () => {
         <button
           className='bg-white text-black w-full max-w-[13rem] py-2 my-2 rounded-lg hover:bg-gray-300 transition-colors duration-300'
           type='button'
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={signInWithGoogle}
         >
           Sign in with Google

@@ -1,33 +1,36 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+generator client {
+  provider = "prisma-client-js"
 }
 
 model Offer {
-  id           String @id @default(uuid())
-  title        String
+  id           String   @id @default(uuid())
+  category     String
+  location     String
+  jobTitle     String
   companyName  String
-  address      String
+  typeOfDayJob String
+  seniority    String
+  street       String
+  building     String
+  house        String
   city         String
   minSalary    String
   maxSalary    String
-  salary       String
-  category     String
-  technologies String
-  description  String @db.VarChar(2000)
-  obligations  String @db.VarChar(500)
-  requirements String @db.VarChar(500)
-  advantage    String @db.VarChar(500)
-  benefit      String @db.VarChar(500)
+  exactSalary  String
+  technologies String[]
+  description  String   @db.VarChar(2000)
+  obligations  String   @db.VarChar(500)
+  requirements String   @db.VarChar(500)
+  advantages   String   @db.VarChar(500)
+  benefits     String   @db.VarChar(500)
 }
 
 model Account {

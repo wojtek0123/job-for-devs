@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import OfferDetails from '../../components/new-offer/OfferDetails';
@@ -13,6 +13,8 @@ import {
   ThirdStepError,
 } from '../../helpers/types';
 import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
+import { useMutation } from '@apollo/client';
+import { ADD_OFFER } from '../../graphql/queries';
 
 const stepsInfo = [
   'Szczegóły oferty',
@@ -23,6 +25,7 @@ const stepsInfo = [
 
 const NewPost: NextPage = () => {
   const [step, setStep] = useState(1);
+  const [addTask] = useMutation(ADD_OFFER);
   const [formData, setFormData] = useState<FormData>({
     category: '',
     technologies: [],
@@ -255,20 +258,41 @@ const NewPost: NextPage = () => {
     }
   };
 
-  const submitHandler = (event: React.FormEvent): void => {
+  const submitHandler = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
 
-    const x = Object.keys(formData).map(
-      (key) =>
-        (formData[key] =
-          typeof formData[key] === 'string'
-            ? formData[key].toString().trim()
-            : formData[key])
-    );
-    console.log(x);
-  };
+    // const x = Object.keys(formData).map(
+    //   (key) =>
+    //     (formData[key] =
+    //       typeof formData[key] === 'string'
+    //         ? formData[key].toString().trim()
+    //         : formData[key])
+    // );
 
-  useEffect(() => console.log(formData), [formData]);
+    await addTask({
+      variables: {
+        category: formData.category,
+        location: formData.location,
+        jobTitle: formData.jobTitle,
+        companyName: formData.companyName,
+        typeOfDayJob: formData.typeOfDayJob,
+        seniority: formData.seniority,
+        street: formData.street,
+        building: formData.building,
+        house: formData.house,
+        city: formData.city,
+        minSalary: formData.minSalary,
+        maxSalary: formData.maxSalary,
+        exactSalary: formData.exactSalary,
+        technologies: formData.technologies,
+        description: formData.description,
+        obligations: formData.obligations,
+        requirements: formData.requirements,
+        advantages: formData.advantages,
+        benefits: formData.benefits,
+      },
+    });
+  };
 
   const content = {
     1: (
@@ -346,8 +370,9 @@ const NewPost: NextPage = () => {
           </div>
         </div>
       </header>
-      <main className='w-full max-w-7xl mx-auto px-5 [1300px]:px-0'>
+      <main className='w-full max-w-7xl mx-auto px-5 2xl:px-0'>
         <form
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={submitHandler}
           className='grid grid-cols-1 md:grid-cols-2'
         >

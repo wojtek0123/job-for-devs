@@ -55,7 +55,7 @@ const OfferInfo: React.FC<{
           onChange={(event) => handleTextarea(event, Offer.Obligation)}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
-          {data.obligation.length}/500
+          {data.obligations.length}/500
         </small>
         <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
           {errorMsgs.obligation}

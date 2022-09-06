@@ -10,7 +10,7 @@ export enum Offer {
   Benefits = 'benefits',
   JobTitle = 'jobTitle',
   Description = 'description',
-  Obligation = 'obligation',
+  Obligation = 'obligations',
   Requirements = 'requirements',
   Advantages = 'advantages',
   CompanyName = 'companyName',

@@ -4,6 +4,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { ReactElement, ReactNode } from 'react';
 import { NextPage } from 'next';
 import { SessionProvider } from 'next-auth/react';
+import { FiltersContextProvider } from '../context/filters-context';
 
 const client = new ApolloClient({
   uri: 'http://localhost:3000/api/graphql',
@@ -26,7 +27,9 @@ export default function MyApp({
   return (
     <SessionProvider session={pageProps.session}>
       <ApolloProvider client={client}>
-        {getLayout(<Component {...pageProps} />)}
+        <FiltersContextProvider>
+          <>{getLayout(<Component {...pageProps} />)}</>
+        </FiltersContextProvider>
       </ApolloProvider>
     </SessionProvider>
   );
