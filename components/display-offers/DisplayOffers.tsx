@@ -53,6 +53,28 @@ const DisplayOffers: React.FC<{
     );
   }
 
+  const showTimeDifference = (offer: OfferData): string => {
+    const currentTime = new Date().getTime();
+    const createdAt = new Date(offer.createdAt).getTime();
+
+    const seconds =
+      Math.floor(currentTime / 1000) - Math.floor(createdAt / 1000);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const hours = Math.floor(seconds / 3600);
+    const days = Math.floor(hours / 24);
+    if (days >= 1) {
+      return `${days}d`;
+    }
+    if (hours >= 1) {
+      return `${hours}h`;
+    }
+    if (minutes >= 1) {
+      return `${minutes}m`;
+    }
+
+    return `${seconds}s`;
+  };
+
   return (
     <>
       {offers.map((offer) => (
@@ -60,7 +82,7 @@ const DisplayOffers: React.FC<{
           <div className='bg-gray-200 text-black rounded-lg w-full px-5 py-2 mt-5 cursor-pointer shadow-lg'>
             <div className='flex w-full items-center justify-between mb-2'>
               <h2 className='text-2xl'>{offer.jobTitle}</h2>
-              <p className='hidden sm:block'>5 d</p>
+              <p className='hidden sm:block'>{showTimeDifference(offer)}</p>
             </div>
             <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
               <div>

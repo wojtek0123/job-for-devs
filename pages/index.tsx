@@ -7,8 +7,15 @@ import DisplayOffers from '../components/display-offers/DisplayOffers';
 import FiltersContext from '../context/filters-context';
 
 const Home: NextPageWithLayout = () => {
-  const { offers, loading, error, changeTitle, enteredTitle, onFilter, refetch } =
-    useContext(FiltersContext);
+  const {
+    offers,
+    loading,
+    error,
+    changeTitle,
+    enteredTitle,
+    onFilter,
+    refetch,
+  } = useContext(FiltersContext);
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -21,8 +28,8 @@ const Home: NextPageWithLayout = () => {
   };
 
   useEffect(() => {
-    refetch()
-  }, [])
+    refetch();
+  }, []);
 
   return (
     <>

@@ -42,6 +42,7 @@ export interface OfferData {
   street: string;
   building: string;
   house: string;
+  createdAt: string;
 }
 
 export interface FormData {

@@ -2,7 +2,30 @@ import { gql } from '@apollo/client';
 import { Offer, Application } from '@prisma/client';
 import { Context } from './context';
 
+import { GraphQLScalarType, Kind } from 'graphql';
+
+export const dateScalar = new GraphQLScalarType({
+  name: 'Date',
+  description: 'Date custom scalar type',
+  serialize(value: any) {
+    // return value.getTime(); // Convert outgoing Date to integer for JSON
+    const date = new Date(value);
+    return date.toISOString();
+  },
+  parseValue(value: any) {
+    return new Date(value); // Convert incoming integer to Date
+  },
+  parseLiteral(ast) {
+    if (ast.kind === Kind.INT) {
+      return new Date(parseInt(ast.value, 10)); // Convert hard-coded AST string to integer and then to Date
+    }
+    return null; // Invalid hard-coded value (not an integer)
+  },
+});
+
 export const typeDefs = gql`
+  scalar Date
+
   type Offer {
     id: String
     category: String
@@ -24,6 +47,8 @@ export const typeDefs = gql`
     requirements: String
     advantages: String
     benefits: String
+    createdAt: Date
+    updatedAt: Date
   }
 
   type Application {
@@ -68,6 +93,7 @@ export const typeDefs = gql`
       advantages: String
       benefits: String
       userId: String
+      createdAt: Date
     ): Offer
     apply(
       email: String

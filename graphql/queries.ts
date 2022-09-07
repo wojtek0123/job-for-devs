@@ -8,6 +8,7 @@ export const GET_OFFERS = gql`
       companyName
       exactSalary
       jobTitle
+      createdAt
       location
       maxSalary
       minSalary
