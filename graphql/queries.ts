@@ -18,6 +18,14 @@ export const GET_OFFERS = gql`
   }
 `;
 
+export const GET_USER_ID = gql`
+  query UserId($email: String) {
+    userId(email: $email) {
+      id
+    }
+  }
+`;
+
 export const ADD_OFFER = gql`
   mutation AddOffer(
     $category: String
@@ -39,6 +47,7 @@ export const ADD_OFFER = gql`
     $requirements: String
     $advantages: String
     $benefits: String
+    $userId: String
   ) {
     addOffer(
       category: $category
@@ -60,27 +69,29 @@ export const ADD_OFFER = gql`
       requirements: $requirements
       advantages: $advantages
       benefits: $benefits
+      userId: $userId
     ) {
       id
-      advantages
-      benefits
-      building
-      category
-      city
-      companyName
-      description
-      exactSalary
-      house
-      jobTitle
-      location
-      maxSalary
-      minSalary
-      obligations
-      requirements
-      seniority
-      street
-      technologies
-      typeOfDayJob
+    }
+  }
+`;
+
+export const ADD_APPLICATION = gql`
+  mutation Apply(
+    $email: String
+    $name: String
+    $message: String
+    $userId: String
+    $offerId: String
+  ) {
+    apply(
+      email: $email
+      name: $name
+      message: $message
+      userId: $userId
+      offerId: $offerId
+    ) {
+      id
     }
   }
 `;

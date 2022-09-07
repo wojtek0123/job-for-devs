@@ -18,6 +18,7 @@ interface IFiltersContext {
   offers: OfferData[] | undefined;
   loading: boolean;
   error: Error | undefined;
+  refetch: () => void;
   changeTechnologies: (event: React.FormEvent<HTMLButtonElement>) => void;
   changeSeniority: (event: React.FormEvent<HTMLButtonElement>) => void;
   changeCity: (event: React.FormEvent<HTMLButtonElement>) => void;
@@ -33,6 +34,7 @@ const FiltersContext = React.createContext<IFiltersContext>({
   offers: [],
   loading: false,
   error: undefined,
+  refetch: () => {},
   changeTechnologies: () => {},
   changeSeniority: () => {},
   changeCity: () => {},
@@ -43,7 +45,7 @@ const FiltersContext = React.createContext<IFiltersContext>({
 export const FiltersContextProvider: React.FC<{
   children: JSX.Element;
 }> = ({ children }) => {
-  const { data, loading, error } = useQuery<{ offers: OfferData[] }>(
+  const { data, loading, error, refetch } = useQuery<{ offers: OfferData[] }>(
     GET_OFFERS
   );
   const [offers, setOffers] = useState<OfferData[]>([]);
@@ -146,7 +148,8 @@ export const FiltersContextProvider: React.FC<{
     const filteredOffersByAllParameters = filteredOffers.filter(
       (offer) =>
         (offer.city.toLowerCase() === filters.city || filters.city === '') &&
-        (offer.seniority.toLowerCase() === filters.seniority || filters.seniority === '') &&
+        (offer.seniority.toLowerCase() === filters.seniority ||
+          filters.seniority === '') &&
         (offer.jobTitle.toLowerCase().includes(filters.jobTitle) ||
           filters.jobTitle === '')
     );
@@ -168,6 +171,7 @@ export const FiltersContextProvider: React.FC<{
     offers,
     loading,
     error,
+    refetch,
     changeTechnologies: changeTechnologiesHandler,
     changeCity: changeCityHandler,
     changeSeniority: changeSeniorityHandler,

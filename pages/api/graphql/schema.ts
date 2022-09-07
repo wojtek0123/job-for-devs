@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { Offer } from '@prisma/client';
+import { Offer, Application } from '@prisma/client';
 import { Context } from './context';
 
 export const typeDefs = gql`
@@ -26,8 +26,24 @@ export const typeDefs = gql`
     benefits: String
   }
 
+  type Application {
+    id: String
+    name: String
+    email: String
+    message: String
+  }
+
+  type User {
+    id: String
+    name: String
+    email: String
+    offers: [Offer]
+    applications: [Application]
+  }
+
   type Query {
     offers: [Offer]
+    userId(email: String): User
   }
 
   type Mutation {
@@ -51,7 +67,15 @@ export const typeDefs = gql`
       requirements: String
       advantages: String
       benefits: String
+      userId: String
     ): Offer
+    apply(
+      email: String
+      name: String
+      message: String
+      offerId: String
+      userId: String
+    ): Application
   }
 `;
 
@@ -59,6 +83,9 @@ export const resolvers = {
   Query: {
     offers: (_parent: any, _args: any, context: Context) => {
       return context.prisma.offer.findMany();
+    },
+    userId: (_parent: any, args: { email: string }, context: Context) => {
+      return context.prisma.user.findUnique({ where: { email: args.email } });
     },
   },
   Mutation: {
@@ -84,6 +111,18 @@ export const resolvers = {
           requirements: args.requirements,
           advantages: args.advantages,
           benefits: args.benefits,
+          userId: args.userId,
+        },
+      });
+    },
+    apply: (_parent: any, args: Application, context: Context) => {
+      return context.prisma.application.create({
+        data: {
+          email: args.email,
+          name: args.name,
+          message: args.message,
+          offerId: args.offerId,
+          userId: args.userId,
         },
       });
     },

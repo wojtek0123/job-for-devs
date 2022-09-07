@@ -11,7 +11,7 @@ generator client {
 }
 
 model Offer {
-  id           String   @id @default(uuid())
+  id           String        @id @default(uuid())
   category     String
   location     String
   jobTitle     String
@@ -26,11 +26,25 @@ model Offer {
   maxSalary    String
   exactSalary  String
   technologies String[]
-  description  String   @db.VarChar(2000)
-  obligations  String   @db.VarChar(500)
-  requirements String   @db.VarChar(500)
-  advantages   String   @db.VarChar(500)
-  benefits     String   @db.VarChar(500)
+  description  String        @db.VarChar(2000)
+  obligations  String        @db.VarChar(500)
+  requirements String        @db.VarChar(500)
+  advantages   String        @db.VarChar(500)
+  benefits     String        @db.VarChar(500)
+  application  Application[]
+  User         User          @relation(fields: [userId], references: [id])
+  userId       String
+}
+
+model Application {
+  id      String  @id @default(uuid())
+  email   String
+  name    String  @db.VarChar(100)
+  message String  @db.VarChar(500)
+  user    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+  offer   Offer   @relation(fields: [offerId], references: [id])
+  offerId String
 }
 
 model Account {
@@ -64,13 +78,17 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   session       Session[]
+  applications  Application[]
+  offers        Offer[]
+
+  @@unique([id])
 }
 
 model VerificationToken {

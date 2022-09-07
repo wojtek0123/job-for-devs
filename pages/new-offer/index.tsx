@@ -1,4 +1,4 @@
-import { NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
@@ -15,6 +15,9 @@ import {
 import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
 import { useMutation } from '@apollo/client';
 import { ADD_OFFER } from '../../graphql/queries';
+import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/react';
+import { context as graphContext } from '../api/graphql/context';
 
 const stepsInfo = [
   'Szczegóły oferty',
@@ -23,9 +26,42 @@ const stepsInfo = [
   'Podgląd',
 ];
 
-const NewPost: NextPage = () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession({ req: context.req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+      props: {},
+    };
+  }
+
+  const user = await graphContext.prisma.user.findUnique({
+    where: { email: session.user?.email ?? '' },
+  });
+
+  return {
+    props: {
+      user,
+    },
+  };
+};
+
+interface SessionProps {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+const NewPost: NextPage<SessionProps> = (props) => {
+  const router = useRouter();
   const [step, setStep] = useState(1);
-  const [addTask] = useMutation(ADD_OFFER);
+  const [addOffer] = useMutation(ADD_OFFER);
   const [formData, setFormData] = useState<FormData>({
     category: '',
     technologies: [],
@@ -269,29 +305,39 @@ const NewPost: NextPage = () => {
     //         : formData[key])
     // );
 
-    await addTask({
-      variables: {
-        category: formData.category,
-        location: formData.location,
-        jobTitle: formData.jobTitle,
-        companyName: formData.companyName,
-        typeOfDayJob: formData.typeOfDayJob,
-        seniority: formData.seniority,
-        street: formData.street,
-        building: formData.building,
-        house: formData.house,
-        city: formData.city,
-        minSalary: formData.minSalary,
-        maxSalary: formData.maxSalary,
-        exactSalary: formData.exactSalary,
-        technologies: formData.technologies,
-        description: formData.description,
-        obligations: formData.obligations,
-        requirements: formData.requirements,
-        advantages: formData.advantages,
-        benefits: formData.benefits,
-      },
-    });
+    try {
+      const newOffer = await addOffer({
+        variables: {
+          category: formData.category,
+          location: formData.location,
+          jobTitle: formData.jobTitle,
+          companyName: formData.companyName,
+          typeOfDayJob: formData.typeOfDayJob,
+          seniority: formData.seniority,
+          street: formData.street,
+          building: formData.building,
+          house: formData.house,
+          city: formData.city,
+          minSalary: formData.minSalary,
+          maxSalary: formData.maxSalary,
+          exactSalary: formData.exactSalary,
+          technologies: formData.technologies,
+          description: formData.description,
+          obligations: formData.obligations,
+          requirements: formData.requirements,
+          advantages: formData.advantages,
+          benefits: formData.benefits,
+          userId: props.user.id
+        },
+      });
+      if (newOffer.errors) {
+        throw new Error('Something went wrong');
+      }
+      const offerId: string = await newOffer.data.addOffer.id;
+      await router.push(`/offer/${offerId}`);
+    } catch (error: any) {
+      console.error(error);
+    }
   };
 
   const content = {

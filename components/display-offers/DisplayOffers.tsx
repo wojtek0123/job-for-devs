@@ -56,7 +56,7 @@ const DisplayOffers: React.FC<{
   return (
     <>
       {offers.map((offer) => (
-        <Link key={offer.id} href={`/details/${offer.id}`}>
+        <Link key={offer.id} href={`/offer/${offer.id}`}>
           <div className='bg-gray-200 text-black rounded-lg w-full px-5 py-2 mt-5 cursor-pointer shadow-lg'>
             <div className='flex w-full items-center justify-between mb-2'>
               <h2 className='text-2xl'>{offer.jobTitle}</h2>

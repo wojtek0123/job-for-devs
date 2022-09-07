@@ -5,6 +5,11 @@ import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDeta
 import { GetStaticPaths, GetStaticProps } from 'next';
 import prisma from '../../lib/prisma';
 import { OfferData } from '../../helpers/types';
+import { useMutation, useQuery } from '@apollo/client';
+import { ADD_APPLICATION, GET_USER_ID } from '../../graphql/queries';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { context as graphContext } from '../api/graphql/context';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const offersId = await prisma.offer.findMany({
@@ -31,13 +36,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
     };
   }
 
-  const offer: OfferData | null = await prisma.offer.findUnique({
+  const offer: OfferData | null = await graphContext.prisma.offer.findUnique({
     where: { id: params.id?.toString() },
   });
 
   if (offer) {
     return {
-      props: { offer: JSON.parse(JSON.stringify(offer)) },
+      props: {
+        offer: JSON.parse(JSON.stringify(offer)),
+      },
     };
   }
 
@@ -48,9 +55,24 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-const JobOfferDetails: NextPageWithLayout<{ offer: OfferData }> = (props: {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+const JobOfferDetails: NextPageWithLayout<{
   offer: OfferData;
-}) => {
+  user: User;
+}> = (props: { offer: OfferData; user: User }) => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const { data } = useQuery(GET_USER_ID, {
+    variables: {
+      email: session?.user?.email ?? '',
+    },
+  });
+  const [apply] = useMutation(ADD_APPLICATION);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const [message, setMessage] = useState('');
@@ -63,7 +85,7 @@ const JobOfferDetails: NextPageWithLayout<{ offer: OfferData }> = (props: {
     setMessage(event.target.value);
   };
 
-  const submitHandler = (event: React.FormEvent): void => {
+  const submitHandler = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
     if (nameRef.current === null || emailRef.current === null) return;
 
@@ -93,17 +115,39 @@ const JobOfferDetails: NextPageWithLayout<{ offer: OfferData }> = (props: {
       return;
     }
 
-    const application = {
-      name: enteredName,
-      email: enteredEmail,
-      message: message.trim(),
-    };
+    try {
+      if (!session) {
+        console.log('Nie zalogowany');
+        await apply({
+          variables: {
+            name: enteredName,
+            email: enteredEmail,
+            message: message.trim(),
+            offerId: router.query.id,
+          },
+        });
+      }
+      if (session) {
+        console.log('Zalogowany');
+        await apply({
+          variables: {
+            name: enteredName,
+            email: enteredEmail,
+            message: message.trim(),
+            offerId: router.query.id,
+            userId: data.userId.id,
+          },
+        });
+      }
 
-    nameRef.current.value = '';
-    emailRef.current.value = '';
-    setMessage('');
-
-    console.log(application);
+      console.log('You applied');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      nameRef.current.value = '';
+      emailRef.current.value = '';
+      setMessage('');
+    }
   };
 
   return (
@@ -123,6 +167,7 @@ const JobOfferDetails: NextPageWithLayout<{ offer: OfferData }> = (props: {
                 placeholder='Imie i nazwisko'
                 className='p-3 rounded-lg outline-green-500 min-w-max'
                 ref={nameRef}
+                maxLength={100}
                 onFocus={() => setNameError('')}
               />
               <small className='text-red-600 h-4'>{nameError}</small>
@@ -134,6 +179,7 @@ const JobOfferDetails: NextPageWithLayout<{ offer: OfferData }> = (props: {
                 placeholder='Twój email'
                 className='p-3 rounded-lg outline-green-500 min-w-max'
                 ref={emailRef}
+                maxLength={100}
                 onFocus={() => setEmailError('')}
               />
               <small className='text-red-600 h-4'>{emailError}</small>

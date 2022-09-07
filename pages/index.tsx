@@ -1,13 +1,13 @@
 import type { NextPageWithLayout } from './_app';
 import Layout from '../components/layouts/layout';
-import React, { ReactElement, useContext, useState } from 'react';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import Modal from '../components/modal/Modal';
 import Filters from '../components/filters/Filters';
 import DisplayOffers from '../components/display-offers/DisplayOffers';
 import FiltersContext from '../context/filters-context';
 
 const Home: NextPageWithLayout = () => {
-  const { offers, loading, error, changeTitle, enteredTitle, onFilter } =
+  const { offers, loading, error, changeTitle, enteredTitle, onFilter, refetch } =
     useContext(FiltersContext);
 
   const [showFilters, setShowFilters] = useState(false);
@@ -19,6 +19,10 @@ const Home: NextPageWithLayout = () => {
   const filterOffers = (): void => {
     setShowFilters(false);
   };
+
+  useEffect(() => {
+    refetch()
+  }, [])
 
   return (
     <>
