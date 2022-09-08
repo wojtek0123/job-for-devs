@@ -6,10 +6,15 @@ import StepsContext, { stepsInfo } from '../../context/steps-context';
 const currentYear = new Date().getFullYear();
 
 const NewOfferLayout: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const { step } = useContext(StepsContext);
+  const { step, jumpToStep } = useContext(StepsContext);
 
   const renderStepsDetails = stepsInfo.map((stepInfo, index) => (
-    <div className='flex items-center' key={index}>
+    <button
+      type='button'
+      className='flex items-center'
+      key={index}
+      // onClick={() => jumpToStep(index + 1)}
+    >
       {index !== 0 && (
         <div className={`mx-3 w-3 h-[0.1rem] bg-gray-200 xl:mx-5`} />
       )}
@@ -27,7 +32,7 @@ const NewOfferLayout: React.FC<{ children: JSX.Element }> = ({ children }) => {
       >
         {stepInfo}
       </p>
-    </div>
+    </button>
   ));
 
   return (
@@ -39,7 +44,7 @@ const NewOfferLayout: React.FC<{ children: JSX.Element }> = ({ children }) => {
           name='description'
           content='App to help devs find a job or for employers to find a employees'
         />
-        <link rel='icon' href='/icons/looking-for-job.svg' />
+        <link rel='icon' href='/code.svg' />
       </Head>
 
       <header className='bg-white p-5 flex items-center justify-center w-full text-black selection:bg-green-500 selection:text-white border-b-2 border-gray-200'>

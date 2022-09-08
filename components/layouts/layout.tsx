@@ -26,7 +26,7 @@ const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
           name='description'
           content='App to help devs find a job or for employers to find a employees'
         />
-        <link rel='icon' href='/icons/looking-for-job.svg' />
+        <link rel='icon' href='/code.svg' />
       </Head>
 
       <header className='bg-white p-5 flex items-center justify-center w-full text-black selection:bg-green-500 selection:text-white border-b-2 border-gray-200'>

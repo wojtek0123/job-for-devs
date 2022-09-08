@@ -75,7 +75,7 @@ const Login: NextPage = () => {
           name='description'
           content='App to help devs find a job or for employers to find a employees'
         />
-        <link rel='icon' href='/icons/looking-for-job.svg' />
+        <link rel='icon' href='/code.svg' />
       </Head>
       <div className='flex flex-col bg-gray-200 p-10 text-black border border-gray-200 sm:rounded-lg absolute inset-0 justify-center items-center md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 max-w-md shadow-xl'>
         <Link href='/'>
