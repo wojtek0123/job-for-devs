@@ -1,7 +1,6 @@
-import { GetServerSideProps, NextPage } from 'next';
-import React, { useState } from 'react';
+import { GetServerSideProps } from 'next';
+import React, { ReactElement, useContext, useState } from 'react';
 import Link from 'next/link';
-import Head from 'next/head';
 import OfferDetails from '../../components/new-offer/OfferDetails';
 import OfferInfo from '../../components/new-offer/OfferInfo';
 import ComapnyInfo from '../../components/new-offer/CompanyInfo';
@@ -18,13 +17,9 @@ import { ADD_OFFER } from '../../graphql/queries';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 import { context as graphContext } from '../api/graphql/context';
-
-const stepsInfo = [
-  'Szczegóły oferty',
-  'Opis oferty',
-  'Dane administracyjne',
-  'Podgląd',
-];
+import StepsContext, { stepsInfo } from '../../context/steps-context';
+import { NextPageWithLayout } from '../_app';
+import NewOfferLayout from '../../components/layouts/new-offer-layout';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession({ req: context.req });
@@ -58,9 +53,9 @@ interface SessionProps {
   };
 }
 
-const NewPost: NextPage<SessionProps> = (props) => {
+const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
+  const { step, nextStep, previousStep } = useContext(StepsContext);
   const router = useRouter();
-  const [step, setStep] = useState(1);
   const [addOffer] = useMutation(ADD_OFFER);
   const [formData, setFormData] = useState<FormData>({
     category: '',
@@ -171,18 +166,8 @@ const NewPost: NextPage<SessionProps> = (props) => {
     });
   };
 
-  const onPreviousStep = (): void => {
-    if (step === 1) {
-      return;
-    }
-    setStep((prevState) => prevState - 1);
-  };
-
   const onNextStep = (): void => {
     let counter = 0;
-    if (step === stepsInfo.length) {
-      return;
-    }
 
     if (step === 1) {
       for (const key in formDataErrorsFirstStep) {
@@ -290,7 +275,7 @@ const NewPost: NextPage<SessionProps> = (props) => {
     }
 
     if (counter === 0) {
-      setStep((prevState) => prevState + 1);
+      nextStep();
     }
   };
 
@@ -327,7 +312,7 @@ const NewPost: NextPage<SessionProps> = (props) => {
           requirements: formData.requirements,
           advantages: formData.advantages,
           benefits: formData.benefits,
-          userId: props.user.id
+          userId: props.user.id,
         },
       });
       if (newOffer.errors) {
@@ -335,7 +320,7 @@ const NewPost: NextPage<SessionProps> = (props) => {
       }
       const offerId: string = await newOffer.data.addOffer.id;
       await router.push(`/offer/${offerId}`);
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
     }
   };
@@ -368,109 +353,58 @@ const NewPost: NextPage<SessionProps> = (props) => {
     4: <DisplayOfferDetails offer={formData} review={true} />,
   }[step];
 
-  const renderStepsDetails = stepsInfo.map((stepInfo, index) => (
-    <div className='flex items-center' key={index}>
-      {index !== 0 && (
-        <div className={`mx-3 w-3 h-[0.1rem] bg-gray-200 xl:mx-5`} />
-      )}
-      <span
-        className={`flex items-center justify-center h-8 w-8 rounded-full text-white ${
-          step - 1 === index ? 'bg-green-500' : 'bg-gray-200'
-        }`}
-      >
-        {index + 1}
-      </span>
-      <p
-        className={`ml-2 text-base ${
-          step - 1 === index ? 'text-black' : 'text-gray-200'
-        }`}
-      >
-        {stepInfo}
-      </p>
-    </div>
-  ));
-
   return (
-    <>
-      <Head>
-        <title>Job for devs</title>
-        <meta charSet='UTF-8' />
-        <meta
-          name='description'
-          content='App to help devs find a job or for employers to find a employees'
-        />
-        <link rel='icon' href='/icons/looking-for-job.svg' />
-      </Head>
-
-      <header className='bg-white p-5 flex items-center justify-center w-full text-black selection:bg-green-500 selection:text-white border-b-2 border-gray-200'>
-        <div className='max-w-7xl w-full flex justify-between'>
-          <Link href='/'>
-            <h1 className='text-3xl min-w-max cursor-pointer'>Job for Devs</h1>
-          </Link>
-          <div className='flex flex-col items-end w-full lg:hidden'>
-            <p>{stepsInfo[step - 1]}</p>
-            <p> Krok {step} z 4</p>
-          </div>
-          <div className='hidden w-full lg:flex lg:items-center justify-end'>
-            {renderStepsDetails}
-          </div>
+    <form onSubmit={submitHandler} className='grid grid-cols-1 md:grid-cols-2'>
+      {content}
+      {step !== stepsInfo.length && (
+        <div className='col-span-2 flex items-center'>
+          *<span className='w-[0.35rem] h-[0.05rem] mx-1 bg-black block'></span>
+          pole wymagane
         </div>
-      </header>
-      <main className='w-full max-w-7xl mx-auto px-5 2xl:px-0'>
-        <form
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={submitHandler}
-          className='grid grid-cols-1 md:grid-cols-2'
-        >
-          {content}
-          {step !== stepsInfo.length && (
-            <div className='col-span-2 flex items-center'>
-              *
-              <span className='w-[0.35rem] h-[0.05rem] mx-1 bg-black block'></span>
-              pole wymagane
-            </div>
-          )}
-          <div
-            className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
+      )}
+      <div
+        className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
+      >
+        {step === 1 && (
+          <Link href='/'>
+            <a className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center hover:bg-slate-200 transition-colors duration-300  border border-gray-200'>
+              <span className=''>powrót</span>
+            </a>
+          </Link>
+        )}
+        {step !== 1 && (
+          <button
+            type='button'
+            onClick={previousStep}
+            className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 hover:bg-slate-200 transition-colors duration-300 border border-gray-200'
           >
-            {step === 1 && (
-              <Link href='/'>
-                <a className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center hover:bg-slate-200 transition-colors duration-300  border border-gray-200'>
-                  <span className=''>powrót</span>
-                </a>
-              </Link>
-            )}
-            {step !== 1 && (
-              <button
-                type='button'
-                onClick={onPreviousStep}
-                className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 hover:bg-slate-200 transition-colors duration-300 border border-gray-200'
-              >
-                wstecz
-              </button>
-            )}
-            {step !== stepsInfo.length && (
-              <button
-                type='button'
-                onClick={onNextStep}
-                className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
-              >
-                dalej
-              </button>
-            )}
-            {step === stepsInfo.length && (
-              <button
-                type='submit'
-                className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
-              >
-                Opublikuj
-              </button>
-            )}
-          </div>
-        </form>
-      </main>
-    </>
+            wstecz
+          </button>
+        )}
+        {step !== stepsInfo.length && (
+          <button
+            type='button'
+            onClick={onNextStep}
+            className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
+          >
+            dalej
+          </button>
+        )}
+        {step === stepsInfo.length && (
+          <button
+            type='submit'
+            className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
+          >
+            Opublikuj
+          </button>
+        )}
+      </div>
+    </form>
   );
 };
 
-export default NewPost;
+NewOffer.getLayout = function getLayout(page: ReactElement) {
+  return <NewOfferLayout>{page}</NewOfferLayout>;
+};
+
+export default NewOffer;

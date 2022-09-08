@@ -5,6 +5,7 @@ import { ReactElement, ReactNode } from 'react';
 import { NextPage } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import { FiltersContextProvider } from '../context/filters-context';
+import { StepsContextProvider } from '../context/steps-context';
 
 const client = new ApolloClient({
   uri: 'http://localhost:3000/api/graphql',
@@ -28,7 +29,9 @@ export default function MyApp({
     <SessionProvider session={pageProps.session}>
       <ApolloProvider client={client}>
         <FiltersContextProvider>
-          <>{getLayout(<Component {...pageProps} />)}</>
+          <StepsContextProvider>
+            <>{getLayout(<Component {...pageProps} />)}</>
+          </StepsContextProvider>
         </FiltersContextProvider>
       </ApolloProvider>
     </SessionProvider>
