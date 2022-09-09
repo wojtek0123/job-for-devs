@@ -15,8 +15,8 @@ const DisplayOfferDetails: React.FC<{
 
   const displayAddress =
     offer.house === ''
-      ? `${offer.street} ${offer.building}, ${offer.city}`
-      : `${offer.street} ${offer.building}/${offer.house}, {offer.city}`;
+      ? `${offer.street.toString()} ${offer.building.toString()}, ${offer.city}`
+      : `${offer.street.toString()} ${offer.building.toString()}/${offer.house.toString()}, {offer.city}`;
 
   return (
     <div className='max-w-7xl mx-auto w-full mt-5 col-span-2'>
@@ -131,13 +131,13 @@ const DisplayOfferDetails: React.FC<{
           <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
             Twoje podstawowe zadania
           </p>
-          <DisplayAsTextOrList text={offer.obligations} />
+          <DisplayAsTextOrList text={offer.obligations.toString()} />
         </div>
         <hr className='hidden md:block mb-3 col-span-2' />
 
         <div className='mt-3 flex flex-col col-span-2 md:grid md:grid-cols-2 md:mb-6'>
           <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>Wymagania</p>
-          <DisplayAsTextOrList text={offer.requirements} />
+          <DisplayAsTextOrList text={offer.requirements.toString()} />
         </div>
         <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -147,7 +147,7 @@ const DisplayOfferDetails: React.FC<{
               <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
                 Dobrze mieć
               </p>
-              <DisplayAsTextOrList text={offer.advantages} />
+              <DisplayAsTextOrList text={offer.advantages.toString()} />
             </div>
             <hr className='hidden md:block mb-3 col-span-2' />
           </>
@@ -158,7 +158,7 @@ const DisplayOfferDetails: React.FC<{
             <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
               Co oferujemy
             </p>
-            <DisplayAsTextOrList text={offer.benefits} />
+            <DisplayAsTextOrList text={offer.benefits.toString()} />
           </div>
         )}
       </div>

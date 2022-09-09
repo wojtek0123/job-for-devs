@@ -37,16 +37,6 @@ const NewOfferLayout: React.FC<{ children: JSX.Element }> = ({ children }) => {
 
   return (
     <>
-      <Head>
-        <title>Job for devs</title>
-        <meta charSet='UTF-8' />
-        <meta
-          name='description'
-          content='App to help devs find a job or for employers to find a employees'
-        />
-        <link rel='icon' href='/code.svg' />
-      </Head>
-
       <header className='bg-white p-5 flex items-center justify-center w-full text-black selection:bg-green-500 selection:text-white border-b-2 border-gray-200'>
         <div className='max-w-7xl w-full flex justify-between'>
           <Link href='/'>

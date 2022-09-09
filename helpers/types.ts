@@ -20,7 +20,7 @@ export enum Offer {
   HouseNumber = 'house',
 }
 
-export interface OfferData {
+export interface OfferDataDetails {
   [index: string]: string | string[];
   id: string;
   category: string;
@@ -43,6 +43,22 @@ export interface OfferData {
   building: string;
   house: string;
   createdAt: string;
+}
+
+export interface OfferData {
+  [index: string]: string | string[];
+  id: string;
+  city: string;
+  companyName: string;
+  exactSalary: string;
+  jobTitle: string;
+  createdAt: string;
+  location: string;
+  maxSalary: string;
+  minSalary: string;
+  technologies: string[];
+  typeOfDayJob: string;
+  seniority: string;
 }
 
 export interface FormData {

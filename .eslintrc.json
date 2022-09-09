@@ -29,6 +29,9 @@
       "error",
       {
         "checksVoidReturn": false
+      },
+      {
+        "ignoreIIFE": true
       }
     ]
   }

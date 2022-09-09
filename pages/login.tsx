@@ -68,15 +68,6 @@ const Login: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Job for devs</title>
-        <meta charSet='UTF-8' />
-        <meta
-          name='description'
-          content='App to help devs find a job or for employers to find a employees'
-        />
-        <link rel='icon' href='/code.svg' />
-      </Head>
       <div className='flex flex-col bg-gray-200 p-10 text-black border border-gray-200 sm:rounded-lg absolute inset-0 justify-center items-center md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 max-w-md shadow-xl'>
         <Link href='/'>
           <a className='absolute top-4 left-4 inline-flex items-center bg-white border text-black shadow px-4 py-1 rounded-lg ml-2 xl:ml-0 text-lg hover:bg-gray-300 transition-colors duration-300'>
@@ -117,7 +108,7 @@ const Login: NextPage = () => {
               placeholder='email@przyklad.com'
               ref={emailInputRef}
               className='rounded-lg px-3 py-2  w-full max-w-[13rem] text-black'
-              // autoComplete='off'
+              autoComplete='off'
             />
             <button
               type='submit'

@@ -32,7 +32,7 @@ export const StepsContextProvider: React.FC<{ children: JSX.Element }> = ({
   const [step, setStep] = useState(1);
 
   const jumpToStep = (step: number): void => {
-    if (step < minStepInForm || step > maxStepInForm) {
+    if (step < minStepInForm || step >= maxStepInForm) {
       return;
     }
     setStep(step);
