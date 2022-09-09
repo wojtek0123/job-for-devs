@@ -105,6 +105,7 @@ export const typeDefs = gql`
       userId: String
     ): Application
     changeName(userId: String, name: String): User
+    deleteOffer(id: String): Offer
   }
 `;
 
@@ -183,6 +184,14 @@ export const resolvers = {
       return context.prisma.user.update({
         where: { id: args.userId },
         data: { name: args.name },
+      });
+    },
+    deleteOffer: (_parent: any, args: { id: string }, context: Context) => {
+      return context.prisma.offer.delete({
+        where: { id: args.id },
+        include: {
+          application: true,
+        },
       });
     },
   },

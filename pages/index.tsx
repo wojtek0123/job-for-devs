@@ -71,12 +71,17 @@ const Home: NextPageWithLayout = () => {
       <Modal show={showFilters} close={filterOffers} />
       {!showFilters && (
         <div className='px-5 2xl:px-0 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[400px_1fr] lg:gap-3'>
-          <div className='hidden lg:block p-5 lg:p-0'>
+          <aside className='hidden lg:block p-5 lg:p-0'>
             <Filters />
-          </div>
-          <div className='lg:col-start-2 lg:col-end-3'>
-            <DisplayOffers error={error} loading={loading} offers={offers} />
-          </div>
+          </aside>
+          <section className='lg:col-start-2 lg:col-end-3'>
+            <DisplayOffers
+              error={error}
+              loading={loading}
+              offers={offers}
+              showUtilities={false}
+            />
+          </section>
         </div>
       )}
     </>

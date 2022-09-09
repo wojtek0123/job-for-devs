@@ -33,7 +33,7 @@ model Offer {
   benefits     String        @db.VarChar(500)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime?     @updatedAt
-  application  Application[]
+  application  Application[] // add s at the end
   User         User          @relation(fields: [userId], references: [id])
   userId       String
 }
@@ -45,7 +45,7 @@ model Application {
   message String  @db.VarChar(500)
   user    User?   @relation(fields: [userId], references: [id])
   userId  String?
-  offer   Offer   @relation(fields: [offerId], references: [id])
+  offer   Offer   @relation(fields: [offerId], references: [id], onDelete: Cascade)
   offerId String
 }
 

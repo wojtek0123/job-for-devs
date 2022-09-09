@@ -107,3 +107,8 @@ export interface ThirdStepError {
   street: string;
   building: string;
 }
+
+export interface INotification {
+  message: string;
+  isError: boolean;
+}

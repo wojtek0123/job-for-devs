@@ -104,3 +104,11 @@ export const EDIT_NAME = gql`
     }
   }
 `;
+
+export const DELETE_OFFER = gql`
+  mutation DeleteOffer($id: String) {
+    deleteOffer(id: $id) {
+      id
+    }
+  }
+`;
