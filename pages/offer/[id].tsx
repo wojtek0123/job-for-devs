@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useState } from 'react';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import Layout from '../../components/layouts/layout';
 import { NextPageWithLayout } from '../_app';
 import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
@@ -36,7 +36,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     };
   }
 
-  const offer: OfferData | null = await graphContext.prisma.offer.findUnique({
+  const offer = await graphContext.prisma.offer.findUnique({
     where: { id: params.id?.toString() },
   });
 
@@ -55,17 +55,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
 const JobOfferDetails: NextPageWithLayout<{
   offer: OfferData;
-  user: User;
-}> = (props: { offer: OfferData; user: User }) => {
-  const { data: session } = useSession();
+}> = (props: { offer: OfferData }) => {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const { data } = useQuery(GET_USER_ID, {
     variables: {
@@ -73,24 +66,24 @@ const JobOfferDetails: NextPageWithLayout<{
     },
   });
   const [apply] = useMutation(ADD_APPLICATION);
-  const nameRef = useRef<HTMLInputElement | null>(null);
-  const emailRef = useRef<HTMLInputElement | null>(null);
-  const [message, setMessage] = useState('');
+  const [nameInput, setNameInput] = useState('');
+  const [emailInput, setEmailInput] = useState('');
+  const [messageInput, setMessageInput] = useState('');
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
 
   const changeMessageHandler = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ): void => {
-    setMessage(event.target.value);
+    setMessageInput(event.target.value);
   };
 
   const submitHandler = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
-    if (nameRef.current === null || emailRef.current === null) return;
 
-    const enteredName = nameRef.current.value.trim();
-    const enteredEmail = emailRef.current.value.trim();
+    const enteredName = nameInput.trim();
+    const enteredEmail = emailInput.trim();
+    const enteredMessage = messageInput.trim();
 
     if (enteredName === '') {
       setNameError('Proszę uzupełnić to pole');
@@ -108,9 +101,6 @@ const JobOfferDetails: NextPageWithLayout<{
       setEmailError('');
     }
 
-    console.log(emailError);
-    console.log(nameError);
-
     if (emailError.length !== 0 || nameError.length !== 0) {
       return;
     }
@@ -122,7 +112,7 @@ const JobOfferDetails: NextPageWithLayout<{
           variables: {
             name: enteredName,
             email: enteredEmail,
-            message: message.trim(),
+            message: enteredMessage,
             offerId: router.query.id,
           },
         });
@@ -133,7 +123,7 @@ const JobOfferDetails: NextPageWithLayout<{
           variables: {
             name: enteredName,
             email: enteredEmail,
-            message: message.trim(),
+            message: enteredMessage,
             offerId: router.query.id,
             userId: data.userId.id,
           },
@@ -144,11 +134,30 @@ const JobOfferDetails: NextPageWithLayout<{
     } catch (error) {
       console.error(error);
     } finally {
-      nameRef.current.value = '';
-      emailRef.current.value = '';
-      setMessage('');
+      if (status !== 'authenticated') {
+        setEmailInput('');
+        setNameInput('');
+      }
+      setMessageInput('');
     }
   };
+
+  const changeNameInput = (event: React.FocusEvent<HTMLInputElement>): void => {
+    setNameInput(event.target.value);
+  };
+
+  const changeEmailInput = (
+    event: React.FocusEvent<HTMLInputElement>
+  ): void => {
+    setEmailInput(event.target.value);
+  };
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      setEmailInput(session.user?.email ?? '');
+      setNameInput(session.user?.name ?? '');
+    }
+  }, [session?.user]);
 
   return (
     <div className='max-w-7xl mx-auto w-full mt-5'>
@@ -166,9 +175,9 @@ const JobOfferDetails: NextPageWithLayout<{
                 title='name'
                 placeholder='Imie i nazwisko'
                 className='p-3 rounded-lg outline-green-500 min-w-max'
-                ref={nameRef}
                 maxLength={100}
-                onFocus={() => setNameError('')}
+                value={nameInput}
+                onChange={changeNameInput}
               />
               <small className='text-red-600 h-4'>{nameError}</small>
             </div>
@@ -178,9 +187,9 @@ const JobOfferDetails: NextPageWithLayout<{
                 title='email'
                 placeholder='Twój email'
                 className='p-3 rounded-lg outline-green-500 min-w-max'
-                ref={emailRef}
                 maxLength={100}
-                onFocus={() => setEmailError('')}
+                value={emailInput}
+                onChange={changeEmailInput}
               />
               <small className='text-red-600 h-4'>{emailError}</small>
             </div>
@@ -191,10 +200,10 @@ const JobOfferDetails: NextPageWithLayout<{
             className='p-3 rounded-lg my-1 max-h-52 min-h-[13rem] resize-none outline-green-500 w-full'
             maxLength={500}
             onChange={changeMessageHandler}
-            value={message}
+            value={messageInput}
           />
           <small className='flex w-full justify-end my-1 text-black text-left'>
-            {message.length}/500
+            {messageInput.length}/500
           </small>
           <div className='w-full flex justify-start'>
             <input
