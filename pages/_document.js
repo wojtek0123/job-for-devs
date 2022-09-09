@@ -13,7 +13,7 @@ export default function Document() {
         />
         <link rel='icon' href='/code.svg' />
       </Head>
-      <body className='overflow-x-hidden'>
+      <body className='overflow-x-hidden scrollbar-thumb-green-500 scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-rounded-lg'>
         <Main />
         <NextScript />
         <div id='modal-root'></div>
