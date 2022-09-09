@@ -1,5 +1,5 @@
 const DisplayAsTextOrList: React.FC<{ text: string }> = ({ text }) => {
-  if (text.split('\n').length <= 1) {
+  if (text.trim().split('\n').length <= 1) {
     return <p className='lg:col-start-2 lg:col-end-3 break-words'>{text}</p>;
   } else {
     return (

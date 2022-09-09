@@ -9,7 +9,8 @@ import DisplayOffers from '../../components/display-offers/DisplayOffers';
 import { OfferData } from '../../helpers/types';
 import userIcon from '../../public/user.svg';
 import { useMutation } from '@apollo/client';
-import { EDIT_NAME } from '../../graphql/queries';
+import { DELETE_OFFER, EDIT_NAME } from '../../graphql/queries';
+import Notification from '../../components/notification/Notification';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = context.params?.id ?? '';
@@ -128,12 +129,13 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
   const [nameInput, setNameInput] = useState('');
   const [name, setName] = useState(props.user.name ?? 'Brak danych');
   const [showNotification, setShowNotification] = useState(false);
-  const [message, setMessage] = useState<{
+  const [notification, setNotification] = useState<{
     message: string;
     isError: boolean;
   }>({ message: '', isError: false });
 
   const [editName] = useMutation(EDIT_NAME);
+  const [deleteOffer] = useMutation(DELETE_OFFER);
 
   const offers: OfferData[] = props.applications.map(
     (application) => application.offer
@@ -173,13 +175,13 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
       }
       setName(data.data.changeName.name);
       setShowNotification(true);
-      setMessage({
+      setNotification({
         message: 'Udało się zmienić imię i nazwisko',
         isError: false,
       });
     } catch (error) {
       setShowNotification(true);
-      setMessage({
+      setNotification({
         message: 'Błąd podczas zmiany imię i nazwisko',
         isError: true,
       });
@@ -188,7 +190,7 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
       hidePopup();
       setTimeout(() => {
         setShowNotification(false);
-        setMessage({ message: '', isError: false });
+        setNotification({ message: '', isError: false });
       }, 4000);
     }
   };
@@ -199,27 +201,47 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
     setNameInput(event.currentTarget.value);
   };
 
+  const deleteOfferHandler = async (offerId: string): Promise<void> => {
+    try {
+      const data = await deleteOffer({
+        variables: {
+          id: offerId,
+        },
+      });
+      if (data.errors) {
+        setNotification({
+          message: 'Błąd przy usuwaniu oferty',
+          isError: true,
+        });
+        return;
+      }
+      setNotification({ message: 'Usunięto ofertę', isError: false });
+    } catch (error) {
+      setNotification({ message: 'Błąd przy usuwaniu oferty', isError: true });
+    } finally {
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 4000);
+    }
+  };
+
   return (
     <div className='px-5 mt-5 max-w-7xl mx-auto w-full 2xl:px-0'>
-      {showNotification && (
-        <div
-          className={`fixed bottom-5 px-10 py-5 text-lg text-white rounded-lg ${
-            message.isError ? 'bg-red-500' : 'bg-green-500'
-          }`}
-        >
-          {message.message}
-        </div>
-      )}
+      <Notification
+        isError={notification.isError}
+        message={notification.message}
+        show={showNotification}
+      />
       {showEditPopup && (
-        <div className='fixed bottom-0 left-1/2 -translate-x-1/2 bg-green-500 shadow text-white w-full max-w-md rounded-t-lg py-10 lg:bottom-5 lg:rounded-lg'>
+        <div className='fixed bottom-0 left-1/2 -translate-x-1/2 bg-green-500 shadow text-white w-full max-w-xl rounded-t-lg py-10 lg:bottom-5 lg:rounded-lg z-10'>
           <button
             type='button'
-            className='absolute top-2 right-2 p-3 flex items-center justify-center'
+            className='absolute top-2 right-2 p-2 flex items-center justify-center bg-white rounded-lg'
             onClick={hidePopup}
             title='close'
           >
             <svg
-              className='fill-black w-5 h-5 hover:fill-white transition-colors duration-300'
+              className='fill-green-500 w-5 h-5 hover:fill-green-600 transition-colors duration-300'
               viewBox='0 0 384 512'
             >
               <path d='M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z' />
@@ -241,7 +263,7 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
             />
             <button
               type='submit'
-              className='bg-white rounded-lg text-black px-6 py-3 mt-5'
+              className='bg-white rounded-lg hover:bg-gray-300 transition-colors duration-300 text-black px-6 py-3 mt-5'
             >
               Zmień
             </button>
@@ -304,6 +326,7 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
             loading={false}
             error={undefined}
             offers={uniqueOffers}
+            showUtilities={false}
           />
         </div>
 
@@ -321,6 +344,8 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
             loading={false}
             error={undefined}
             offers={props.postedOffers}
+            showUtilities={true}
+            onDeleteOffer={deleteOfferHandler}
           />
         </div>
         {props.postedOffers.length === 0 && (

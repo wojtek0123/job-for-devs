@@ -93,7 +93,7 @@ const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
                   </a>
                 </Link>
               )}
-              {session && !loading && !error && (
+              {data && (
                 <Link href={`/profile/${data.userId.id}`}>
                   <a className='my-4' onClick={closeMenuHandler}>
                     Profil

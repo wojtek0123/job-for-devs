@@ -1,11 +1,11 @@
-import { OfferData, FormData } from '../../helpers/types';
+import { FormData, OfferDataDetails } from '../../helpers/types';
 import Image from 'next/image';
 import detailsBg from '../../public/images/details-bg.jpg';
-import Link from 'next/link';
 import DisplayAsTextOrList from './DisplayAsTextOrList';
+import ReturnButton from '../return-button/ReturnButton';
 
 const DisplayOfferDetails: React.FC<{
-  offer: FormData | OfferData;
+  offer: FormData | OfferDataDetails;
   review: boolean;
 }> = ({ offer, review }) => {
   const displaySalary =
@@ -15,21 +15,12 @@ const DisplayOfferDetails: React.FC<{
 
   const displayAddress =
     offer.house === ''
-      ? `${offer.street.toString()} ${offer.building.toString()}, ${offer.city}`
-      : `${offer.street.toString()} ${offer.building.toString()}/${offer.house.toString()}, {offer.city}`;
+      ? `${offer.street} ${offer.building}, ${offer.city}`
+      : `${offer.street} ${offer.building}/${offer.house}, {offer.city}`;
 
   return (
     <div className='max-w-7xl mx-auto w-full mt-5 col-span-2'>
-      {!review && (
-        <Link href='/'>
-          <a className='inline-flex items-center bg-gray-200 border text-black shadow px-4 py-1 rounded-lg ml-2 xl:ml-0 text-lg hover:bg-gray-300 transition-colors duration-300'>
-            <svg className='w-4 h-4 fill-black' viewBox='0 0 448 512'>
-              <path d='M447.1 256c0 17.7-13.4 32-31.1 32H109.3l105.4 105.4c12.5 12.5 12.5 32.75 0 45.25-6.3 6.25-14.5 9.35-22.7 9.35s-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L109.3 224H416c17.7 0 31.1 14.3 31.1 32z' />
-            </svg>
-            <span className='ml-2'>back</span>
-          </a>
-        </Link>
-      )}
+      {!review && <ReturnButton isGray={true} />}
       <div className='rounded-b-lg relative mt-5'>
         <Image
           src={detailsBg}
@@ -131,13 +122,13 @@ const DisplayOfferDetails: React.FC<{
           <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
             Twoje podstawowe zadania
           </p>
-          <DisplayAsTextOrList text={offer.obligations.toString()} />
+          <DisplayAsTextOrList text={offer.obligations} />
         </div>
         <hr className='hidden md:block mb-3 col-span-2' />
 
         <div className='mt-3 flex flex-col col-span-2 md:grid md:grid-cols-2 md:mb-6'>
           <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>Wymagania</p>
-          <DisplayAsTextOrList text={offer.requirements.toString()} />
+          <DisplayAsTextOrList text={offer.requirements} />
         </div>
         <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -147,7 +138,7 @@ const DisplayOfferDetails: React.FC<{
               <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
                 Dobrze mieć
               </p>
-              <DisplayAsTextOrList text={offer.advantages.toString()} />
+              <DisplayAsTextOrList text={offer.advantages} />
             </div>
             <hr className='hidden md:block mb-3 col-span-2' />
           </>
@@ -158,7 +149,7 @@ const DisplayOfferDetails: React.FC<{
             <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>
               Co oferujemy
             </p>
-            <DisplayAsTextOrList text={offer.benefits.toString()} />
+            <DisplayAsTextOrList text={offer.benefits} />
           </div>
         )}
       </div>

@@ -4,12 +4,14 @@ import { NextPageWithLayout } from '../_app';
 import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import prisma from '../../lib/prisma';
-import { OfferData } from '../../helpers/types';
+import { OfferDataDetails } from '../../helpers/types';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_APPLICATION, GET_USER_ID } from '../../graphql/queries';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { context as graphContext } from '../api/graphql/context';
+import { INotification } from '../../helpers/types';
+import Notification from '../../components/notification/Notification';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const offersId = await prisma.offer.findMany({
@@ -56,11 +58,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 const JobOfferDetails: NextPageWithLayout<{
-  offer: OfferData;
-}> = (props: { offer: OfferData }) => {
+  offer: OfferDataDetails;
+}> = (props: { offer: OfferDataDetails }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { data } = useQuery(GET_USER_ID, {
+  const { data: user } = useQuery(GET_USER_ID, {
     variables: {
       email: session?.user?.email ?? '',
     },
@@ -71,6 +73,11 @@ const JobOfferDetails: NextPageWithLayout<{
   const [messageInput, setMessageInput] = useState('');
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [notification, setNotification] = useState<INotification>({
+    message: '',
+    isError: false,
+  });
+  const [showNotification, setShowNotification] = useState(false);
 
   const changeMessageHandler = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -95,8 +102,10 @@ const JobOfferDetails: NextPageWithLayout<{
 
     if (enteredEmail === '') {
       setEmailError('Proszę uzupełnić to pole');
+      return;
     } else if (!enteredEmail?.match(emailRegExp)) {
       setEmailError('Nie prawidłowy adres email');
+      return;
     } else {
       setEmailError('');
     }
@@ -107,8 +116,7 @@ const JobOfferDetails: NextPageWithLayout<{
 
     try {
       if (!session) {
-        console.log('Nie zalogowany');
-        await apply({
+        const data = await apply({
           variables: {
             name: enteredName,
             email: enteredEmail,
@@ -116,28 +124,38 @@ const JobOfferDetails: NextPageWithLayout<{
             offerId: router.query.id,
           },
         });
+        if (data.errors) {
+          setNotification({ message: 'Błąd przy aplikowaniu', isError: true });
+          return;
+        }
       }
       if (session) {
-        console.log('Zalogowany');
-        await apply({
+        const data = await apply({
           variables: {
             name: enteredName,
             email: enteredEmail,
             message: enteredMessage,
             offerId: router.query.id,
-            userId: data.userId.id,
+            userId: user.userId.id,
           },
         });
+        if (data.errors) {
+          setNotification({ message: 'Błąd przy aplikowaniu', isError: true });
+          return;
+        }
       }
-
-      console.log('You applied');
+      setNotification({ message: 'Wysłano podanie', isError: false });
     } catch (error) {
-      console.error(error);
+      setNotification({ message: 'Błąd przy aplikowaniu', isError: true });
     } finally {
       if (status !== 'authenticated') {
         setEmailInput('');
         setNameInput('');
       }
+      setShowNotification(true);
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 4000);
       setMessageInput('');
     }
   };
@@ -162,7 +180,11 @@ const JobOfferDetails: NextPageWithLayout<{
   return (
     <div className='max-w-7xl mx-auto w-full mt-5'>
       <DisplayOfferDetails offer={props.offer} review={false} />
-
+      <Notification
+        message={notification.message}
+        isError={notification.isError}
+        show={showNotification}
+      />
       <div className='lg:col-span-2 mt-6 bg-gray-200 px-5 rounded-lg pt-3 pb-3'>
         <p className='uppercase text-2xl text-black mb-3 font-bold lg:col-start-1 lg:col-end-2'>
           Aplikuj
