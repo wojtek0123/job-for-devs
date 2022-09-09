@@ -69,6 +69,8 @@ export const typeDefs = gql`
   type Query {
     offers: [Offer]
     userId(email: String): User
+    applications(userId: String): [Application]
+    specificOffers(offerId: String): [Offer]
   }
 
   type Mutation {
@@ -102,6 +104,7 @@ export const typeDefs = gql`
       offerId: String
       userId: String
     ): Application
+    changeName(userId: String, name: String): User
   }
 `;
 
@@ -112,6 +115,26 @@ export const resolvers = {
     },
     userId: (_parent: any, args: { email: string }, context: Context) => {
       return context.prisma.user.findUnique({ where: { email: args.email } });
+    },
+    applications: (
+      _parent: any,
+      args: { userId: string },
+      context: Context
+    ) => {
+      return context.prisma.application.findMany({
+        where: { userId: args.userId },
+        select: {
+          id: true,
+          offerId: true,
+        },
+      });
+    },
+    specificOffers: (
+      _parent: any,
+      args: { offerId: string },
+      context: Context
+    ) => {
+      return context.prisma.offer.findMany({ where: { id: args.offerId } });
     },
   },
   Mutation: {
@@ -150,6 +173,16 @@ export const resolvers = {
           offerId: args.offerId,
           userId: args.userId,
         },
+      });
+    },
+    changeName: (
+      _parent: any,
+      args: { userId: string; name: string },
+      context: Context
+    ) => {
+      return context.prisma.user.update({
+        where: { id: args.userId },
+        data: { name: args.name },
       });
     },
   },

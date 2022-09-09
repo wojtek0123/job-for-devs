@@ -96,3 +96,11 @@ export const ADD_APPLICATION = gql`
     }
   }
 `;
+
+export const EDIT_NAME = gql`
+  mutation ChangeName($userId: String, $name: String) {
+    changeName(userId: $userId, name: $name) {
+      name
+    }
+  }
+`;
