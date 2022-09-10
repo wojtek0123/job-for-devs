@@ -19,7 +19,7 @@ import { getSession } from 'next-auth/react';
 import { context as graphContext } from '../api/graphql/context';
 import StepsContext, { stepsInfo } from '../../context/steps-context';
 import { NextPageWithLayout } from '../_app';
-import NewOfferLayout from '../../components/layouts/new-offer-layout';
+import Layout from '../../components/layouts/layout';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession({ req: context.req });
@@ -354,7 +354,10 @@ const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
   }[step];
 
   return (
-    <form onSubmit={submitHandler} className='grid grid-cols-1 md:grid-cols-2'>
+    <form
+      onSubmit={submitHandler}
+      className='grid grid-cols-1 md:grid-cols-2 w-full max-w-7xl mx-auto px-5 2xl:px-0'
+    >
       {content}
       {step !== stepsInfo.length && (
         <div className='col-span-2 flex items-center'>
@@ -404,7 +407,7 @@ const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
 };
 
 NewOffer.getLayout = function getLayout(page: ReactElement) {
-  return <NewOfferLayout>{page}</NewOfferLayout>;
+  return <Layout typeHeader='new-offer'>{page}</Layout>;
 };
 
 export default NewOffer;

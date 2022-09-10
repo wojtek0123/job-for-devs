@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { NextPage } from 'next';
-import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';

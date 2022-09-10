@@ -211,7 +211,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
 };
 
 Applications.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return <Layout typeHeader='main'>{page}</Layout>;
 };
 
 export default Applications;
