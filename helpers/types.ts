@@ -112,3 +112,31 @@ export interface INotification {
   message: string;
   isError: boolean;
 }
+
+export interface IFirstStepData {
+  category: string;
+  technologies: string[];
+  minSalary: string;
+  maxSalary: string;
+  exactSalary: string;
+  location: string;
+  typeOfDayJob: string;
+  seniority: string;
+  benefits: string;
+  jobTitle: string;
+}
+
+export interface ISecondStepData {
+  description: string;
+  obligations: string;
+  requirements: string;
+  advantages: string;
+}
+
+export interface IThirdStepData {
+  companyName: string;
+  city: string;
+  street: string;
+  building: string;
+  house: string;
+}

@@ -19,7 +19,7 @@ export const cities = [
   'Zielona góra',
 ];
 
-export const seniorities = ['stażysta', 'junior', 'mid', 'senior'];
+export const seniorities = ['stażysta', 'junior', 'regular', 'senior'];
 
 export const technologies = [
   'JavaScript',

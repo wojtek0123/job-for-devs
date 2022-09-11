@@ -1,15 +1,14 @@
 import { GetServerSideProps } from 'next';
-import React, { ReactElement, useContext, useState } from 'react';
-import Link from 'next/link';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import OfferDetails from '../../components/new-offer/OfferDetails';
 import OfferInfo from '../../components/new-offer/OfferInfo';
 import ComapnyInfo from '../../components/new-offer/CompanyInfo';
 import {
-  FirstStepError,
   FormData,
-  Offer,
-  SecondStepError,
-  ThirdStepError,
+  ISecondStepData,
+  IThirdStepData,
+  IFirstStepData,
+  INotification,
 } from '../../helpers/types';
 import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
 import { useMutation } from '@apollo/client';
@@ -20,6 +19,7 @@ import { context as graphContext } from '../api/graphql/context';
 import StepsContext, { stepsInfo } from '../../context/steps-context';
 import { NextPageWithLayout } from '../_app';
 import Layout from '../../components/layouts/layout';
+import Notification from '../../components/notification/Notification';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession({ req: context.req });
@@ -54,310 +54,110 @@ interface SessionProps {
 }
 
 const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
-  const { step, nextStep, previousStep } = useContext(StepsContext);
+  const { step, previousStep, jumpToStep } = useContext(StepsContext);
   const router = useRouter();
   const [addOffer] = useMutation(ADD_OFFER);
-  const [formData, setFormData] = useState<FormData>({
-    category: '',
-    technologies: [],
-    minSalary: '',
-    maxSalary: '',
-    exactSalary: '',
-    location: '',
-    typeOfDayJob: '',
-    seniority: '',
-    benefits: '',
-    jobTitle: '',
-    description: '',
-    obligations: '',
-    requirements: '',
-    advantages: '',
-    companyName: '',
-    city: '',
-    street: '',
-    building: '',
-    house: '',
+  const [notification, setNotification] = useState<INotification>({
+    message: '',
+    isError: false,
   });
-  const [formDataErrorsFirstStep, setFormDataErrorsFirstStep] =
-    useState<FirstStepError>({
-      category: '',
-      technologies: '',
-      minSalary: '',
-      location: '',
-      seniority: '',
-      jobTitle: '',
-    });
-  const [formDataErrorsSecondStep, setFormDataErrorsSecondStep] =
-    useState<SecondStepError>({
-      obligations: '',
-      requirements: '',
-    });
-  const [formDataErrorsThirdStep, setFormDataErrorsThirdStep] =
-    useState<ThirdStepError>({
-      companyName: '',
-      city: '',
-      street: '',
-      building: '',
+  const [showNotification, setShowNotification] = useState(false);
+
+  const [formData, setFormData] = useState<FormData | {}>({});
+
+  async function showNoti(id: string): Promise<void> {
+    await new Promise((resolve) => {
+      setTimeout(resolve, 4000);
     });
 
-  const handleButtonData = (
-    event: React.FormEvent<HTMLButtonElement>,
-    input: Offer
-  ): void => {
-    if (input === Offer.Technologies) {
-      const text = event.currentTarget?.textContent?.toLowerCase() ?? '';
-      if (formData.technologies.includes(text)) {
-        const filteredTechnologies = formData.technologies.filter(
-          (technology) => technology.toLowerCase() !== text
-        );
+    const offerId: string = id;
+    await router.push(`/offer/${offerId}`);
+  }
 
-        setFormData({ ...formData, technologies: filteredTechnologies });
-        return;
-      }
-
-      if (formData.technologies.length > 5) {
-        return;
-      }
-
-      setFormData({
-        ...formData,
-        [input]: [
-          ...formData.technologies,
-          event.currentTarget?.textContent?.toLowerCase() ?? '',
-        ],
-      });
-      return;
-    }
-    setFormData({
-      ...formData,
-      [input]: event.currentTarget?.textContent?.toLowerCase() ?? '',
-    });
-  };
-
-  const handleInputData = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    input: string,
-    type: 'number' | 'text'
-  ): void => {
-    if (type === 'number') {
-      const value = isNaN(+event.currentTarget.value)
-        ? ''
-        : event.currentTarget.value.toString();
-
-      setFormData({
-        ...formData,
-        [input]: value,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [input]: event.currentTarget.value,
-      });
-    }
-  };
-
-  const handleTextareaData = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-    input: string
-  ): void => {
-    setFormData({
-      ...formData,
-      [input]: event.target.value,
-    });
-  };
-
-  const onNextStep = (): void => {
-    let counter = 0;
-
-    if (step === 1) {
-      for (const key in formDataErrorsFirstStep) {
-        if (key === Offer.Technologies && formData.technologies.length === 0) {
-          counter += 1;
-          setFormDataErrorsFirstStep((prevState) => ({
-            ...prevState,
-            technologies: 'Zaznacz co najmniej jedną technologię',
-          }));
-        }
-
-        const isEmpty = formData[key] === '';
-
-        if (isEmpty) {
-          counter += 1;
-          setFormDataErrorsFirstStep((prevState) => ({
-            ...prevState,
-            [key]: 'To pole jest wymagane',
-          }));
-        } else {
-          setFormDataErrorsFirstStep((prevState) => ({
-            ...prevState,
-            [key]: '',
-          }));
-        }
-      }
-
-      if (
-        formData.exactSalary !== '' &&
-        (formData.minSalary !== '' || formData.maxSalary !== '')
-      ) {
-        counter += 1;
-        setFormDataErrorsFirstStep((prevState) => ({
-          ...prevState,
-          minSalary: 'Wybierz widełki lub dokładną wartość',
-        }));
-      }
-
-      if (
-        formData.exactSalary !== '' &&
-        formData.minSalary === '' &&
-        formData.maxSalary === ''
-      ) {
-        counter -= 1;
-        setFormDataErrorsFirstStep((prevState) => ({
-          ...prevState,
-          minSalary: '',
-        }));
-      }
-
-      if (formData.minSalary !== '' && formData.maxSalary !== '') {
-        if (formData.minSalary >= formData.maxSalary) {
-          counter += 1;
-          setFormDataErrorsFirstStep((prevState) => ({
-            ...prevState,
-            minSalary: 'Wartość maks. musi być większa od min.',
-          }));
-        }
-      }
-
-      if (
-        (formData.minSalary === '' && formData.maxSalary !== '') ||
-        (formData.minSalary !== '' && formData.maxSalary === '')
-      ) {
-        counter += 1;
-        setFormDataErrorsFirstStep((prevState) => ({
-          ...prevState,
-          minSalary: 'Uzupełnij widełki lub wpisz tylko dokładną wartość',
-        }));
-      }
-    } else if (step === 2) {
-      for (const key in formDataErrorsSecondStep) {
-        const isEmpty = formData[key] === '';
-
-        if (isEmpty) {
-          counter += 1;
-          setFormDataErrorsSecondStep((prevState) => ({
-            ...prevState,
-            [key]: 'To pole jest wymagane',
-          }));
-        } else {
-          setFormDataErrorsSecondStep((prevState) => ({
-            ...prevState,
-            [key]: '',
-          }));
-        }
-      }
-    } else if (step === 3) {
-      for (const key in formDataErrorsThirdStep) {
-        const isEmpty = formData[key] === '';
-
-        if (isEmpty) {
-          counter += 1;
-          setFormDataErrorsThirdStep((prevState) => ({
-            ...prevState,
-            [key]: 'To pole jest wymagane',
-          }));
-        } else {
-          setFormDataErrorsThirdStep((prevState) => ({
-            ...prevState,
-            [key]: '',
-          }));
-        }
-      }
-    }
-
-    if (counter === 0) {
-      nextStep();
-    }
-  };
-
-  const submitHandler = async (event: React.FormEvent): Promise<void> => {
+  const createNewOffer = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
 
-    // const x = Object.keys(formData).map(
-    //   (key) =>
-    //     (formData[key] =
-    //       typeof formData[key] === 'string'
-    //         ? formData[key].toString().trim()
-    //         : formData[key])
-    // );
-
     try {
+      const data: FormData = Object.assign({}, formData as FormData);
       const newOffer = await addOffer({
         variables: {
-          category: formData.category,
-          location: formData.location,
-          jobTitle: formData.jobTitle,
-          companyName: formData.companyName,
-          typeOfDayJob: formData.typeOfDayJob,
-          seniority: formData.seniority,
-          street: formData.street,
-          building: formData.building,
-          house: formData.house,
-          city: formData.city,
-          minSalary: formData.minSalary,
-          maxSalary: formData.maxSalary,
-          exactSalary: formData.exactSalary,
-          technologies: formData.technologies,
-          description: formData.description,
-          obligations: formData.obligations,
-          requirements: formData.requirements,
-          advantages: formData.advantages,
-          benefits: formData.benefits,
+          category: data.category,
+          location: data.location,
+          jobTitle: data.jobTitle,
+          companyName: data.companyName,
+          typeOfDayJob: data.typeOfDayJob,
+          seniority: data.seniority,
+          street: data.street,
+          building: data.building,
+          house: data.house,
+          city: data.city,
+          minSalary: data.minSalary,
+          maxSalary: data.maxSalary,
+          exactSalary: data.exactSalary,
+          technologies: data.technologies,
+          description: data.description,
+          obligations: data.obligations,
+          requirements: data.requirements,
+          advantages: data.advantages,
+          benefits: data.benefits,
           userId: props.user.id,
         },
       });
       if (newOffer.errors) {
         throw new Error('Something went wrong');
       }
-      const offerId: string = await newOffer.data.addOffer.id;
-      await router.push(`/offer/${offerId}`);
+      setShowNotification(true);
+      setNotification({
+        message:
+          'Dodano ofertę pracy. Za chwilę zostaniesz przekierowany do niej',
+        isError: false,
+      });
+
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 4000);
+      await showNoti(newOffer.data.addOffer.id);
     } catch (error) {
-      console.error(error);
+      setNotification({ message: 'Coś poszło nie tak', isError: true });
+      setTimeout(() => setShowNotification(false), 4000);
     }
   };
 
+  useEffect(() => jumpToStep(1), []);
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+  }, [formData]);
+
+  const firstStepHandler = (firstStepData: IFirstStepData): void => {
+    setFormData(Object.assign({}, firstStepData));
+  };
+
+  const secondStepHandler = (secondStepData: ISecondStepData): void => {
+    setFormData(Object.assign({}, formData, secondStepData));
+  };
+
+  const thirdStepHandler = (thirdStepData: IThirdStepData): void => {
+    setFormData(Object.assign({}, formData, thirdStepData));
+  };
+
   const content = {
-    1: (
-      <OfferDetails
-        handleButtons={handleButtonData}
-        handleInputs={handleInputData}
-        handleTextarea={handleTextareaData}
-        data={formData}
-        errorMsgs={formDataErrorsFirstStep}
-      />
-    ),
-    2: (
-      <OfferInfo
-        handleTextarea={handleTextareaData}
-        data={formData}
-        errorMsgs={formDataErrorsSecondStep}
-      />
-    ),
-    3: (
-      <ComapnyInfo
-        handleButtons={handleButtonData}
-        handleInputs={handleInputData}
-        data={formData}
-        errorMsgs={formDataErrorsThirdStep}
-      />
-    ),
-    4: <DisplayOfferDetails offer={formData} review={true} />,
+    1: <OfferDetails onFirstStep={firstStepHandler} />,
+    2: <OfferInfo onSecondStep={secondStepHandler} />,
+    3: <ComapnyInfo onThirdStep={thirdStepHandler} />,
+    4: <DisplayOfferDetails offer={formData as FormData} review={true} />,
   }[step];
 
   return (
     <form
-      onSubmit={submitHandler}
       className='grid grid-cols-1 md:grid-cols-2 w-full max-w-7xl mx-auto px-5 2xl:px-0'
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      onSubmit={createNewOffer}
     >
+      <Notification
+        isError={notification.isError}
+        message={notification.message}
+        show={showNotification}
+      />
       {content}
       {step !== stepsInfo.length && (
         <div className='col-span-2 flex items-center'>
@@ -365,43 +165,26 @@ const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
           pole wymagane
         </div>
       )}
-      <div
-        className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
-      >
-        {step === 1 && (
-          <Link href='/'>
-            <a className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center hover:bg-slate-200 transition-colors duration-300  border border-gray-200'>
-              <span className=''>powrót</span>
-            </a>
-          </Link>
-        )}
-        {step !== 1 && (
+      {step === stepsInfo.length && (
+        <div
+          className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
+        >
           <button
             type='button'
             onClick={previousStep}
-            className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 hover:bg-slate-200 transition-colors duration-300 border border-gray-200'
+            className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 hover:bg-slate-200 transition-colors duration-300 border border-gray-200 capitalize'
           >
-            wstecz
+            Wstecz
           </button>
-        )}
-        {step !== stepsInfo.length && (
-          <button
-            type='button'
-            onClick={onNextStep}
-            className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
-          >
-            dalej
-          </button>
-        )}
-        {step === stepsInfo.length && (
+
           <button
             type='submit'
-            className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
+            className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300 capitalize'
           >
             Opublikuj
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </form>
   );
 };

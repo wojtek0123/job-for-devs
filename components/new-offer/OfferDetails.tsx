@@ -1,28 +1,145 @@
-import React, { useEffect } from 'react';
-import { FormData, Offer, FirstStepError } from '../../helpers/types';
+import React, { useContext, useEffect, useState } from 'react';
+import { Offer, IFirstStepData } from '../../helpers/types';
 import { technologies, seniorities } from '../../helpers/constants';
+import Link from 'next/link';
+import StepsContext from '../../context/steps-context';
+import ErrorMessage from './ErrorMessage';
+import {
+  handleInputData,
+  checkIsLengthIsGreaterThanZero,
+} from '../../helpers/functions';
+import Notification from '../notification/Notification';
 
 const categories = ['Frontend', 'Backend', 'Fullstack'];
 const TypeOfDayJobs = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
 
 const OfferDetails: React.FC<{
-  handleButtons: (
-    event: React.FormEvent<HTMLButtonElement>,
+  onFirstStep: (firstStepData: IFirstStepData) => void;
+}> = ({ onFirstStep }) => {
+  const { nextStep } = useContext(StepsContext);
+
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
+    []
+  );
+  const [enteredMinSalary, setEnteredMinSalary] = useState('');
+  const [enteredMaxSalary, setEnteredMaxSalary] = useState('');
+  const [enteredExactSalary, setExactSalary] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedTypeOfDayJob, setSelectedTypeOfDayJob] = useState('');
+  const [selectedSeniority, setSelectedSeniority] = useState('');
+  const [enteredBenefits, setEnteredBenefits] = useState('');
+  const [enteredJobTitle, setEnteredJobTitle] = useState('');
+
+  const [salaryError, setSalaryError] = useState('');
+  const [showErrors, setShowErrors] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+
+  const handleButtonData = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    fn: (text: string) => void,
     input: Offer
-  ) => void;
-  handleInputs: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    input: string,
-    type: 'number' | 'text'
-  ) => void;
-  handleTextarea: (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-    input: string
-  ) => void;
-  data: FormData;
-  errorMsgs: FirstStepError;
-}> = ({ handleButtons, data, handleInputs, handleTextarea, errorMsgs }) => {
+  ): void => {
+    if (input === Offer.Technologies) {
+      const text = event.currentTarget?.textContent?.toLowerCase() ?? '';
+      if (selectedTechnologies.includes(text)) {
+        const filteredTechnologies = selectedTechnologies.filter(
+          (technology) => technology.toLowerCase() !== text
+        );
+
+        setSelectedTechnologies(filteredTechnologies);
+        return;
+      }
+
+      if (selectedTechnologies.length > 5) {
+        return;
+      }
+
+      setSelectedTechnologies((prevState) => [...prevState, text]);
+    }
+
+    fn(event.currentTarget.textContent?.toLowerCase() ?? '');
+  };
+
+  const onNextStep = (): void => {
+    const requiredFields = [
+      selectedCategory,
+      selectedTechnologies,
+      selectedLocation,
+      selectedSeniority,
+      enteredJobTitle,
+    ];
+    let counter = 0;
+
+    requiredFields.forEach(
+      (requiredField) =>
+        (counter = checkIsLengthIsGreaterThanZero(requiredField, counter))
+    );
+
+    if (
+      enteredMinSalary === '' &&
+      enteredMaxSalary === '' &&
+      enteredExactSalary === ''
+    ) {
+      counter += 1;
+      setSalaryError('To pole jest wymagane');
+    }
+
+    if (
+      enteredExactSalary !== '' &&
+      (enteredMinSalary !== '' || enteredMaxSalary !== '')
+    ) {
+      counter += 1;
+      setSalaryError('Wybierz widełki lub dokładną wartość');
+    }
+
+    if (enteredMinSalary !== '' && enteredMaxSalary !== '') {
+      if (enteredMinSalary >= enteredMaxSalary) {
+        counter += 1;
+        setSalaryError('Wartość maks. musi być większa od min.');
+      }
+    }
+
+    if (
+      (enteredMinSalary === '' && enteredMaxSalary !== '') ||
+      (enteredMinSalary !== '' && enteredMaxSalary === '')
+    ) {
+      counter += 1;
+      setSalaryError('Uzupełnij widełki lub wpisz tylko dokładną wartość');
+    }
+
+    if (
+      (enteredMinSalary !== '' && enteredMaxSalary !== '') ||
+      enteredExactSalary !== ''
+    ) {
+      setSalaryError('');
+    }
+
+    if (counter !== 0) {
+      setShowErrors(true);
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 2000);
+      return;
+    }
+
+    const firstStepData: IFirstStepData = {
+      category: selectedCategory,
+      technologies: selectedTechnologies,
+      minSalary: enteredMinSalary,
+      maxSalary: enteredMaxSalary,
+      exactSalary: enteredExactSalary,
+      location: selectedLocation,
+      typeOfDayJob: selectedTypeOfDayJob,
+      seniority: selectedSeniority,
+      benefits: enteredBenefits.trim(),
+      jobTitle: enteredJobTitle.trim(),
+    };
+    onFirstStep(firstStepData);
+    setShowErrors(false);
+    nextStep();
+  };
+
   useEffect(() => {
     document.documentElement.scrollTop = 0;
   }, []);
@@ -43,19 +160,19 @@ const OfferDetails: React.FC<{
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                data.category.includes(category.toLowerCase())
+                selectedCategory.includes(category.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={(event) => handleButtons(event, Offer.Category)}
+              onClick={(event) =>
+                handleButtonData(event, setSelectedCategory, Offer.Category)
+              }
             >
               {category}
             </button>
           ))}
         </div>
-        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
-          {errorMsgs.category}
-        </small>
+        <ErrorMessage expression={selectedCategory} isVisible={showErrors} />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
       <div className='mt-3 flex flex-col w-full col-span-2 md:grid md:grid-cols-2 md:mb-6'>
@@ -69,22 +186,25 @@ const OfferDetails: React.FC<{
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                data.technologies.includes(technology.toLowerCase())
+                selectedTechnologies.includes(technology.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={(event) => handleButtons(event, Offer.Technologies)}
+              onClick={(event) =>
+                handleButtonData(event, () => {}, Offer.Technologies)
+              }
             >
               {technology}
             </button>
           ))}
         </div>
         <small className='col-span-2 flex justify-end mt-1'>
-          {data.technologies.length}/6
+          {selectedTechnologies.length}/6
         </small>
-        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
-          {errorMsgs.technologies}
-        </small>
+        <ErrorMessage
+          expression={selectedTechnologies}
+          isVisible={showErrors}
+        />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -104,10 +224,8 @@ const OfferDetails: React.FC<{
               maxLength={5}
               className='rounded-lg text-black p-3 max-w-[10rem] min-w-fit w-full outline-green-500 bg-gray-100'
               autoComplete='off'
-              value={data.minSalary}
-              onChange={(event) =>
-                handleInputs(event, Offer.MinSalary, 'number')
-              }
+              value={enteredMinSalary}
+              onChange={(event) => handleInputData(event, setEnteredMinSalary)}
             />
             <div className='mx-2'>-</div>
             <input
@@ -119,10 +237,8 @@ const OfferDetails: React.FC<{
               maxLength={5}
               className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-fit bg-gray-100 outline-green-500'
               autoComplete='off'
-              value={data.maxSalary}
-              onChange={(event) =>
-                handleInputs(event, Offer.MaxSalary, 'number')
-              }
+              value={enteredMaxSalary}
+              onChange={(event) => handleInputData(event, setEnteredMaxSalary)}
             />
           </div>
           <span className='my-2'>lub</span>
@@ -135,15 +251,21 @@ const OfferDetails: React.FC<{
             maxLength={5}
             className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-max bg-gray-100 outline-green-500'
             autoComplete='off'
-            value={data.exactSalary}
-            onChange={(event) =>
-              handleInputs(event, Offer.ExactSalary, 'number')
-            }
+            value={enteredExactSalary}
+            onChange={(event) => handleInputData(event, setExactSalary)}
           />
         </div>
-        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
-          {errorMsgs.minSalary}
-        </small>
+        {showErrors && (
+          <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
+            {(enteredMinSalary !== '' && enteredMaxSalary !== '') ||
+            enteredExactSalary !== ''
+              ? ''
+              : salaryError}
+          </small>
+        )}
+        {!showErrors && (
+          <small className='col-span-2 text-left md:text-right text-red-600 h-4'></small>
+        )}
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -158,19 +280,19 @@ const OfferDetails: React.FC<{
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                data.location.includes(location.toLowerCase())
+                selectedLocation.includes(location.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={(event) => handleButtons(event, Offer.Location)}
+              onClick={(event) =>
+                handleButtonData(event, setSelectedLocation, Offer.Location)
+              }
             >
               {location}
             </button>
           ))}
         </div>
-        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
-          {errorMsgs.location}
-        </small>
+        <ErrorMessage expression={selectedLocation} isVisible={showErrors} />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -184,11 +306,17 @@ const OfferDetails: React.FC<{
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                data.typeOfDayJob.includes(typeOfDayJob.toLowerCase())
+                selectedTypeOfDayJob.includes(typeOfDayJob.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={(event) => handleButtons(event, Offer.TypeOfDayJob)}
+              onClick={(event) =>
+                handleButtonData(
+                  event,
+                  setSelectedTypeOfDayJob,
+                  Offer.TypeOfDayJob
+                )
+              }
             >
               {typeOfDayJob}
             </button>
@@ -208,19 +336,19 @@ const OfferDetails: React.FC<{
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                data.seniority.includes(seniority.toLowerCase())
+                selectedSeniority.includes(seniority.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={(event) => handleButtons(event, Offer.Seniority)}
+              onClick={(event) =>
+                handleButtonData(event, setSelectedSeniority, Offer.Seniority)
+              }
             >
               {seniority}
             </button>
           ))}
         </div>
-        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
-          {errorMsgs.seniority}
-        </small>
+        <ErrorMessage expression={selectedSeniority} isVisible={showErrors} />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -229,18 +357,18 @@ const OfferDetails: React.FC<{
           className='text-lg mb-2 mt-4 col-start-1 col-end-2 lg:text-xl'
           htmlFor='benefits'
         >
-          Benefity
+          Dodatki dla pracownika
         </label>
         <textarea
           name='benefits'
           id='benefits'
           maxLength={500}
           className='py-1 px-3 rounded-lg text-black text-base h-28 resize-none outline-green-500 bg-gray-100 col-start-2 col-end-3 w-full'
-          onChange={(event) => handleTextarea(event, Offer.Benefits)}
-          value={data.benefits}
+          onChange={(event) => handleInputData(event, setEnteredBenefits)}
+          value={enteredBenefits}
         ></textarea>
         <small className='col-span-2 flex justify-end mt-1'>
-          {data.benefits.length}/500
+          {enteredBenefits.length}/500
         </small>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
@@ -257,12 +385,34 @@ const OfferDetails: React.FC<{
           id='title'
           className='p-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
-          onChange={(event) => handleInputs(event, Offer.JobTitle, 'text')}
-          value={data.jobTitle}
+          onChange={(event) => handleInputData(event, setEnteredJobTitle)}
+          value={enteredJobTitle}
         />
-        <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
-          {errorMsgs.jobTitle}
-        </small>
+        <ErrorMessage expression={enteredJobTitle} isVisible={showErrors} />
+      </div>
+      <div className='lg:hidden col-span-2 w-full'>
+        <Notification
+          isError={true}
+          message={'Popraw błędy'}
+          show={showNotification}
+        />
+      </div>
+      <div
+        className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
+      >
+        <Link href='/'>
+          <a className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center hover:bg-slate-200 transition-colors duration-300  border border-gray-200 capitalize'>
+            <span className='capitalize'>powrót</span>
+          </a>
+        </Link>
+
+        <button
+          type='button'
+          onClick={onNextStep}
+          className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300 capitalize'
+        >
+          dalej
+        </button>
       </div>
     </>
   );

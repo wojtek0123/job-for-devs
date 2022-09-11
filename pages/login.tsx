@@ -62,7 +62,7 @@ const Login: NextPage = () => {
   };
 
   useEffect(() => {
-    (async function () {
+    void (async function(): Promise<void> {
       if (session) {
         await router.push('/');
       }
@@ -82,6 +82,7 @@ const Login: NextPage = () => {
           <button
             className='bg-white text-black w-full max-w-[13rem] py-2 my-2 rounded-lg hover:bg-gray-300 transition-colors duration-300'
             type='button'
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={signInWithGithub}
           >
             Sign in with GitHub
@@ -89,11 +90,13 @@ const Login: NextPage = () => {
           <button
             className='bg-white text-black w-full max-w-[13rem] py-2 my-2 rounded-lg hover:bg-gray-300 transition-colors duration-300'
             type='button'
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={signInWithGoogle}
           >
             Sign in with Google
           </button>
           <form
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit={async (event) => await signInWithEmail(event)}
             className='flex flex-col'
           >

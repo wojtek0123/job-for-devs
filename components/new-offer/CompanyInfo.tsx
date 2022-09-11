@@ -1,25 +1,63 @@
-import { useEffect } from 'react';
-import { FormData, Offer, ThirdStepError } from '../../helpers/types';
+import { useState, useContext } from 'react';
 import { cities } from '../../helpers/constants';
+import {
+  handleButtonData,
+  handleInputData,
+  checkIsLengthIsGreaterThanZero,
+} from '../../helpers/functions';
+import ErrorMessage from './ErrorMessage';
+import StepsContext from '../../context/steps-context';
+import { IThirdStepData } from '../../helpers/types';
+import Notification from '../notification/Notification';
 
 const citiesLowerCase = cities.map((city) => city.toLowerCase());
 
 const ComapnyInfo: React.FC<{
-  handleButtons: (
-    event: React.FormEvent<HTMLButtonElement>,
-    input: Offer
-  ) => void;
-  handleInputs: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    input: string,
-    type: 'number' | 'text'
-  ) => void;
-  data: FormData;
-  errorMsgs: ThirdStepError;
-}> = ({ handleButtons, handleInputs, data, errorMsgs }) => {
-  useEffect(() => {
-    document.documentElement.scrollTop = 0;
-  }, []);
+  onThirdStep: (data: IThirdStepData) => void;
+}> = ({ onThirdStep }) => {
+  const { nextStep, previousStep } = useContext(StepsContext);
+
+  const [enteredCompanyName, setEnteredCompanyName] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [enteredStreet, setEnteredStreet] = useState('');
+  const [enteredBuildingNumber, setEnteredBuildingNumber] = useState('');
+  const [enteredHouseNumber, setEnteredHouseNumber] = useState('');
+  const [showErrors, setShowErrors] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+
+  const onNextStep = (): void => {
+    const requiredFields = [
+      enteredCompanyName,
+      selectedCity,
+      enteredBuildingNumber,
+      enteredStreet,
+    ];
+    let counter = 0;
+
+    requiredFields.forEach(
+      (requiredField) =>
+        (counter = checkIsLengthIsGreaterThanZero(requiredField, counter))
+    );
+
+    if (counter !== 0) {
+      setShowErrors(true);
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 2000);
+      return;
+    }
+
+    const thirdStepData: IThirdStepData = {
+      companyName: enteredCompanyName.trim(),
+      city: selectedCity.trim(),
+      street: enteredStreet.trim(),
+      building: enteredBuildingNumber.trim(),
+      house: enteredHouseNumber.trim(),
+    };
+
+    onThirdStep(thirdStepData);
+    setShowErrors(false);
+    nextStep();
+  };
 
   return (
     <>
@@ -40,12 +78,10 @@ const ComapnyInfo: React.FC<{
           className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
           placeholder='Nazwa firmy'
-          onChange={(event) => handleInputs(event, Offer.CompanyName, 'text')}
-          value={data.companyName}
+          onChange={(event) => handleInputData(event, setEnteredCompanyName)}
+          value={enteredCompanyName}
         />
-        <small className='col-span-2 text-left md:text-right text-red-600'>
-          {errorMsgs.companyName}
-        </small>
+        <ErrorMessage expression={enteredCompanyName} isVisible={showErrors} />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -59,11 +95,11 @@ const ComapnyInfo: React.FC<{
               type='button'
               key={index}
               className={`px-3 py-1 rounded-lg mr-1 my-1 ${
-                data.city.includes(city.toLowerCase())
+                selectedCity.includes(city.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
               }`}
-              onClick={(event) => handleButtons(event, Offer.City)}
+              onClick={(event) => handleButtonData(event, setSelectedCity)}
             >
               {city}
             </button>
@@ -80,13 +116,15 @@ const ComapnyInfo: React.FC<{
           className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
           value={
-            citiesLowerCase.includes(data.city.toLowerCase()) ? '' : data.city
+            citiesLowerCase.includes(selectedCity.toLowerCase())
+              ? ''
+              : selectedCity
           }
-          onChange={(event) => handleInputs(event, Offer.City, 'text')}
+          onChange={(event) => handleInputData(event, setSelectedCity)}
         />
-        <small className='col-span-2 flex md:justify-end text-left md:text-right text-red-600'>
-          {errorMsgs.city}
-        </small>
+        <div className='flex md:justify-end'>
+          <ErrorMessage expression={selectedCity} isVisible={showErrors} />
+        </div>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
@@ -104,15 +142,11 @@ const ComapnyInfo: React.FC<{
           maxLength={100}
           className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
-          value={data.street}
-          onChange={(event) => handleInputs(event, Offer.Street, 'text')}
+          value={enteredStreet}
+          onChange={(event) => handleInputData(event, setEnteredStreet)}
         />
-        {/* <small className='col-span-2 text-left md:text-right text-red-600'>
-          {errorMsgs.street}
-        </small> */}
-
-        <div className='flex flex-col border border-white rounded-lg my-4 w-full col-span-2 md:grid md:grid-cols-2'>
-          <div className='flex justify-between col-start-2 col-end-3 text-lg lg:text-xl mb-4'>
+        <div className='flex flex-col border border-white rounded-lg mt-4 w-full col-span-2 md:grid md:grid-cols-2'>
+          <div className='flex justify-between col-start-2 col-end-3 text-lg lg:text-xl'>
             <input
               type='text'
               id='building-number'
@@ -121,9 +155,9 @@ const ComapnyInfo: React.FC<{
               maxLength={7}
               className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] mr-1 sm:mr-0'
               autoComplete='off'
-              value={data.building}
+              value={enteredBuildingNumber}
               onChange={(event) =>
-                handleInputs(event, Offer.BuildingNumber, 'text')
+                handleInputData(event, setEnteredBuildingNumber)
               }
             />
             <input
@@ -134,16 +168,50 @@ const ComapnyInfo: React.FC<{
               maxLength={7}
               className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] ml-1 sm:ml-0'
               autoComplete='off'
-              value={data.house}
+              value={enteredHouseNumber}
               onChange={(event) =>
-                handleInputs(event, Offer.HouseNumber, 'text')
+                handleInputData(event, setEnteredHouseNumber)
               }
             />
           </div>
         </div>
-        <small className='col-span-2 text-left md:text-right text-red-600'>
-          {errorMsgs.building}
-        </small>
+
+        <ErrorMessage
+          expression={enteredStreet}
+          isVisible={showErrors}
+          message='Uzupełnij nazwę ulicy'
+        />
+
+        <ErrorMessage
+          expression={enteredBuildingNumber}
+          isVisible={showErrors}
+          message='Uzupełnij number budynku'
+        />
+      </div>
+      <div className='lg:hidden col-span-2 w-full'>
+        <Notification
+          isError={true}
+          message={'Popraw błędy'}
+          show={showNotification}
+        />
+      </div>
+      <div
+        className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
+      >
+        <button
+          type='button'
+          onClick={previousStep}
+          className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 hover:bg-slate-200 transition-colors duration-300 border border-gray-200'
+        >
+          wstecz
+        </button>
+        <button
+          type='button'
+          onClick={onNextStep}
+          className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300'
+        >
+          dalej
+        </button>
       </div>
     </>
   );

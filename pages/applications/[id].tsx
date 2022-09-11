@@ -71,12 +71,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 interface ApplicationsProps {
   offer: {
-    application: {
+    application: Array<{
       email: string;
       message: string;
       id: string;
       name: string;
-    }[];
+    }>;
     userId: string;
     id: string;
     city: string;
@@ -115,14 +115,14 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
     },
   ];
 
-  const showMore = () => {
+  const showMore = (): void => {
     if (step > props.offer.application.length) {
       return;
     }
     setStep((prevState) => prevState + take);
   };
 
-  const showLess = () => {
+  const showLess = (): void => {
     if (step <= take) {
       return;
     }

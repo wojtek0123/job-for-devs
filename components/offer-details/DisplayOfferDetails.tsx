@@ -2,12 +2,16 @@ import { FormData, OfferDataDetails } from '../../helpers/types';
 import Image from 'next/image';
 import detailsBg from '../../public/images/details-bg.jpg';
 import DisplayAsTextOrList from './DisplayAsTextOrList';
-import ReturnButton from '../return-button/ReturnButton';
+// import ReturnButton from '../return-button/ReturnButton';
+import { useEffect } from 'react';
 
 const DisplayOfferDetails: React.FC<{
   offer: FormData | OfferDataDetails;
   review: boolean;
 }> = ({ offer, review }) => {
+  if (offer === undefined) {
+    return <p>Nie prawidłowy objekt</p>;
+  }
   const displaySalary =
     offer.exactSalary === ''
       ? `${offer.minSalary} - ${offer.maxSalary}`
@@ -18,9 +22,13 @@ const DisplayOfferDetails: React.FC<{
       ? `${offer.street} ${offer.building}, ${offer.city}`
       : `${offer.street} ${offer.building}/${offer.house}, ${offer.city}`;
 
+  useEffect(() => {
+    console.log(offer.technologies);
+  }, [offer]);
+
   return (
     <div className='max-w-7xl mx-auto w-full mt-5 col-span-2'>
-      {!review && <ReturnButton isGray={true} />}
+      {/* {!review && <ReturnButton isGray={true} />} */}
       <div className='rounded-b-lg relative mt-5'>
         <Image
           src={detailsBg}
