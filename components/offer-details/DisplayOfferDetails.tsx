@@ -2,8 +2,7 @@ import { FormData, OfferDataDetails } from '../../helpers/types';
 import Image from 'next/image';
 import detailsBg from '../../public/images/details-bg.jpg';
 import DisplayAsTextOrList from './DisplayAsTextOrList';
-// import ReturnButton from '../return-button/ReturnButton';
-import { useEffect } from 'react';
+import ReturnButton from '../return-button/ReturnButton';
 
 const DisplayOfferDetails: React.FC<{
   offer: FormData | OfferDataDetails;
@@ -22,13 +21,13 @@ const DisplayOfferDetails: React.FC<{
       ? `${offer.street} ${offer.building}, ${offer.city}`
       : `${offer.street} ${offer.building}/${offer.house}, ${offer.city}`;
 
-  useEffect(() => {
-    console.log(offer.technologies);
-  }, [offer]);
+  if (offer.technologies === undefined || offer.description === undefined) {
+    return <></>;
+  }
 
   return (
     <div className='max-w-7xl mx-auto w-full mt-5 col-span-2'>
-      {/* {!review && <ReturnButton isGray={true} />} */}
+      {!review && <ReturnButton isGray={true} />}
       <div className='rounded-b-lg relative mt-5'>
         <Image
           src={detailsBg}
@@ -115,7 +114,6 @@ const DisplayOfferDetails: React.FC<{
 
         {offer.description.length !== 0 && (
           <>
-            {' '}
             <div className='mt-3 flex flex-col col-span-2 md:grid md:grid-cols-2 md:mb-6'>
               <p className='text-2xl mb-2 mt-4 col-start-1 col-end-2'>Opis</p>
               <p className='lg:col-start-2 lg:col-end-3 break-words'>
