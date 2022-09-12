@@ -94,15 +94,13 @@ interface ApplicationsProps {
   };
 }
 
-// const take = 5;
+const paginationTake = 5;
 
 const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
-  const { numberOfElements, take, showMore, showLess } = usePagination(
+  const { numberOfElements, showMore, showLess } = usePagination(
     props.offer.application.length,
-    5
+    paginationTake
   );
-
-  // const [step, setStep] = useState(take);
 
   const offerData: OfferData[] = [
     {
@@ -120,20 +118,6 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
       seniority: props.offer.seniority,
     },
   ];
-
-  // const showMore = (): void => {
-  //   if (step > props.offer.application.length) {
-  //     return;
-  //   }
-  //   setStep((prevState) => prevState + take);
-  // };
-
-  // const showLess = (): void => {
-  //   if (step <= take) {
-  //     return;
-  //   }
-  //   setStep((prevState) => prevState - take);
-  // };
 
   return (
     <div className='px-5 mt-5 max-w-7xl mx-auto w-full 2xl:px-0'>
@@ -190,7 +174,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
           )}
           {props.offer.application.length !== 0 && (
             <div className='w-full flex items-center justify-around'>
-              {numberOfElements > take && (
+              {numberOfElements > paginationTake && (
                 <button
                   type='button'
                   onClick={showLess}

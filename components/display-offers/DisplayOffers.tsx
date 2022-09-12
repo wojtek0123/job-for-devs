@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import { DELETE_OFFER } from '../../graphql/queries';
 
 const skeletons = [1, 2, 3, 4, 5];
+const paginationTake = 20;
 
 const DisplayOffers: React.FC<{
   offers: OfferData[] | undefined;
@@ -12,9 +13,9 @@ const DisplayOffers: React.FC<{
   loading: boolean;
   showUtilities: boolean;
 }> = ({ offers = [], loading, error, showUtilities }) => {
-  const { numberOfElements, take, showLess, showMore } = usePagination(
+  const { numberOfElements, showLess, showMore } = usePagination(
     offers.length,
-    20
+    paginationTake
   );
   const [deleteOffer] = useMutation(DELETE_OFFER);
 
@@ -243,7 +244,7 @@ const DisplayOffers: React.FC<{
         )
       )}
       <div className='w-full flex items-center justify-around mt-5'>
-        {numberOfElements > take && (
+        {numberOfElements > paginationTake && (
           <button
             type='button'
             onClick={showLess}

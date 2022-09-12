@@ -1,10 +1,10 @@
 import type { NextPageWithLayout } from './_app';
 import Layout from '../components/layouts/layout';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import Modal from '../components/modal/Modal';
 import Filters from '../components/filters/Filters';
 import DisplayOffers from '../components/display-offers/DisplayOffers';
 import FiltersContext from '../context/filters-context';
+import FiltersModal from '../components/filters/FiltersModal';
 
 const Home: NextPageWithLayout = () => {
   const {
@@ -68,7 +68,7 @@ const Home: NextPageWithLayout = () => {
           Filtruj
         </button>
       </div>
-      <Modal show={showFilters} close={filterOffers} />
+      <FiltersModal show={showFilters} close={filterOffers} />
       {!showFilters && (
         <div className='px-5 2xl:px-0 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[400px_1fr] lg:gap-3'>
           <aside className='hidden lg:block p-5 lg:p-0'>

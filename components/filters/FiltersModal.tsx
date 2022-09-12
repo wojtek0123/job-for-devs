@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import Filters from '../filters/Filters';
+import Filters from './Filters';
 
-const Modal: React.FC<{
+const FiltersModal: React.FC<{
   show: boolean;
   close: () => void;
 }> = ({ show, close }) => {
@@ -39,4 +39,4 @@ const Modal: React.FC<{
   }
 };
 
-export default Modal;
+export default FiltersModal;
