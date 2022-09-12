@@ -23,7 +23,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: offersId.map((offerId) => ({
       params: { id: offerId.id },
     })),
-    fallback: false,
+    fallback: 'blocking',
   };
 };
 
@@ -46,6 +46,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       props: {
         offer: JSON.parse(JSON.stringify(offer)),
       },
+      revalidate: 10,
     };
   }
 
@@ -53,6 +54,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     redirect: '/',
     permanent: false,
     props: {},
+    revalidate: 10,
   };
 };
 

@@ -35,7 +35,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             }`}
             onClick={changeTechnologies}
           >
-            All
+            wszystkie
           </button>
           {technologies.map((technology, index) => (
             <button
@@ -66,7 +66,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             }`}
             onClick={changeCity}
           >
-            All
+            wszystkie
           </button>
           {cities.map((city, index) => (
             <button
@@ -98,7 +98,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             }`}
             onClick={changeSeniority}
           >
-            All
+            wszystkie
           </button>
           {seniorities.map((seniority, index) => (
             <button

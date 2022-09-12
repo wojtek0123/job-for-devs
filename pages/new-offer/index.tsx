@@ -109,7 +109,7 @@ const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
       setShowNotification(true);
       setNotification({
         message:
-          'Dodano ofertę pracy. Za chwilę zostaniesz przekierowany do niej',
+          'Dodano ofertę pracy. Za chwilę zostaniesz do niej przekierowany',
         isError: false,
       });
 
