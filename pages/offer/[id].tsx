@@ -237,13 +237,13 @@ const JobOfferDetails: NextPageWithLayout<{
             <input
               type='file'
               title='cv'
-              className='my-1 rounded-lg p-3 md:max-w-xs bg-white outline-green-500 '
+              className='my-1 rounded-lg p-3 md:max-w-xs bg-white outline-green-500 file:rounded-lg file:bg-gray-200 file:text-black file:border-none file:p-3 cursor-pointer file:cursor-pointer hover:file:bg-gray-300 file:transition-colors file:duration-300 file:mr-5'
               accept='.pdf, .doc, .docx'
             />
           </div>
           <button
             type='submit'
-            className='bg-white text-black py-3 px-5 max-w-xs w-full rounded-lg mt-4 mb-1 outline-green-500 hover:bg-gray-300 transition-colors duration-200'
+            className='bg-green-500 text-white py-3 px-5 max-w-xs w-full rounded-lg mt-4 mb-1 outline-green-500 hover:bg-green-600 transition-colors duration-300'
           >
             Aplikuj
           </button>
