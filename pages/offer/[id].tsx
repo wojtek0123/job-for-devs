@@ -1,16 +1,15 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from '../../components/layouts/layout';
 import { NextPageWithLayout } from '../_app';
 import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import prisma from '../../lib/prisma';
-import { OfferDataDetails } from '../../helpers/types';
+import { OfferDataDetails, INotification } from '../../helpers/types';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_APPLICATION, GET_USER_ID } from '../../graphql/queries';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { context as graphContext } from '../api/graphql/context';
-import { INotification } from '../../helpers/types';
 import Notification from '../../components/notification/Notification';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -189,7 +188,12 @@ const JobOfferDetails: NextPageWithLayout<{
         <p className='uppercase text-2xl text-black mb-3 font-bold lg:col-start-1 lg:col-end-2'>
           Aplikuj
         </p>
-        <form className='flex flex-col items-center' onSubmit={submitHandler}>
+        <form
+          className='flex flex-col items-center'
+          onSubmit={(event) => {
+            void (async () => await submitHandler(event))();
+          }}
+        >
           <div className='flex flex-col w-full md:flex-row md:justify-between mb-4 mt-2'>
             <div className='flex flex-col w-full md:mr-5 mb-4 md:my-0'>
               <input

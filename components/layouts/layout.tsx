@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import MainHeader from './MainHeader';
 import NewOfferHeader from './NewOfferHeader';
 
@@ -9,6 +10,9 @@ const Layout: React.FC<{
 }> = ({ children, typeHeader }) => {
   return (
     <>
+      <Head>
+        <title>Job for devs</title>
+      </Head>
       {typeHeader === 'main' && <MainHeader />}
       {typeHeader === 'new-offer' && <NewOfferHeader />}
       <main className='selection:bg-green-500 selection:text-white'>

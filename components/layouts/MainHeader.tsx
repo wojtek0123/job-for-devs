@@ -26,11 +26,11 @@ const MainHeader: React.FC = () => {
     await router.push(data.url);
   };
 
-  const toggleMenuHandler = () => {
+  const toggleMenuHandler = (): void => {
     setShowMenu((prevState) => !prevState);
   };
 
-  const closeMenuHandler = () => {
+  const closeMenuHandler = (): void => {
     setShowMenu(false);
   };
   return (
@@ -89,7 +89,7 @@ const MainHeader: React.FC = () => {
               </Link>
             )}
             {data && (
-              <Link href={`/profile/${data.userId.id}`}>
+              <Link href={`/profile/${data.userId.id as string}`}>
                 <a className='my-4' onClick={closeMenuHandler}>
                   Profil
                 </a>
@@ -99,7 +99,9 @@ const MainHeader: React.FC = () => {
               <button
                 type='button'
                 className='my-4 text-left'
-                onClick={singOutHandler}
+                onClick={() => {
+                  void (async () => await singOutHandler())();
+                }}
               >
                 Wyloguj
               </button>
@@ -126,7 +128,7 @@ const MainHeader: React.FC = () => {
             </Link>
           )}
           {session && !loading && !error && (
-            <Link href={`/profile/${data.userId.id}`}>
+            <Link href={`/profile/${data.userId.id as string}`}>
               <a className='mx-1 bg-gray-200 text-black px-3 py-2 w-max rounded-lg text-base md:text-lg sm:mr-2 hover:bg-gray-300 transition-colors duration-200 flex items-center'>
                 Profil
               </a>
@@ -136,7 +138,9 @@ const MainHeader: React.FC = () => {
             <button
               type='button'
               className='ml-1 bg-green-500 text-white px-3 py-2 rounded-lg text-base md:text-lg sm:ml-2 hover:bg-green-600 transition-colors duration-200'
-              onClick={singOutHandler}
+              onClick={() => {
+                void (async () => await singOutHandler())();
+              }}
             >
               Wyloguj
             </button>

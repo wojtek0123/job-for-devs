@@ -1,6 +1,8 @@
 import { OfferData } from '../../helpers/types';
 import Link from 'next/link';
 import usePagination from '../../hooks/usePagination';
+import { useMutation } from '@apollo/client';
+import { DELETE_OFFER } from '../../graphql/queries';
 
 const skeletons = [1, 2, 3, 4, 5];
 
@@ -9,12 +11,12 @@ const DisplayOffers: React.FC<{
   error: Error | undefined;
   loading: boolean;
   showUtilities: boolean;
-  onDeleteOffer?: (id: string) => void;
-}> = ({ offers = [], loading, error, showUtilities, onDeleteOffer }) => {
+}> = ({ offers = [], loading, error, showUtilities }) => {
   const { numberOfElements, take, showLess, showMore } = usePagination(
     offers.length,
     20
   );
+  const [deleteOffer] = useMutation(DELETE_OFFER);
 
   if (error) {
     return (
@@ -98,7 +100,7 @@ const DisplayOffers: React.FC<{
           <Link key={offer.id} href={`/offer/${offer.id}`}>
             <div>
               <div className='bg-gray-200 text-black rounded-lg w-full px-5 py-2 mt-5 cursor-pointer shadow-lg relative'>
-                {showUtilities && onDeleteOffer && (
+                {showUtilities && (
                   <div className='hidden lg:flex absolute left-0 -translate-x-full -translate-y-1/2 top-1/2 bottom-0 flex-col justify-center'>
                     <Link href={`/applications/${offer.id}`}>
                       <a className='h-5 w-5 fill-black hover:fill-green-500 transition-colors cursor-default duration-300 my-2 mr-1'>
@@ -122,7 +124,14 @@ const DisplayOffers: React.FC<{
                     <button
                       type='button'
                       title='Usuń'
-                      onClick={() => onDeleteOffer(offer.id)}
+                      onClick={() => {
+                        void (async () =>
+                          await deleteOffer({
+                            variables: {
+                              id: offer.id,
+                            },
+                          }))();
+                      }}
                     >
                       <svg
                         className='h-5 w-5 fill-black hover:fill-green-500 transition-colors duration-300 cursor-pointer my-2 mr-1'
@@ -183,7 +192,7 @@ const DisplayOffers: React.FC<{
                   </div>
                 </div>
               </div>
-              {showUtilities && onDeleteOffer && (
+              {showUtilities && (
                 <div className='flex lg:hidden mt-4'>
                   <Link
                     href={`/applications/${offer.id}`}
@@ -209,7 +218,14 @@ const DisplayOffers: React.FC<{
                   <button
                     type='button'
                     title='Usuń'
-                    onClick={() => onDeleteOffer(offer.id)}
+                    onClick={() => {
+                      void (async () =>
+                        await deleteOffer({
+                          variables: {
+                            id: offer.id,
+                          },
+                        }))();
+                    }}
                   >
                     <svg
                       className='h-8 w-8 fill-black hover:fill-green-500 transition-colors duration-300 cursor-pointer ml-4'

@@ -9,7 +9,7 @@ import DisplayOffers from '../../components/display-offers/DisplayOffers';
 import { OfferData } from '../../helpers/types';
 import userIcon from '../../public/user.svg';
 import { useMutation } from '@apollo/client';
-import { DELETE_OFFER, EDIT_NAME } from '../../graphql/queries';
+import { EDIT_NAME } from '../../graphql/queries';
 import Notification from '../../components/notification/Notification';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -135,7 +135,6 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
   }>({ message: '', isError: false });
 
   const [editName] = useMutation(EDIT_NAME);
-  const [deleteOffer] = useMutation(DELETE_OFFER);
 
   const offers: OfferData[] = props.applications.map(
     (application) => application.offer
@@ -144,11 +143,11 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
     new Set(offers.map((offer) => JSON.stringify(offer)))
   ).map((offer) => JSON.parse(offer));
 
-  const showPopup = () => {
+  const showPopup = (): void => {
     setShowEditPopup(true);
   };
 
-  const hidePopup = () => {
+  const hidePopup = (): void => {
     setShowEditPopup(false);
   };
 
@@ -201,30 +200,6 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
     setNameInput(event.currentTarget.value);
   };
 
-  const deleteOfferHandler = async (offerId: string): Promise<void> => {
-    try {
-      const data = await deleteOffer({
-        variables: {
-          id: offerId,
-        },
-      });
-      if (data.errors) {
-        setNotification({
-          message: 'Błąd przy usuwaniu oferty',
-          isError: true,
-        });
-        return;
-      }
-      setNotification({ message: 'Usunięto ofertę', isError: false });
-    } catch (error) {
-      setNotification({ message: 'Błąd przy usuwaniu oferty', isError: true });
-    } finally {
-      setTimeout(() => {
-        setShowNotification(false);
-      }, 4000);
-    }
-  };
-
   return (
     <div className='px-5 mt-5 max-w-7xl mx-auto w-full 2xl:px-0'>
       <Notification
@@ -248,7 +223,9 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
             </svg>
           </button>
           <form
-            onSubmit={submitChangeNameHandler}
+            onSubmit={(event) => {
+              void (async () => await submitChangeNameHandler(event))();
+            }}
             className='flex flex-col items-center px-5 lg:px-10'
           >
             <label htmlFor='change-name' className='text-lg mb-2'>
@@ -345,7 +322,6 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
             error={undefined}
             offers={props.postedOffers}
             showUtilities={true}
-            onDeleteOffer={deleteOfferHandler}
           />
         </div>
         {props.postedOffers.length === 0 && (

@@ -3,14 +3,13 @@ import { useContext } from 'react';
 import StepsContext, { stepsInfo } from '../../context/steps-context';
 
 const NewOfferHeader: React.FC = () => {
-  const { step, jumpToStep } = useContext(StepsContext);
+  const { step } = useContext(StepsContext);
 
   const renderStepsDetails = stepsInfo.map((stepInfo, index) => (
     <button
       type='button'
-      className='flex items-center'
+      className='flex items-center cursor-default'
       key={index}
-      // onClick={() => jumpToStep(index + 1)}
     >
       {index !== 0 && (
         <div className={`mx-3 w-3 h-[0.1rem] bg-gray-200 xl:mx-5`} />

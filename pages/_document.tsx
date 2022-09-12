@@ -1,11 +1,10 @@
-// eslint-disable-next-line no-unused-vars
 import { Html, Main, NextScript, Head } from 'next/document';
+import { ReactElement } from 'react';
 
-export default function Document() {
+export default function Document(): ReactElement {
   return (
     <Html lang='pl'>
       <Head>
-        <title>Job for devs</title>
         <meta charSet='UTF-8' />
         <meta
           name='description'
