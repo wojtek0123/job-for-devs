@@ -3,14 +3,19 @@ import { NextPageWithLayout } from '../_app';
 import { context as graphContext } from '../api/graphql/context';
 import { getSession } from 'next-auth/react';
 import Image from 'next/image';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from '../../components/layouts/layout';
 import DisplayOffers from '../../components/display-offers/DisplayOffers';
-import { OfferData } from '../../helpers/types';
 import userIcon from '../../public/user.svg';
-import { useMutation } from '@apollo/client';
-import { EDIT_NAME } from '../../graphql/queries';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  APPLICATIONS,
+  EDIT_NAME,
+  POSTED_OFFERS_BY_USER,
+} from '../../graphql/queries';
 import Notification from '../../components/notification/Notification';
+import { OfferData } from '../../helpers/types';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = context.params?.id ?? '';
@@ -50,81 +55,43 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const applications = await graphContext.prisma.application.findMany({
-    where: { userId: userId.toString() },
-    select: {
-      id: true,
-      offer: {
-        select: {
-          id: true,
-          city: true,
-          companyName: true,
-          exactSalary: true,
-          jobTitle: true,
-          createdAt: true,
-          location: true,
-          maxSalary: true,
-          minSalary: true,
-          technologies: true,
-          typeOfDayJob: true,
-          seniority: true,
-        },
-      },
-    },
-  });
-
-  const postedOffers = await graphContext.prisma.offer.findMany({
-    where: { userId: userId.toString() },
-    select: {
-      id: true,
-      city: true,
-      companyName: true,
-      exactSalary: true,
-      jobTitle: true,
-      createdAt: true,
-      location: true,
-      maxSalary: true,
-      minSalary: true,
-      technologies: true,
-      typeOfDayJob: true,
-      seniority: true,
-    },
-  });
-
   return {
     props: {
       user: JSON.parse(JSON.stringify(user)),
-      applications: JSON.parse(JSON.stringify(applications)),
-      postedOffers: JSON.parse(JSON.stringify(postedOffers)),
     },
   };
 };
 
 interface UserProps {
   user: { id: string; name: string; email: string; image: string };
-  applications: [
-    {
+}
+
+interface IApplication {
+  applications: Array<{
+    id: string;
+    offer: {
       id: string;
-      offer: {
-        id: string;
-        city: string;
-        companyName: string;
-        exactSalary: string;
-        jobTitle: string;
-        createdAt: string;
-        location: string;
-        maxSalary: string;
-        minSalary: string;
-        technologies: string[];
-        typeOfDayJob: string;
-        seniority: string;
-      };
-    }
-  ];
-  postedOffers: OfferData[];
+      city: string;
+      companyName: string;
+      exactSalary: string;
+      jobTitle: string;
+      createdAt: string;
+      location: string;
+      maxSalary: string;
+      minSalary: string;
+      technologies: string[];
+      typeOfDayJob: string;
+      seniority: string;
+    };
+  }>;
+}
+
+interface IPostedOffers {
+  postedOffersByUser: OfferData[];
 }
 
 const Profile: NextPageWithLayout<UserProps> = (props) => {
+  const [parent] = useAutoAnimate<HTMLDivElement>();
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [nameInput, setNameInput] = useState('');
   const [name, setName] = useState(props.user.name ?? 'Brak danych');
@@ -136,12 +103,27 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
 
   const [editName] = useMutation(EDIT_NAME);
 
-  const offers: OfferData[] = props.applications.map(
-    (application) => application.offer
-  );
-  const uniqueOffers = Array.from(
-    new Set(offers.map((offer) => JSON.stringify(offer)))
-  ).map((offer) => JSON.parse(offer));
+  const {
+    data: applications,
+    loading: applicationsLoading,
+    error: applicationsError,
+    refetch: refetchApplications,
+  } = useQuery<IApplication>(APPLICATIONS, {
+    variables: {
+      userId: props.user.id,
+    },
+  });
+
+  const {
+    data: postedOffers,
+    loading: postedOffersLoading,
+    error: postedOffersError,
+    refetch: refetchPostedOffers,
+  } = useQuery<IPostedOffers>(POSTED_OFFERS_BY_USER, {
+    variables: {
+      userId: props.user.id,
+    },
+  });
 
   const showPopup = (): void => {
     setShowEditPopup(true);
@@ -159,6 +141,9 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
     const enteredName = nameInput.trim();
 
     if (enteredName.length === 0) {
+      setShowNotification(true);
+      setNotification({ message: 'Wprowadź wprawidłowe dane', isError: true });
+      setTimeout(() => setShowNotification(false), 1000);
       return;
     }
 
@@ -200,23 +185,32 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
     setNameInput(event.currentTarget.value);
   };
 
+  useEffect(() => {
+    void (async () => {
+      await refetchPostedOffers();
+      await refetchApplications();
+    })();
+  }, []);
+
   return (
     <div className='px-5 mt-5 max-w-7xl mx-auto w-full 2xl:px-0'>
-      <Notification
-        isError={notification.isError}
-        message={notification.message}
-        show={showNotification}
-      />
+      <div className=''>
+        <Notification
+          isError={notification.isError}
+          message={notification.message}
+          show={showNotification}
+        />
+      </div>
       {showEditPopup && (
         <div className='fixed bottom-0 left-1/2 -translate-x-1/2 bg-green-500 shadow text-white w-full max-w-xl rounded-t-lg py-10 lg:bottom-5 lg:rounded-lg z-10'>
           <button
             type='button'
-            className='absolute top-2 right-2 p-2 flex items-center justify-center bg-white rounded-lg'
+            className='absolute top-2 right-2 p-2 flex items-center justify-center bg-white rounded-lg hover:bg-gray-300 transition-colors duration-300'
             onClick={hidePopup}
             title='close'
           >
             <svg
-              className='fill-green-500 w-5 h-5 hover:fill-green-600 transition-colors duration-300'
+              className='fill-green-500 w-5 h-5 hover:fill-green-600 hover:bg-gray-300 transition-colors duration-300'
               viewBox='0 0 384 512'
             >
               <path d='M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z' />
@@ -268,7 +262,7 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
           />
         )}
         <div className='flex flex-col mt-2 md:text-xl sm:ml-10'>
-          <div className='flex flex-col xs:flex-row sm:text-lg md:grid md:grid-cols-2 my-2'>
+          <div className='flex flex-col xs:flex-row text-lg md:grid md:grid-cols-2 my-2'>
             <p className='md:text-right pr-3'>Imię i nazwisko:</p>
             <div className='truncate flex'>
               <p>{name}</p>
@@ -287,7 +281,7 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
               </button>
             </div>
           </div>
-          <div className='flex flex-col xs:flex-row sm:text-lg md:grid md:grid-cols-2 my-2'>
+          <div className='flex flex-col xs:flex-row text-lg md:grid md:grid-cols-2 my-2'>
             <p className='md:text-right pr-3 min-w-max'>Adres email:</p>
             <p className='truncate'>{props.user.email}</p>
           </div>
@@ -298,35 +292,44 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
         <p className='text-xl lg:text-2xl col-start-1 col-end-2'>
           Oferty pracy, na które wysłano podanie
         </p>
-        <div className='lg:col-start-2 lg:col-end-3'>
+        <div className='lg:col-start-2 lg:col-end-3' ref={parent}>
           <DisplayOffers
-            loading={false}
-            error={undefined}
-            offers={uniqueOffers}
+            loading={applicationsLoading}
+            error={applicationsError}
+            offers={
+              applications
+                ? Array.from(
+                    new Set(
+                      applications.applications.map((offer) =>
+                        JSON.stringify(offer.offer)
+                      )
+                    )
+                  ).map((offer) => JSON.parse(offer))
+                : []
+            }
             showUtilities={false}
           />
         </div>
-
-        {uniqueOffers.length === 0 && (
-          <p className='mt-4'>Brak wysłanych podań</p>
-        )}
       </div>
       <hr className='mb-3 mt-6 bg-gray-200' />
       <div className='lg:grid lg:grid-cols-[400px_1fr]'>
         <p className='text-xl lg:text-2xl col-start-1 col-end-2'>
           Opublikowane oferty pracy
         </p>
-        <div className='lg:col-start-2 lg:col-end-3'>
+        <div className='lg:col-start-2 lg:col-end-3' ref={parent}>
           <DisplayOffers
-            loading={false}
-            error={undefined}
-            offers={props.postedOffers}
+            loading={postedOffersLoading}
+            error={postedOffersError}
+            offers={postedOffers?.postedOffersByUser}
             showUtilities={true}
+            refetch={() => {
+              void (async () => {
+                await refetchPostedOffers();
+                await refetchApplications();
+              })();
+            }}
           />
         </div>
-        {props.postedOffers.length === 0 && (
-          <p className='mt-4'>Brak opublikowanych ofert</p>
-        )}
       </div>
     </div>
   );

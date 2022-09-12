@@ -8,6 +8,7 @@ import DisplayOffers from '../../components/display-offers/DisplayOffers';
 import { OfferData } from '../../helpers/types';
 import ReturnButton from '../../components/return-button/ReturnButton';
 import usePagination from '../../hooks/usePagination';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession({ req: context.req });
@@ -97,6 +98,8 @@ interface ApplicationsProps {
 const paginationTake = 5;
 
 const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
+  const [parent] = useAutoAnimate<HTMLDivElement>();
+
   const { numberOfElements, showMore, showLess } = usePagination(
     props.offer.application.length,
     paginationTake
@@ -131,7 +134,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
             offers={offerData}
             error={undefined}
             loading={false}
-            showUtilities={true}
+            showUtilities={false}
           />
         </div>
       </div>
@@ -140,7 +143,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
         <p className='text-xl lg:text-2xl col-start-1 col-end-2'>
           Lista podań o pracę
         </p>
-        <div className='lg:col-start-2 lg:col-end-3'>
+        <div className='lg:col-start-2 lg:col-end-3' ref={parent}>
           {props.offer.application.length === 0 && (
             <p className='text-xl text-center my-3'>
               Jeszcze nikt nie wysłał podania

@@ -5,8 +5,10 @@ import Filters from '../components/filters/Filters';
 import DisplayOffers from '../components/display-offers/DisplayOffers';
 import FiltersContext from '../context/filters-context';
 import FiltersModal from '../components/filters/FiltersModal';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 const Home: NextPageWithLayout = () => {
+  const [parent] = useAutoAnimate<HTMLDivElement>();
   const {
     offers,
     loading,
@@ -74,7 +76,7 @@ const Home: NextPageWithLayout = () => {
           <aside className='hidden lg:block p-5 lg:p-0'>
             <Filters />
           </aside>
-          <section className='lg:col-start-2 lg:col-end-3'>
+          <section className='lg:col-start-2 lg:col-end-3' ref={parent}>
             <DisplayOffers
               error={error}
               loading={loading}

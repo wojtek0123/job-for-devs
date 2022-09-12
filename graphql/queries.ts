@@ -112,3 +112,44 @@ export const DELETE_OFFER = gql`
     }
   }
 `;
+
+export const APPLICATIONS = gql`
+  query Applications($userId: String) {
+    applications(userId: $userId) {
+      id
+      offer {
+        id
+        city
+        companyName
+        exactSalary
+        jobTitle
+        createdAt
+        location
+        maxSalary
+        minSalary
+        technologies
+        typeOfDayJob
+        seniority
+      }
+    }
+  }
+`;
+
+export const POSTED_OFFERS_BY_USER = gql`
+  query PostedOffersByUser($userId: String) {
+    postedOffersByUser(userId: $userId) {
+      id
+      city
+      companyName
+      exactSalary
+      jobTitle
+      createdAt
+      location
+      maxSalary
+      minSalary
+      technologies
+      typeOfDayJob
+      seniority
+    }
+  }
+`;

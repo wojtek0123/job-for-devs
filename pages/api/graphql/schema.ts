@@ -56,6 +56,7 @@ export const typeDefs = gql`
     name: String
     email: String
     message: String
+    offer: Offer
   }
 
   type User {
@@ -70,7 +71,7 @@ export const typeDefs = gql`
     offers: [Offer]
     userId(email: String): User
     applications(userId: String): [Application]
-    specificOffers(offerId: String): [Offer]
+    postedOffersByUser(userId: String): [Offer]
   }
 
   type Mutation {
@@ -112,7 +113,11 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     offers: (_parent: any, _args: any, context: Context) => {
-      return context.prisma.offer.findMany();
+      return context.prisma.offer.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
     },
     userId: (_parent: any, args: { email: string }, context: Context) => {
       return context.prisma.user.findUnique({ where: { email: args.email } });
@@ -126,16 +131,47 @@ export const resolvers = {
         where: { userId: args.userId },
         select: {
           id: true,
-          offerId: true,
+          offer: {
+            select: {
+              id: true,
+              city: true,
+              companyName: true,
+              exactSalary: true,
+              jobTitle: true,
+              createdAt: true,
+              location: true,
+              maxSalary: true,
+              minSalary: true,
+              technologies: true,
+              typeOfDayJob: true,
+              seniority: true,
+            },
+          },
         },
       });
     },
-    specificOffers: (
+    postedOffersByUser: (
       _parent: any,
-      args: { offerId: string },
+      args: { userId: string },
       context: Context
     ) => {
-      return context.prisma.offer.findMany({ where: { id: args.offerId } });
+      return context.prisma.offer.findMany({
+        where: { userId: args.userId },
+        select: {
+          id: true,
+          city: true,
+          companyName: true,
+          exactSalary: true,
+          jobTitle: true,
+          createdAt: true,
+          location: true,
+          maxSalary: true,
+          minSalary: true,
+          technologies: true,
+          typeOfDayJob: true,
+          seniority: true,
+        },
+      });
     },
   },
   Mutation: {
