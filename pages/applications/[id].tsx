@@ -1,5 +1,5 @@
 import { NextPageWithLayout } from '../_app';
-import { ReactElement, useState } from 'react';
+import { ReactElement } from 'react';
 import Layout from '../../components/layouts/layout';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
@@ -7,6 +7,7 @@ import { context as graphContext } from '../api/graphql/context';
 import DisplayOffers from '../../components/display-offers/DisplayOffers';
 import { OfferData } from '../../helpers/types';
 import ReturnButton from '../../components/return-button/ReturnButton';
+import usePagination from '../../hooks/usePagination';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession({ req: context.req });
@@ -93,10 +94,15 @@ interface ApplicationsProps {
   };
 }
 
-const take = 5;
+// const take = 5;
 
 const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
-  const [step, setStep] = useState(take);
+  const { numberOfElements, take, showMore, showLess } = usePagination(
+    props.offer.application.length,
+    5
+  );
+
+  // const [step, setStep] = useState(take);
 
   const offerData: OfferData[] = [
     {
@@ -115,19 +121,19 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
     },
   ];
 
-  const showMore = (): void => {
-    if (step > props.offer.application.length) {
-      return;
-    }
-    setStep((prevState) => prevState + take);
-  };
+  // const showMore = (): void => {
+  //   if (step > props.offer.application.length) {
+  //     return;
+  //   }
+  //   setStep((prevState) => prevState + take);
+  // };
 
-  const showLess = (): void => {
-    if (step <= take) {
-      return;
-    }
-    setStep((prevState) => prevState - take);
-  };
+  // const showLess = (): void => {
+  //   if (step <= take) {
+  //     return;
+  //   }
+  //   setStep((prevState) => prevState - take);
+  // };
 
   return (
     <div className='px-5 mt-5 max-w-7xl mx-auto w-full 2xl:px-0'>
@@ -157,7 +163,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
             </p>
           )}
           {props.offer.application.map((application, index) =>
-            index < step ? (
+            index < numberOfElements ? (
               <div
                 key={application.id}
                 className='bg-gray-200 p-5 rounded-lg my-5 flex flex-col items-start'
@@ -184,7 +190,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
           )}
           {props.offer.application.length !== 0 && (
             <div className='w-full flex items-center justify-around'>
-              {step > take && (
+              {numberOfElements > take && (
                 <button
                   type='button'
                   onClick={showLess}
@@ -193,7 +199,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
                   Mniej
                 </button>
               )}
-              {step < props.offer.application.length && (
+              {numberOfElements < props.offer.application.length && (
                 <button
                   type='button'
                   onClick={showMore}
