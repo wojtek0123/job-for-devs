@@ -141,9 +141,24 @@ const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
   };
 
   const content = {
-    1: <OfferDetails onFirstStep={firstStepHandler} />,
-    2: <OfferInfo onSecondStep={secondStepHandler} />,
-    3: <ComapnyInfo onThirdStep={thirdStepHandler} />,
+    1: (
+      <OfferDetails
+        onFirstStep={firstStepHandler}
+        formData={formData as FormData}
+      />
+    ),
+    2: (
+      <OfferInfo
+        onSecondStep={secondStepHandler}
+        formData={formData as FormData}
+      />
+    ),
+    3: (
+      <ComapnyInfo
+        onThirdStep={thirdStepHandler}
+        formData={formData as FormData}
+      />
+    ),
     4: <DisplayOfferDetails offer={formData as FormData} review={true} />,
   }[step];
 

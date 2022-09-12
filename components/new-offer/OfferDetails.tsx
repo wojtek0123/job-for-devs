@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Offer, IFirstStepData } from '../../helpers/types';
+import { Offer, IFirstStepData, FormData } from '../../helpers/types';
 import { technologies, seniorities } from '../../helpers/constants';
 import Link from 'next/link';
 import StepsContext from '../../context/steps-context';
@@ -16,21 +16,40 @@ const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
 
 const OfferDetails: React.FC<{
   onFirstStep: (firstStepData: IFirstStepData) => void;
-}> = ({ onFirstStep }) => {
+  formData: FormData;
+}> = ({ onFirstStep, formData }) => {
   const { nextStep } = useContext(StepsContext);
 
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
-    []
+  const [selectedCategory, setSelectedCategory] = useState(
+    formData?.category ?? ''
   );
-  const [enteredMinSalary, setEnteredMinSalary] = useState('');
-  const [enteredMaxSalary, setEnteredMaxSalary] = useState('');
-  const [enteredExactSalary, setExactSalary] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [selectedTypeOfDayJob, setSelectedTypeOfDayJob] = useState('');
-  const [selectedSeniority, setSelectedSeniority] = useState('');
-  const [enteredBenefits, setEnteredBenefits] = useState('');
-  const [enteredJobTitle, setEnteredJobTitle] = useState('');
+  const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
+    formData?.technologies ?? []
+  );
+  const [enteredMinSalary, setEnteredMinSalary] = useState(
+    formData?.minSalary ?? ''
+  );
+  const [enteredMaxSalary, setEnteredMaxSalary] = useState(
+    formData?.maxSalary ?? ''
+  );
+  const [enteredExactSalary, setExactSalary] = useState(
+    formData?.exactSalary ?? ''
+  );
+  const [selectedLocation, setSelectedLocation] = useState(
+    formData?.location ?? ''
+  );
+  const [selectedTypeOfDayJob, setSelectedTypeOfDayJob] = useState(
+    formData?.typeOfDayJob ?? ''
+  );
+  const [selectedSeniority, setSelectedSeniority] = useState(
+    formData?.seniority ?? ''
+  );
+  const [enteredBenefits, setEnteredBenefits] = useState(
+    formData?.benefits ?? ''
+  );
+  const [enteredJobTitle, setEnteredJobTitle] = useState(
+    formData?.jobTitle ?? ''
+  );
 
   const [salaryError, setSalaryError] = useState('');
   const [showErrors, setShowErrors] = useState(false);
@@ -354,10 +373,24 @@ const OfferDetails: React.FC<{
 
       <div className='flex flex-col mt-3 col-span-2 md:grid md:grid-cols-2 md:mb-6'>
         <label
-          className='text-lg mb-2 mt-4 col-start-1 col-end-2 lg:text-xl'
+          className='text-lg mb-2 mt-4 col-start-1 col-end-2 lg:text-xl flex flex-col lg:flex-row lg:items-center relative'
           htmlFor='benefits'
         >
           Dodatki dla pracownika
+          <div className='group hidden lg:block'>
+            <svg className='ml-2 w-5 h-5 fill-green-500' viewBox='0 0 512 512'>
+              <path d='M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-114.7 0-208-93.31-208-208S141.3 48 256 48s208 93.31 208 208S370.7 464 256 464zM256 336c-18 0-32 14-32 32s13.1 32 32 32c17.1 0 32-14 32-32S273.1 336 256 336zM289.1 128h-51.1C199 128 168 159 168 198c0 13 11 24 24 24s24-11 24-24C216 186 225.1 176 237.1 176h51.1C301.1 176 312 186 312 198c0 8-4 14.1-11 18.1L244 251C236 256 232 264 232 272V288c0 13 11 24 24 24S280 301 280 288V286l45.1-28c21-13 34-36 34-60C360 159 329 128 289.1 128z' />
+            </svg>
+            <div className='absolute bg-gray-200 top-0 -translate-y-3/4 left-1/2 translate-x-1/2 p-3 lg:transform-none lg:-top-3/4 lg:left-0 rounded-lg text-base hidden group-hover:block'>
+              <p>
+                Jeśli chcesz stworzyć listę odziel zdania naciskając enter.
+                Efekt zobaczysz w kroku 4 - podgląd.
+              </p>
+            </div>
+          </div>
+          <p className='text-sm lg:hidden'>
+            Jeśli chcesz stworzyć listę odziel zdania naciskając enter
+          </p>
         </label>
         <textarea
           name='benefits'

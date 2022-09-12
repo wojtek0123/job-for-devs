@@ -7,21 +7,28 @@ import {
 } from '../../helpers/functions';
 import ErrorMessage from './ErrorMessage';
 import StepsContext from '../../context/steps-context';
-import { IThirdStepData } from '../../helpers/types';
+import { FormData, IThirdStepData } from '../../helpers/types';
 import Notification from '../notification/Notification';
 
 const citiesLowerCase = cities.map((city) => city.toLowerCase());
 
 const ComapnyInfo: React.FC<{
   onThirdStep: (data: IThirdStepData) => void;
-}> = ({ onThirdStep }) => {
+  formData: FormData;
+}> = ({ onThirdStep, formData }) => {
   const { nextStep, previousStep } = useContext(StepsContext);
 
-  const [enteredCompanyName, setEnteredCompanyName] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
-  const [enteredStreet, setEnteredStreet] = useState('');
-  const [enteredBuildingNumber, setEnteredBuildingNumber] = useState('');
-  const [enteredHouseNumber, setEnteredHouseNumber] = useState('');
+  const [enteredCompanyName, setEnteredCompanyName] = useState(
+    formData?.companyName ?? ''
+  );
+  const [selectedCity, setSelectedCity] = useState(formData?.city ?? '');
+  const [enteredStreet, setEnteredStreet] = useState(formData?.street ?? '');
+  const [enteredBuildingNumber, setEnteredBuildingNumber] = useState(
+    formData?.building ?? ''
+  );
+  const [enteredHouseNumber, setEnteredHouseNumber] = useState(
+    formData?.house ?? ''
+  );
   const [showErrors, setShowErrors] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 

@@ -56,7 +56,11 @@ const DisplayOffers: React.FC<{
   }
 
   if (offers.length === 0) {
-    return <p className='text-xl'>Brak ofert do wyświetlenia</p>;
+    return (
+      <p className='text-center mt-10 text-2xl px-2 lg:text-3xl'>
+        Brak ofert do wyświetlenia
+      </p>
+    );
   }
 
   const showTimeDifference = (offer: OfferData): string => {
