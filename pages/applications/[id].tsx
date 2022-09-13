@@ -97,14 +97,14 @@ interface ApplicationsProps {
   };
 }
 
-const paginationTake = 5;
+const PAGINATION_TAKE = 5;
 
 const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
   const [parent] = useAutoAnimate<HTMLDivElement>();
 
   const { numberOfElements, showMore, showLess } = usePagination(
     props.offer.application.length,
-    paginationTake
+    PAGINATION_TAKE
   );
 
   const offerData: OfferData[] = [
@@ -180,7 +180,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
           )}
           {props.offer.application.length !== 0 && (
             <div className='w-full flex items-center justify-around'>
-              {numberOfElements > paginationTake && (
+              {numberOfElements > PAGINATION_TAKE && (
                 <button
                   type='button'
                   onClick={showLess}

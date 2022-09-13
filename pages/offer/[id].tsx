@@ -202,7 +202,7 @@ const JobOfferDetails: NextPageWithLayout<{
                 type='text'
                 title='name'
                 placeholder='Imie i nazwisko'
-                className='p-3 rounded-lg outline-green-500 min-w-max'
+                className='p-5 md:p-3 text-lg md:text-base rounded-lg outline-green-500 min-w-max'
                 maxLength={100}
                 value={nameInput}
                 onChange={changeNameInput}
@@ -214,7 +214,7 @@ const JobOfferDetails: NextPageWithLayout<{
                 type='text'
                 title='email'
                 placeholder='Twój email'
-                className='p-3 rounded-lg outline-green-500 min-w-max'
+                className='p-5 md:p-3 text-lg md:text-base rounded-lg outline-green-500 min-w-max'
                 maxLength={100}
                 value={emailInput}
                 onChange={changeEmailInput}
@@ -225,7 +225,7 @@ const JobOfferDetails: NextPageWithLayout<{
           <textarea
             aria-label='your message to the employer'
             placeholder='Wiadomość dla pracodawcy'
-            className='p-3 rounded-lg my-1 max-h-52 min-h-[13rem] resize-none outline-green-500 w-full'
+            className='p-5 md:p-3 text-lg md:text-base rounded-lg my-1 max-h-52 min-h-[13rem] resize-none outline-green-500 w-full'
             maxLength={500}
             onChange={changeMessageHandler}
             value={messageInput}
@@ -237,13 +237,13 @@ const JobOfferDetails: NextPageWithLayout<{
             <input
               type='file'
               title='cv'
-              className='my-1 rounded-lg p-3 md:max-w-xs bg-white outline-green-500 file:rounded-lg file:bg-gray-200 file:text-black file:border-none file:p-3 cursor-pointer file:cursor-pointer hover:file:bg-gray-300 file:transition-colors file:duration-300 file:mr-5'
+              className='my-1 rounded-lg p-5 md:p-3 md:max-w-xs bg-white outline-green-500 file:rounded-lg file:bg-gray-200 file:text-black file:border-none file:p-3 cursor-pointer file:cursor-pointer hover:file:bg-gray-300 file:transition-colors file:duration-300 file:mr-5'
               accept='.pdf, .doc, .docx'
             />
           </div>
           <button
             type='submit'
-            className='bg-green-500 text-white py-3 px-5 max-w-xs w-full rounded-lg mt-4 mb-1 outline-green-500 hover:bg-green-600 transition-colors duration-300'
+            className='bg-green-500 text-white p-5 md:p-3 text-lg md:text-base max-w-xs w-full rounded-lg mt-4 mb-1 outline-green-500 hover:bg-green-600 transition-colors duration-300'
           >
             Aplikuj
           </button>

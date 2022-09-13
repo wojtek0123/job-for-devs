@@ -103,7 +103,7 @@ const DisplayOfferDetails: React.FC<{
             {offer.technologies.map((technology, index) => (
               <span
                 key={index}
-                className='bg-gray-200 rounded-lg py-1 px-2 mr-2 my-1 shadow'
+                className='bg-gray-200 rounded-lg p-3 text-lg mr-2 my-1 shadow'
               >
                 {technology}
               </span>

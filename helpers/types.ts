@@ -141,3 +141,9 @@ export interface IThirdStepData {
   building: string;
   house: string;
 }
+
+export interface IUserID {
+  userId: {
+    id: string;
+  };
+}

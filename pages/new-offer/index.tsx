@@ -8,6 +8,7 @@ import {
   IThirdStepData,
   IFirstStepData,
   INotification,
+  IUserID,
 } from '../../helpers/types';
 import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
 import { useMutation, useQuery } from '@apollo/client';
@@ -18,12 +19,6 @@ import StepsContext, { stepsInfo } from '../../context/steps-context';
 import { NextPageWithLayout } from '../_app';
 import Layout from '../../components/layouts/layout';
 import Notification from '../../components/notification/Notification';
-
-interface IUserID {
-  userId: {
-    id: string;
-  };
-}
 
 const NewOffer: NextPageWithLayout = () => {
   const { step, previousStep, jumpToStep } = useContext(StepsContext);
