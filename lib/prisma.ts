@@ -8,7 +8,6 @@ if (process.env.NODE_ENV === 'production') {
   const globalWithPrisma = global as typeof globalThis & {
     prisma: PrismaClient;
   };
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!globalWithPrisma.prisma) {
     globalWithPrisma.prisma = new PrismaClient();
   }
