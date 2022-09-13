@@ -39,6 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       technologies: true,
       typeOfDayJob: true,
       seniority: true,
+      category: true,
       application: {
         select: {
           email: true,
@@ -92,6 +93,7 @@ interface ApplicationsProps {
     technologies: string[];
     typeOfDayJob: string;
     seniority: string;
+    category: string;
   };
 }
 
@@ -119,6 +121,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
       technologies: props.offer.technologies,
       typeOfDayJob: props.offer.typeOfDayJob,
       seniority: props.offer.seniority,
+      category: props.offer.category,
     },
   ];
 
