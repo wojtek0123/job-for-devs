@@ -1,7 +1,5 @@
-import { GetServerSideProps } from 'next';
 import { NextPageWithLayout } from '../_app';
-import { context as graphContext } from '../api/graphql/context';
-import { getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from '../../components/layouts/layout';
@@ -11,60 +9,13 @@ import { useMutation, useQuery } from '@apollo/client';
 import {
   APPLICATIONS,
   EDIT_NAME,
+  GET_USER_ID,
   POSTED_OFFERS_BY_USER,
 } from '../../graphql/queries';
 import Notification from '../../components/notification/Notification';
-import { OfferData } from '../../helpers/types';
+import { OfferData, IUserID } from '../../helpers/types';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const userId = context.params?.id ?? '';
-  const session = await getSession({ req: context.req });
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-      props: {},
-    };
-  }
-
-  if (!userId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-      props: {},
-    };
-  }
-
-  const user = await graphContext.prisma.user.findUnique({
-    where: { id: userId.toString() },
-  });
-
-  if (user?.email !== session.user?.email) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-      props: {},
-    };
-  }
-
-  return {
-    props: {
-      user: JSON.parse(JSON.stringify(user)),
-    },
-  };
-};
-
-interface UserProps {
-  user: { id: string; name: string; email: string; image: string };
-}
+import { useRouter } from 'next/router';
 
 interface IApplication {
   applications: Array<{
@@ -90,17 +41,36 @@ interface IPostedOffers {
   postedOffersByUser: OfferData[];
 }
 
-const Profile: NextPageWithLayout<UserProps> = (props) => {
+const Profile: NextPageWithLayout = () => {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    async onUnauthenticated() {
+      await router.push('/login');
+    },
+  });
+
+  if (status === 'loading') {
+    return (
+      <div className='w-full text-center text-2xl'>Sprawdzanie uprawnień!</div>
+    );
+  }
+
   const [parent] = useAutoAnimate<HTMLDivElement>();
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [nameInput, setNameInput] = useState('');
-  const [name, setName] = useState(props.user.name ?? 'Brak danych');
+  const [name, setName] = useState(session.user?.name ?? 'Brak danych');
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
     isError: boolean;
   }>({ message: '', isError: false });
 
+  const { data: userId } = useQuery<IUserID>(GET_USER_ID, {
+    variables: {
+      email: session.user?.email,
+    },
+  });
   const [editName] = useMutation(EDIT_NAME);
 
   const {
@@ -110,7 +80,7 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
     refetch: refetchApplications,
   } = useQuery<IApplication>(APPLICATIONS, {
     variables: {
-      userId: props.user.id,
+      userId: userId?.userId.id,
     },
   });
 
@@ -121,7 +91,7 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
     refetch: refetchPostedOffers,
   } = useQuery<IPostedOffers>(POSTED_OFFERS_BY_USER, {
     variables: {
-      userId: props.user.id,
+      userId: userId?.userId.id,
     },
   });
 
@@ -150,7 +120,7 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
     try {
       const data = await editName({
         variables: {
-          userId: props.user.id,
+          userId: userId?.userId.id,
           name: enteredName,
         },
       });
@@ -243,16 +213,16 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
       )}
 
       <div className='flex flex-col sm:flex-row justify-center sm:justify-start items-start sm:items-center sm:mb-5'>
-        {props.user.image !== null && (
+        {session.user?.image && (
           <Image
-            src={props.user.image}
+            src={session.user?.image}
             alt='avatar'
             width={150}
             height={150}
             className='rounded-lg'
           />
         )}
-        {props.user.image === null && (
+        {!session.user?.image && (
           <Image
             src={userIcon}
             alt='avatar'
@@ -283,7 +253,7 @@ const Profile: NextPageWithLayout<UserProps> = (props) => {
           </div>
           <div className='flex flex-col xs:flex-row text-lg md:grid md:grid-cols-2 my-2'>
             <p className='md:text-right pr-3 min-w-max'>Adres email:</p>
-            <p className='truncate'>{props.user.email}</p>
+            <p className='truncate'>{session.user?.email}</p>
           </div>
         </div>
       </div>
