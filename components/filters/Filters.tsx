@@ -1,13 +1,20 @@
-import React, { useContext } from 'react';
-import { technologies, seniorities, cities } from '../../helpers/constants';
+import { useContext } from 'react';
+import {
+  technologies,
+  seniorities,
+  cities,
+  categories,
+} from '../../helpers/constants';
 import FiltersContext from '../../context/filters-context';
 
 const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
   const {
+    changeCategory,
     changeCity,
     changeTechnologies,
     changeSeniority,
     selectedCity,
+    selectedCategory,
     selectedSeniority,
     selectedTechnologies,
     onFilter,
@@ -21,14 +28,43 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
   };
 
   return (
-    <form onSubmit={submitHandler} className='bg-white'>
+    <form onSubmit={submitHandler} className='bg-white relative'>
+      <div className='mt-3'>
+        <p className='text-lg'>Kategoria</p>
+        <button
+          type='button'
+          id='clear-category'
+          className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
+            selectedCategory === ''
+              ? 'bg-green-500 text-white'
+              : 'bg-gray-200 text-black'
+          }`}
+          onClick={changeCategory}
+        >
+          wszystkie
+        </button>
+        {categories.map((category, index) => (
+          <button
+            type='button'
+            key={index}
+            className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
+              selectedCategory.includes(category.toLowerCase())
+                ? 'bg-green-500 text-white'
+                : 'bg-gray-200 text-black'
+            }`}
+            onClick={changeCategory}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
       <div className='mt-3'>
         <p className='text-lg'>Technologie</p>
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3'>
           <button
             type='button'
             id='clear-technologies'
-            className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+            className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
               selectedTechnologies.length === 0
                 ? 'bg-green-500 text-white'
                 : 'bg-gray-200 text-black'
@@ -41,7 +77,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedTechnologies.includes(technology.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
@@ -59,7 +95,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
           <button
             type='button'
             id='clear-city'
-            className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+            className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
               selectedCity === ''
                 ? 'bg-green-500 text-white'
                 : 'bg-gray-200 text-black'
@@ -72,7 +108,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedCity.includes(city.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200'
@@ -91,7 +127,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
           <button
             type='button'
             id='clear-seniority'
-            className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+            className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
               selectedSeniority === ''
                 ? 'bg-green-500 text-white'
                 : 'bg-gray-200 text-black'
@@ -104,7 +140,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedSeniority.includes(seniority.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200'
@@ -118,7 +154,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
       </div>
       <button
         type='submit'
-        className='bg-green-500 text-white py-3 rounded-lg mt-10 w-full hover:bg-green-600 transition-colors duration-300'
+        className='bg-green-500 sticky bottom-2 shadow-green-500 text-white p-5 md:p-3 text-lg rounded-lg mt-10 w-full hover:bg-green-600 transition-colors duration-300'
       >
         Filtruj
       </button>

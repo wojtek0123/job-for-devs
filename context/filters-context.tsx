@@ -8,10 +8,12 @@ interface IFilters {
   city: string;
   seniority: string;
   jobTitle: string;
+  category: string;
 }
 
 interface IFiltersContext {
   enteredTitle: string;
+  selectedCategory: string;
   selectedTechnologies: string[];
   selectedCity: string;
   selectedSeniority: string;
@@ -19,6 +21,7 @@ interface IFiltersContext {
   loading: boolean;
   error: Error | undefined;
   refetch: () => void;
+  changeCategory: (event: React.FormEvent<HTMLButtonElement>) => void;
   changeTechnologies: (event: React.FormEvent<HTMLButtonElement>) => void;
   changeSeniority: (event: React.FormEvent<HTMLButtonElement>) => void;
   changeCity: (event: React.FormEvent<HTMLButtonElement>) => void;
@@ -28,6 +31,7 @@ interface IFiltersContext {
 
 const FiltersContext = React.createContext<IFiltersContext>({
   enteredTitle: '',
+  selectedCategory: '',
   selectedTechnologies: [],
   selectedCity: '',
   selectedSeniority: '',
@@ -35,12 +39,15 @@ const FiltersContext = React.createContext<IFiltersContext>({
   loading: false,
   error: undefined,
   refetch: () => {},
+  changeCategory: () => {},
   changeTechnologies: () => {},
   changeSeniority: () => {},
   changeCity: () => {},
   changeTitle: () => {},
   onFilter: () => {},
 });
+
+type resetButtonIds = 'clear-category' | 'clear-city' | 'clear-seniority';
 
 export const FiltersContextProvider: React.FC<{
   children: JSX.Element;
@@ -49,6 +56,7 @@ export const FiltersContextProvider: React.FC<{
     GET_OFFERS
   );
   const [offers, setOffers] = useState<OfferData[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
     []
   );
@@ -89,24 +97,16 @@ export const FiltersContextProvider: React.FC<{
     setSelectedTechnologies((prevState) => [...prevState, selectedTechnology]);
   };
 
-  const changeSeniorityHandler = (
-    event: React.FormEvent<HTMLButtonElement>
+  const changeValueHandler = (
+    event: React.FormEvent<HTMLButtonElement>,
+    id: resetButtonIds,
+    fn: (value: string) => void
   ): void => {
-    if (event.currentTarget.id === 'clear-seniority') {
-      setSelectedSeniority('');
+    if (event.currentTarget.id === id) {
+      fn('');
       return;
     }
-    setSelectedSeniority(event.currentTarget.textContent?.toLowerCase() ?? '');
-  };
-
-  const changeCityHandler = (
-    event: React.FormEvent<HTMLButtonElement>
-  ): void => {
-    if (event.currentTarget.id === 'clear-city') {
-      setSelectedCity('');
-      return;
-    }
-    setSelectedCity(event.currentTarget.textContent?.toLowerCase() ?? '');
+    fn(event.currentTarget.textContent?.toLowerCase() ?? '');
   };
 
   const filterByTechnologiesCitySeniority = (event: React.FormEvent): void => {
@@ -120,7 +120,8 @@ export const FiltersContextProvider: React.FC<{
       selectedCity.length === 0 &&
       selectedSeniority.length === 0 &&
       selectedTechnologies.length === 0 &&
-      enteredTitle.length === 0
+      enteredTitle.length === 0 &&
+      selectedCategory.length === 0
     ) {
       setOffers(data.offers);
       return;
@@ -130,6 +131,7 @@ export const FiltersContextProvider: React.FC<{
       city: selectedCity.toLowerCase(),
       seniority: selectedSeniority.toLowerCase(),
       jobTitle: enteredTitle.toLowerCase(),
+      category: selectedCategory.toLowerCase(),
     };
 
     let filteredOffers;
@@ -143,15 +145,11 @@ export const FiltersContextProvider: React.FC<{
     } else {
       filteredOffers = data.offers;
     }
-    // Object.keys(filters).every((key) => offer[key] === filters[key] || filters[key] === ''
 
-    const filteredOffersByAllParameters = filteredOffers.filter(
-      (offer) =>
-        (offer.city.toLowerCase() === filters.city || filters.city === '') &&
-        (offer.seniority.toLowerCase() === filters.seniority ||
-          filters.seniority === '') &&
-        (offer.jobTitle.toLowerCase().includes(filters.jobTitle) ||
-          filters.jobTitle === '')
+    const filteredOffersByAllParameters = filteredOffers.filter((offer) =>
+      [...Object.keys(filters)].every(
+        (key) => offer[key].includes(filters[key]) || filters[key] === ''
+      )
     );
 
     setOffers(filteredOffersByAllParameters);
@@ -165,6 +163,7 @@ export const FiltersContextProvider: React.FC<{
 
   const value = {
     enteredTitle,
+    selectedCategory,
     selectedTechnologies,
     selectedCity,
     selectedSeniority,
@@ -172,9 +171,13 @@ export const FiltersContextProvider: React.FC<{
     loading,
     error,
     refetch,
+    changeCategory: (event: React.FormEvent<HTMLButtonElement>) =>
+      changeValueHandler(event, 'clear-category', setSelectedCategory),
     changeTechnologies: changeTechnologiesHandler,
-    changeCity: changeCityHandler,
-    changeSeniority: changeSeniorityHandler,
+    changeCity: (event: React.FormEvent<HTMLButtonElement>) =>
+      changeValueHandler(event, 'clear-city', setSelectedCity),
+    changeSeniority: (event: React.FormEvent<HTMLButtonElement>) =>
+      changeValueHandler(event, 'clear-seniority', setSelectedSeniority),
     changeTitle: changeTitleHandler,
     onFilter: filterByTechnologiesCitySeniority,
   };

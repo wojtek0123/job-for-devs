@@ -15,6 +15,7 @@ export const GET_OFFERS = gql`
       technologies
       typeOfDayJob
       seniority
+      category
     }
   }
 `;

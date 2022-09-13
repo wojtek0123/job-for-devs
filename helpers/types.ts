@@ -59,6 +59,7 @@ export interface OfferData {
   technologies: string[];
   typeOfDayJob: string;
   seniority: string;
+  category: string;
 }
 
 export interface FormData {

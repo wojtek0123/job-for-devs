@@ -39,3 +39,5 @@ export const technologies = [
   'PHP',
   'Laravel',
 ];
+
+export const categories = ['Frontend', 'Backend', 'Fullstack'];
