@@ -62,17 +62,17 @@ const Login: NextPage = () => {
   }, [session]);
 
   return (
-    <>
-      <div className='flex flex-col bg-gray-200 p-10 text-black border border-gray-200 sm:rounded-lg absolute inset-0 justify-center items-center md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 lg:max-w-xl shadow-xl'>
-        <div className='absolute top-4 left-4'>
+    <div className='min-h-screen w-full flex items-center justify-center'>
+      <div className='flex flex-col w-full bg-gray-200 p-5 md:p-10 text-black border border-gray-200 sm:rounded-lg inset-0 items-center justify-evenly lg:justify-center md:max-w-xl shadow-xl min-h-screen md:min-h-max'>
+        <div className='flex justify-start w-full mb-5 md:mb-10'>
           <ReturnButton isGray={false} />
         </div>
-        <h1 className='text-center mb-6 mt-2 text-2xl'>
+        <h1 className='text-center mb-6 mt-2 text-4xl'>
           Zaloguj się do Job for Devs
         </h1>
         <div className='flex flex-col justify-center w-full items-center'>
           <button
-            className='bg-white text-black w-full max-w-[15rem] py-2 my-2 rounded-lg hover:bg-gray-300 transition-colors duration-300 flex items-center justify-center'
+            className='bg-white text-lg md:text-base text-black w-full max-w-sm md:max-w-[15rem] p-5 md:p-3 my-2 rounded-lg hover:bg-gray-300 transition-colors duration-300 flex items-center justify-center'
             type='button'
             onClick={() => {
               void (async () => await signInWithGithub())();
@@ -89,7 +89,7 @@ const Login: NextPage = () => {
             }}
             className='flex flex-col w-full items-center'
           >
-            <label htmlFor='email' className='mt-6 mb-2'>
+            <label htmlFor='email' className='mt-6 mb-2 text-lg'>
               Email
             </label>
             <input
@@ -97,12 +97,12 @@ const Login: NextPage = () => {
               id='email'
               placeholder='email@przyklad.com'
               ref={emailInputRef}
-              className='rounded-lg px-3 py-2  w-full max-w-[15rem] text-black'
+              className='rounded-lg text-lg md:text-base p-5 md:p-3 w-full max-w-sm md:max-w-[15rem] text-black outline-green-500'
               autoComplete='off'
             />
             <button
               type='submit'
-              className='bg-white text-black rounded-lg mt-7 py-2 cursor-pointer w-full max-w-[15rem] hover:bg-gray-300 transition-colors duration-300'
+              className='bg-white text-lg md:text-base text-black rounded-lg my-7 p-5 md:p-3 cursor-pointer w-full max-w-sm md:max-w-[15rem] hover:bg-gray-300 transition-colors duration-300'
             >
               Zaloguj się
             </button>
@@ -114,7 +114,7 @@ const Login: NextPage = () => {
         message={notification.message}
         isError={notification.isError}
       />
-    </>
+    </div>
   );
 };
 

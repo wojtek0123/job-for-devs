@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Offer, IFirstStepData, FormData } from '../../helpers/types';
-import { technologies, seniorities } from '../../helpers/constants';
+import { technologies, seniorities, categories } from '../../helpers/constants';
 import Link from 'next/link';
 import StepsContext from '../../context/steps-context';
 import ErrorMessage from './ErrorMessage';
@@ -10,7 +10,7 @@ import {
 } from '../../helpers/functions';
 import Notification from '../notification/Notification';
 
-const categories = ['Frontend', 'Backend', 'Fullstack'];
+
 const TypeOfDayJobs = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
 
@@ -178,7 +178,7 @@ const OfferDetails: React.FC<{
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedCategory.includes(category.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
@@ -204,7 +204,7 @@ const OfferDetails: React.FC<{
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedTechnologies.includes(technology.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
@@ -298,7 +298,7 @@ const OfferDetails: React.FC<{
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedLocation.includes(location.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
@@ -324,7 +324,7 @@ const OfferDetails: React.FC<{
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedTypeOfDayJob.includes(typeOfDayJob.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
@@ -354,7 +354,7 @@ const OfferDetails: React.FC<{
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedSeniority.includes(seniority.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'

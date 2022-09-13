@@ -82,7 +82,7 @@ const ComapnyInfo: React.FC<{
           type='text'
           id='company-name'
           maxLength={100}
-          className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
+          className='p-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
           placeholder='Nazwa firmy'
           onChange={(event) => handleInputData(event, setEnteredCompanyName)}
@@ -101,7 +101,7 @@ const ComapnyInfo: React.FC<{
             <button
               type='button'
               key={index}
-              className={`px-3 py-1 rounded-lg mr-1 my-1 ${
+              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedCity.includes(city.toLowerCase())
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-black'
@@ -120,7 +120,7 @@ const ComapnyInfo: React.FC<{
           type='text'
           id='input-location'
           placeholder='Inne miasto'
-          className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
+          className='p-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
           value={
             citiesLowerCase.includes(selectedCity.toLowerCase())
@@ -147,7 +147,7 @@ const ComapnyInfo: React.FC<{
           id='street'
           placeholder='Nazwa ulicy'
           maxLength={100}
-          className='py-3 px-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
+          className='p-3 rounded-lg text-black text-base outline-green-500 w-full bg-gray-100 col-start-2 col-end-3'
           autoComplete='off'
           value={enteredStreet}
           onChange={(event) => handleInputData(event, setEnteredStreet)}
@@ -160,7 +160,7 @@ const ComapnyInfo: React.FC<{
               title='building number'
               placeholder='Nr budynku'
               maxLength={7}
-              className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] mr-1 sm:mr-0'
+              className='p-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] mr-1 sm:mr-0'
               autoComplete='off'
               value={enteredBuildingNumber}
               onChange={(event) =>
@@ -173,7 +173,7 @@ const ComapnyInfo: React.FC<{
               title='house number'
               placeholder='Nr mieszkania'
               maxLength={7}
-              className='py-3 px-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] ml-1 sm:ml-0'
+              className='p-3 rounded-lg text-black text-base border border-gray-200 outline-green-500 w-full bg-gray-100 col-start-2 col-end-3 max-w-[10rem] ml-1 sm:ml-0'
               autoComplete='off'
               value={enteredHouseNumber}
               onChange={(event) =>

@@ -8,13 +8,13 @@ const ReturnButton: React.FC<{ isGray: boolean }> = ({ isGray }) => {
   };
 
   const classes = isGray
-    ? 'bg-gray-200 border  hover:bg-gray-300'
-    : 'bg-white border hover:bg-gray-300';
+    ? 'bg-gray-200  hover:bg-gray-300'
+    : 'bg-white hover:bg-gray-300';
 
   return (
     <button
       type='button'
-      className={`inline-flex items-center  shadow px-4 py-1 rounded-lg ml-2 xl:ml-0 text-black text-lg transition-colors duration-300 ${classes}`}
+      className={`inline-flex items-center shadow px-5 py-4 md:px-3 md:py-2 rounded-lg ml-2 xl:ml-0 text-black text-lg transition-colors duration-300 ${classes}`}
       onClick={returnButtonHandler}
     >
       <svg className='w-4 h-4 fill-black' viewBox='0 0 448 512'>
