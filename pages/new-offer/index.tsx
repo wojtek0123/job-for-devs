@@ -1,4 +1,3 @@
-import { GetServerSideProps } from 'next';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import OfferDetails from '../../components/new-offer/OfferDetails';
 import OfferInfo from '../../components/new-offer/OfferInfo';
@@ -11,51 +10,30 @@ import {
   INotification,
 } from '../../helpers/types';
 import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
-import { useMutation } from '@apollo/client';
-import { ADD_OFFER } from '../../graphql/queries';
+import { useMutation, useQuery } from '@apollo/client';
+import { ADD_OFFER, GET_USER_ID } from '../../graphql/queries';
 import { useRouter } from 'next/router';
-import { getSession } from 'next-auth/react';
-import { context as graphContext } from '../api/graphql/context';
+import { useSession } from 'next-auth/react';
 import StepsContext, { stepsInfo } from '../../context/steps-context';
 import { NextPageWithLayout } from '../_app';
 import Layout from '../../components/layouts/layout';
 import Notification from '../../components/notification/Notification';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession({ req: context.req });
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-      props: {},
-    };
-  }
-
-  const user = await graphContext.prisma.user.findUnique({
-    where: { email: session.user?.email ?? '' },
-  });
-
-  return {
-    props: {
-      user: JSON.parse(JSON.stringify(user)),
-    },
-  };
-};
-
-interface SessionProps {
-  user: {
+interface IUserID {
+  userId: {
     id: string;
-    name: string;
-    email: string;
   };
 }
 
-const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
+const NewOffer: NextPageWithLayout = () => {
   const { step, previousStep, jumpToStep } = useContext(StepsContext);
   const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    async onUnauthenticated() {
+      await router.push('/login');
+    },
+  });
   const [addOffer] = useMutation(ADD_OFFER);
   const [notification, setNotification] = useState<INotification>({
     message: '',
@@ -73,6 +51,16 @@ const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
     const offerId: string = id;
     await router.push(`/offer/${offerId}`);
   }
+
+  if (status === 'loading') {
+    return <div>Sprawdzanie uprawnień!</div>;
+  }
+
+  const { data: userId } = useQuery<IUserID>(GET_USER_ID, {
+    variables: {
+      email: session.user?.email,
+    },
+  });
 
   const createNewOffer = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
@@ -100,7 +88,7 @@ const NewOffer: NextPageWithLayout<SessionProps> = (props) => {
           requirements: data.requirements,
           advantages: data.advantages,
           benefits: data.benefits,
-          userId: props.user.id,
+          userId: userId?.userId.id,
         },
       });
       if (newOffer.errors) {
