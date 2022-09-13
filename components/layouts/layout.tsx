@@ -12,6 +12,10 @@ const Layout: React.FC<{
     <>
       <Head>
         <title>Job for devs</title>
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1, maximum-scale=1'
+        />
       </Head>
       {typeHeader === 'main' && <MainHeader />}
       {typeHeader === 'new-offer' && <NewOfferHeader />}

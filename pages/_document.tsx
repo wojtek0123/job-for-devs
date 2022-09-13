@@ -10,10 +10,6 @@ export default function Document(): ReactElement {
           name='description'
           content='App to help devs find a job or for employers to find a employees'
         />
-        <meta
-          name='viewport'
-          content='width=device-width, initial-scale=1, maximum-scale=1'
-        />
         <link rel='icon' href='/code.svg' />
       </Head>
       <body className='overflow-x-hidden scrollbar-thumb-green-500 scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-rounded-lg'>
