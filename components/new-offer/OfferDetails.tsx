@@ -7,9 +7,8 @@ import ErrorMessage from './ErrorMessage';
 import {
   handleInputData,
   checkIsLengthIsGreaterThanZero,
-} from '../../helpers/functions';
+} from '../../utils/functions';
 import Notification from '../notification/Notification';
-
 
 const TypeOfDayJobs = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
@@ -232,7 +231,7 @@ const OfferDetails: React.FC<{
           Wynagrodzenie
           <span className='ml-1 text-red-600'>*</span>
         </p>
-        <div className='flex flex-col items-start sm:justify-between sm:items-center sm:flex-row md:flex-col md:items-start lg:items-center lg:flex-row w-full col-start-2 col-end-3 lg:grid-cols-3'>
+        <div className='flex flex-col items-start sm:justify-between sm:items-center sm:flex-row md:flex-col md:items-start lg:items-center lg:flex-row w-full col-start-2 col-end-3'>
           <div className='flex items-center'>
             <input
               type='number'
@@ -241,7 +240,7 @@ const OfferDetails: React.FC<{
               min={2800}
               max={500000}
               maxLength={5}
-              className='rounded-lg text-black p-3 max-w-[10rem] min-w-fit w-full outline-green-500 bg-gray-100'
+              className='rounded-lg text-black p-3 max-w-[8rem] outline-green-500 bg-gray-100 lg:col-start-1 lg:col-end-2'
               autoComplete='off'
               value={enteredMinSalary}
               onChange={(event) => handleInputData(event, setEnteredMinSalary)}
@@ -254,13 +253,13 @@ const OfferDetails: React.FC<{
               placeholder='Do'
               max={500000}
               maxLength={5}
-              className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-fit bg-gray-100 outline-green-500'
+              className='rounded-lg text-black p-3 w-full max-w-[8rem] bg-gray-100 outline-green-500 lg:col-start-2 lg:col-end-3'
               autoComplete='off'
               value={enteredMaxSalary}
               onChange={(event) => handleInputData(event, setEnteredMaxSalary)}
             />
           </div>
-          <span className='my-2'>lub</span>
+          <div className='my-2 lg:col-start-3 lg:col-end-4'>lub</div>
           <input
             type='number'
             id='salary'
@@ -268,7 +267,7 @@ const OfferDetails: React.FC<{
             min={2800}
             max={500000}
             maxLength={5}
-            className='rounded-lg text-black p-3 w-full max-w-[10rem] min-w-max bg-gray-100 outline-green-500'
+            className='rounded-lg text-black p-3 w-full max-w-[8rem] bg-gray-100 outline-green-500 lg:col-start-4 lg:col-end-5'
             autoComplete='off'
             value={enteredExactSalary}
             onChange={(event) => handleInputData(event, setExactSalary)}

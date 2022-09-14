@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import {
   checkIsLengthIsGreaterThanZero,
   handleInputData,
-} from '../../helpers/functions';
+} from '../../utils/functions';
 import StepsContext from '../../context/steps-context';
 import { FormData, ISecondStepData } from '../../helpers/types';
 import ErrorMessage from './ErrorMessage';

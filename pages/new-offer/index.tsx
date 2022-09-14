@@ -112,7 +112,7 @@ const NewOffer: NextPageWithLayout = () => {
   }, [formData]);
 
   const firstStepHandler = (firstStepData: IFirstStepData): void => {
-    setFormData(Object.assign({}, firstStepData));
+    setFormData(Object.assign({}, formData, firstStepData));
   };
 
   const secondStepHandler = (secondStepData: ISecondStepData): void => {

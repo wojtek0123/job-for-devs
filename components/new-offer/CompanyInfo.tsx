@@ -4,7 +4,7 @@ import {
   handleButtonData,
   handleInputData,
   checkIsLengthIsGreaterThanZero,
-} from '../../helpers/functions';
+} from '../../utils/functions';
 import ErrorMessage from './ErrorMessage';
 import StepsContext from '../../context/steps-context';
 import { FormData, IThirdStepData } from '../../helpers/types';
