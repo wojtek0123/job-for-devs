@@ -49,6 +49,7 @@ export const typeDefs = gql`
     benefits: String
     createdAt: Date
     updatedAt: Date
+    userId: String
   }
 
   type Application {
@@ -69,6 +70,7 @@ export const typeDefs = gql`
 
   type Query {
     offers: [Offer]
+    offer(offerId: String): Offer
     userId(email: String): User
     applications(userId: String): [Application]
     postedOffersByUser(userId: String): [Offer]
@@ -116,6 +118,14 @@ export const resolvers = {
       return context.prisma.offer.findMany({
         orderBy: {
           createdAt: 'desc',
+        },
+      });
+    },
+    offer: (_parent: any, args: { offerId: string }, context: Context) => {
+      return context.prisma.offer.findUnique({
+        where: { id: args.offerId },
+        select: {
+          userId: true,
         },
       });
     },

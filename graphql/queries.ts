@@ -154,3 +154,11 @@ export const POSTED_OFFERS_BY_USER = gql`
     }
   }
 `;
+
+export const GET_OFFER = gql`
+  query Offer($offerId: String) {
+    offer(offerId: $offerId) {
+      userId
+    }
+  }
+`;

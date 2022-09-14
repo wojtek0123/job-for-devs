@@ -6,7 +6,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import prisma from '../../lib/prisma';
 import { OfferDataDetails, INotification } from '../../helpers/types';
 import { useMutation, useQuery } from '@apollo/client';
-import { ADD_APPLICATION, GET_USER_ID } from '../../graphql/queries';
+import { ADD_APPLICATION, GET_OFFER, GET_USER_ID } from '../../graphql/queries';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { context as graphContext } from '../api/graphql/context';
@@ -68,6 +68,11 @@ const JobOfferDetails: NextPageWithLayout<{
       email: session?.user?.email ?? '',
     },
   });
+  const { data: userOfferId } = useQuery(GET_OFFER, {
+    variables: {
+      offerId: router.query.id,
+    },
+  });
   const [apply] = useMutation(ADD_APPLICATION);
   const [nameInput, setNameInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
@@ -79,6 +84,8 @@ const JobOfferDetails: NextPageWithLayout<{
     isError: false,
   });
   const [showNotification, setShowNotification] = useState(false);
+  const [isYourOffer, setIsYourOffer] = useState(false);
+  const [isApplied, setIsApplied] = useState(false);
 
   const changeMessageHandler = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -146,6 +153,7 @@ const JobOfferDetails: NextPageWithLayout<{
         }
       }
       setNotification({ message: 'Wysłano podanie', isError: false });
+      setIsApplied(true);
     } catch (error) {
       setNotification({ message: 'Błąd przy aplikowaniu', isError: true });
     } finally {
@@ -176,7 +184,11 @@ const JobOfferDetails: NextPageWithLayout<{
       setEmailInput(session.user?.email ?? '');
       setNameInput(session.user?.name ?? '');
     }
-  }, [session?.user]);
+  }, [status]);
+
+  useEffect(() => {
+    setIsYourOffer(userOfferId?.offer?.userId === user?.userId?.id);
+  }, [userOfferId, user]);
 
   return (
     <div className='max-w-7xl mx-auto w-full mt-5'>
@@ -241,9 +253,13 @@ const JobOfferDetails: NextPageWithLayout<{
               accept='.pdf, .doc, .docx'
             />
           </div>
+          {isYourOffer && (
+            <p className='mt-2'>Nie możesz zaaplikować na własną ofertę!</p>
+          )}
           <button
             type='submit'
-            className='bg-green-500 text-white p-5 md:p-3 text-lg md:text-base max-w-xs w-full rounded-lg mt-4 mb-1 outline-green-500 hover:bg-green-600 transition-colors duration-300'
+            className='bg-green-500 text-white p-5 md:p-3 text-lg md:text-base max-w-xs w-full rounded-lg mt-4 mb-1 outline-green-500 hover:bg-green-600 transition-colors duration-300 disabled:bg-gray-200 disabled:border-red-500 disabled:border disabled:hover:bg-gray-200 disabled:text-black'
+            disabled={isApplied || isYourOffer}
           >
             Aplikuj
           </button>
