@@ -1,11 +1,19 @@
 import { useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { GET_OFFERS } from '../graphql/queries';
+import { cities } from '../helpers/constants';
 import { OfferData } from '../helpers/types';
 
 interface IFilters {
   [index: string]: string;
   city: string;
+  seniority: string;
+  jobTitle: string;
+  category: string;
+}
+
+interface IFiltersRestCity {
+  [index: string]: string;
   seniority: string;
   jobTitle: string;
   category: string;
@@ -128,10 +136,16 @@ export const FiltersContextProvider: React.FC<{
     }
 
     const filters: IFilters = {
-      city: selectedCity.toLowerCase(),
-      seniority: selectedSeniority.toLowerCase(),
-      jobTitle: enteredTitle.toLowerCase(),
-      category: selectedCategory.toLowerCase(),
+      city: selectedCity,
+      seniority: selectedSeniority,
+      jobTitle: enteredTitle,
+      category: selectedCategory,
+    };
+
+    const filtersRestCity: IFiltersRestCity = {
+      seniority: selectedSeniority,
+      jobTitle: enteredTitle,
+      category: selectedCategory,
     };
 
     let filteredOffers;
@@ -144,6 +158,23 @@ export const FiltersContextProvider: React.FC<{
       );
     } else {
       filteredOffers = data.offers;
+    }
+
+    if (selectedCity.toLowerCase() === 'inne') {
+      const restCity = filteredOffers.filter((offer) =>
+        cities.every((city) => offer.city !== city.toLowerCase())
+      );
+
+      const filtredRestCity = restCity.filter((offer) =>
+        [...Object.keys(filtersRestCity)].every(
+          (key) =>
+            offer[key].includes(filtersRestCity[key]) ||
+            filtersRestCity[key] === ''
+        )
+      );
+
+      setOffers(filtredRestCity);
+      return;
     }
 
     const filteredOffersByAllParameters = filteredOffers.filter((offer) =>

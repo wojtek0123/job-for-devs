@@ -24,7 +24,14 @@ export const seniorities = ['stażysta', 'junior', 'regular', 'senior'];
 export const technologies = [
   'JavaScript',
   'TypeScript',
+  'HTML',
+  'CSS',
+  'SCSS',
+  'Tailwind',
+  'Bootstrap',
   'NextJS',
+  'Gatsby',
+  'Nuxt',
   'React',
   'GraphQL',
   'tRPC',
@@ -36,8 +43,15 @@ export const technologies = [
   'SQL',
   'Python',
   'C++',
+  'Ruby',
+  'Scala',
   'PHP',
+  'Java',
+  'Perl',
+  'GoLang',
   'Laravel',
+  'Kotlin',
+  'Jest',
 ];
 
 export const categories = ['Frontend', 'Backend', 'Fullstack'];

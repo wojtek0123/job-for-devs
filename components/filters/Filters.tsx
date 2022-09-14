@@ -41,7 +41,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
           }`}
           onClick={changeCategory}
         >
-          wszystkie
+          Wszystkie
         </button>
         {categories.map((category, index) => (
           <button
@@ -71,7 +71,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             }`}
             onClick={changeTechnologies}
           >
-            wszystkie
+            Wszystkie
           </button>
           {technologies.map((technology, index) => (
             <button
@@ -102,7 +102,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             }`}
             onClick={changeCity}
           >
-            wszystkie
+            Wszystkie
           </button>
           {cities.map((city, index) => (
             <button
@@ -118,6 +118,18 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
               {city}
             </button>
           ))}
+          <button
+            type='button'
+            id='rest-city'
+            className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 capitalize ${
+              selectedCity === 'inne'
+                ? 'bg-green-500 text-white'
+                : 'bg-gray-200 text-black'
+            }`}
+            onClick={changeCity}
+          >
+            Inne
+          </button>
         </div>
       </div>
 
