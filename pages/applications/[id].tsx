@@ -127,7 +127,7 @@ const Applications: NextPageWithLayout<ApplicationsProps> = (props) => {
 
   return (
     <div className='px-5 mt-5 max-w-7xl mx-auto w-full 2xl:px-0'>
-      <ReturnButton isGray={true} />
+      <ReturnButton />
       <div className='lg:grid lg:grid-cols-[400px_1fr] mt-7'>
         <p className='text-xl lg:text-2xl col-start-1 col-end-2'>
           Podania do oferty

@@ -1,20 +1,16 @@
 import { useRouter } from 'next/router';
 
-const ReturnButton: React.FC<{ isGray: boolean }> = ({ isGray }) => {
+const ReturnButton: React.FC = () => {
   const router = useRouter();
 
   const returnButtonHandler = (): void => {
     router.back();
   };
 
-  const classes = isGray
-    ? 'bg-gray-200  hover:bg-gray-300'
-    : 'bg-white hover:bg-gray-300';
-
   return (
     <button
       type='button'
-      className={`inline-flex items-center shadow px-5 py-4 md:px-3 md:py-2 rounded-lg ml-2 xl:ml-0 text-black text-lg transition-colors duration-300 ${classes}`}
+      className='inline-flex items-center shadow px-5 py-4 md:px-3 md:py-2 rounded-lg ml-2 xl:ml-0 text-black text-lg transition-colors duration-300 bg-gray-200 hover:bg-gray-300'
       onClick={returnButtonHandler}
     >
       <svg className='w-4 h-4 fill-black' viewBox='0 0 448 512'>

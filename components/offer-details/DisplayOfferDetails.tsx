@@ -27,15 +27,15 @@ const DisplayOfferDetails: React.FC<{
 
   return (
     <div className='max-w-7xl mx-auto w-full mt-5 col-span-2'>
-      {!review && <ReturnButton isGray={true} />}
+      {!review && <ReturnButton />}
       <div className='rounded-b-lg relative mt-5'>
         <Image
           src={detailsBg}
-          alt='Group of workers think together how to solve a problem in code'
+          alt='Grupa pracownika myśli razem jak rozwiązać problem'
           layout='responsive'
           objectFit='cover'
           height={800}
-          className='xl:rounded-lg'
+          className='rounded-lg'
           priority={true}
         />
         <div className='absolute inset-0 bg-black/70 rounded-bl-lg rounded-lg flex flex-col justify-center pl-5 md:pl-10 md:pt-20 lg:pl-20 lg:px-28'>
