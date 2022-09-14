@@ -168,8 +168,10 @@ export const FiltersContextProvider: React.FC<{
       const filtredRestCity = restCity.filter((offer) =>
         [...Object.keys(filtersRestCity)].every(
           (key) =>
-            offer[key].includes(filtersRestCity[key]) ||
-            filtersRestCity[key] === ''
+            offer[key]
+              .toString()
+              .toLowerCase()
+              .includes(filtersRestCity[key]) || filtersRestCity[key] === ''
         )
       );
 
@@ -179,7 +181,9 @@ export const FiltersContextProvider: React.FC<{
 
     const filteredOffersByAllParameters = filteredOffers.filter((offer) =>
       [...Object.keys(filters)].every(
-        (key) => offer[key].includes(filters[key]) || filters[key] === ''
+        (key) =>
+          offer[key].toString().toLowerCase().includes(filters[key]) ||
+          filters[key] === ''
       )
     );
 
