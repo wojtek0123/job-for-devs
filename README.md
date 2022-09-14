@@ -39,6 +39,7 @@ git clone https://github.com/wojtek0123/job-for-devs.git
 npm install
 # create .env file like the example .env-example
 npm prisma db push
+npx prisma generate
 npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
