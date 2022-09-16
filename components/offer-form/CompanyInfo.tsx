@@ -9,6 +9,7 @@ import ErrorMessage from './ErrorMessage';
 import StepsContext from '../../context/steps-context';
 import { FormData, IThirdStepData } from '../../helpers/types';
 import Notification from '../notification/Notification';
+import Capsules from 'components/capsules/Capsules';
 
 const citiesLowerCase = cities.map((city) => city.toLowerCase());
 
@@ -97,20 +98,11 @@ const ComapnyInfo: React.FC<{
           Miasto <span className='text-red-600'>*</span>
         </label>
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
-          {cities.map((city, index) => (
-            <button
-              type='button'
-              key={index}
-              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
-                selectedCity.includes(city.toLowerCase())
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 text-black'
-              }`}
-              onClick={(event) => handleButtonData(event, setSelectedCity)}
-            >
-              {city}
-            </button>
-          ))}
+          <Capsules
+            array={cities}
+            selectedItem={selectedCity}
+            onClick={(event) => handleButtonData(event, setSelectedCity)}
+          />
         </div>
       </div>
 

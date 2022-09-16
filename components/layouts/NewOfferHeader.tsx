@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useContext } from 'react';
 import StepsContext, { stepsInfo } from '../../context/steps-context';
+import { v4 as uuid } from 'uuid';
 
 const NewOfferHeader: React.FC = () => {
   const { step } = useContext(StepsContext);
@@ -9,7 +10,7 @@ const NewOfferHeader: React.FC = () => {
     <button
       type='button'
       className='flex items-center cursor-default'
-      key={index}
+      key={uuid()}
     >
       {index !== 0 && (
         <div className={`mx-3 w-3 h-[0.1rem] bg-gray-200 xl:mx-5`} />

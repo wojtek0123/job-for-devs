@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Offer, IFirstStepData, FormData } from '../../helpers/types';
+import { IFirstStepData, FormData } from '../../helpers/types';
 import { technologies, seniorities, categories } from '../../helpers/constants';
 import StepsContext from '../../context/steps-context';
 import ErrorMessage from './ErrorMessage';
 import {
   handleInputData,
   checkIsLengthIsGreaterThanZero,
+  handleButtonData,
 } from '../../utils/functions';
 import Notification from '../notification/Notification';
 import { useRouter } from 'next/router';
+import Capsules from 'components/capsules/Capsules';
 
-const TypeOfDayJobs = ['pełny etat', 'połowa etatu', 'częściowy etat'];
+const typeOfDayJobs = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
 
 const OfferDetails: React.FC<{
@@ -55,30 +57,24 @@ const OfferDetails: React.FC<{
   const [showErrors, setShowErrors] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
-  const handleButtonData = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    fn: (text: string) => void,
-    input: Offer
+  const handleTechnologies = (
+    event: React.MouseEvent<HTMLButtonElement>
   ): void => {
-    if (input === Offer.Technologies) {
-      const text = event.currentTarget?.textContent?.toLowerCase() ?? '';
-      if (selectedTechnologies.includes(text)) {
-        const filteredTechnologies = selectedTechnologies.filter(
-          (technology) => technology.toLowerCase() !== text
-        );
+    const text = event.currentTarget?.textContent?.toLowerCase() ?? '';
+    if (selectedTechnologies.includes(text)) {
+      const filteredTechnologies = selectedTechnologies.filter(
+        (technology) => technology.toLowerCase() !== text
+      );
 
-        setSelectedTechnologies(filteredTechnologies);
-        return;
-      }
-
-      if (selectedTechnologies.length > 5) {
-        return;
-      }
-
-      setSelectedTechnologies((prevState) => [...prevState, text]);
+      setSelectedTechnologies(filteredTechnologies);
+      return;
     }
 
-    fn(event.currentTarget.textContent?.toLowerCase() ?? '');
+    if (selectedTechnologies.length > 5) {
+      return;
+    }
+
+    setSelectedTechnologies((prevState) => [...prevState, text]);
   };
 
   const onNextStep = (): void => {
@@ -174,22 +170,11 @@ const OfferDetails: React.FC<{
           <span className='ml-1 text-red-600'>*</span>
         </p>
         <div className='flex flex-wrap items-center text-base text-black col-start-2 col-end-3'>
-          {categories.map((category, index) => (
-            <button
-              type='button'
-              key={index}
-              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
-                selectedCategory.includes(category.toLowerCase())
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 text-black'
-              }`}
-              onClick={(event) =>
-                handleButtonData(event, setSelectedCategory, Offer.Category)
-              }
-            >
-              {category}
-            </button>
-          ))}
+          <Capsules
+            array={categories}
+            selectedItem={selectedCategory}
+            onClick={(event) => handleButtonData(event, setSelectedCategory)}
+          />
         </div>
         <ErrorMessage expression={selectedCategory} isVisible={showErrors} />
       </div>
@@ -200,22 +185,11 @@ const OfferDetails: React.FC<{
           <span className='ml-1 text-red-600'>*</span>
         </p>
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3  text-base'>
-          {technologies.map((technology, index) => (
-            <button
-              type='button'
-              key={index}
-              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
-                selectedTechnologies.includes(technology.toLowerCase())
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 text-black'
-              }`}
-              onClick={(event) =>
-                handleButtonData(event, () => {}, Offer.Technologies)
-              }
-            >
-              {technology}
-            </button>
-          ))}
+          <Capsules
+            array={technologies}
+            selectedItem={selectedTechnologies}
+            onClick={(event) => handleTechnologies(event)}
+          />
         </div>
         <small className='col-span-2 flex justify-end mt-1'>
           {selectedTechnologies.length}/6
@@ -294,22 +268,11 @@ const OfferDetails: React.FC<{
           <span className='ml-1 text-red-600'>*</span>
         </p>
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
-          {locations.map((location, index) => (
-            <button
-              type='button'
-              key={index}
-              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
-                selectedLocation.includes(location.toLowerCase())
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 text-black'
-              }`}
-              onClick={(event) =>
-                handleButtonData(event, setSelectedLocation, Offer.Location)
-              }
-            >
-              {location}
-            </button>
-          ))}
+          <Capsules
+            array={locations}
+            selectedItem={selectedLocation}
+            onClick={(event) => handleButtonData(event, setSelectedLocation)}
+          />
         </div>
         <ErrorMessage expression={selectedLocation} isVisible={showErrors} />
       </div>
@@ -320,26 +283,13 @@ const OfferDetails: React.FC<{
           Wymiar czasu pracy
         </p>
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
-          {TypeOfDayJobs.map((typeOfDayJob, index) => (
-            <button
-              type='button'
-              key={index}
-              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
-                selectedTypeOfDayJob.includes(typeOfDayJob.toLowerCase())
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 text-black'
-              }`}
-              onClick={(event) =>
-                handleButtonData(
-                  event,
-                  setSelectedTypeOfDayJob,
-                  Offer.TypeOfDayJob
-                )
-              }
-            >
-              {typeOfDayJob}
-            </button>
-          ))}
+          <Capsules
+            array={typeOfDayJobs}
+            onClick={(event) =>
+              handleButtonData(event, setSelectedTypeOfDayJob)
+            }
+            selectedItem={selectedTypeOfDayJob}
+          />
         </div>
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
@@ -350,22 +300,11 @@ const OfferDetails: React.FC<{
           <span className='ml-1 text-red-600'>*</span>
         </p>
         <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
-          {seniorities.map((seniority, index) => (
-            <button
-              type='button'
-              key={index}
-              className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
-                selectedSeniority.includes(seniority.toLowerCase())
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 text-black'
-              }`}
-              onClick={(event) =>
-                handleButtonData(event, setSelectedSeniority, Offer.Seniority)
-              }
-            >
-              {seniority}
-            </button>
-          ))}
+          <Capsules
+            array={seniorities}
+            selectedItem={selectedSeniority}
+            onClick={(event) => handleButtonData(event, setSelectedSeniority)}
+          />
         </div>
         <ErrorMessage expression={selectedSeniority} isVisible={showErrors} />
       </div>

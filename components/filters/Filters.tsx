@@ -6,6 +6,8 @@ import {
   categories,
 } from '../../helpers/constants';
 import FiltersContext from '../../context/filters-context';
+// import { v4 as uuid } from 'uuid';
+import Capsules from 'components/capsules/Capsules';
 
 const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
   const {
@@ -43,10 +45,15 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
         >
           Wszystkie
         </button>
-        {categories.map((category, index) => (
+        <Capsules
+          array={categories}
+          onClick={changeCategory}
+          selectedItem={selectedCategory}
+        />
+        {/* {categories.map((category) => (
           <button
             type='button'
-            key={index}
+            key={uuid()}
             className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
               selectedCategory.includes(category.toLowerCase())
                 ? 'bg-green-500 text-white'
@@ -56,7 +63,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
           >
             {category}
           </button>
-        ))}
+        ))} */}
       </div>
       <div className='mt-3'>
         <p className='text-lg'>Technologie</p>
@@ -73,10 +80,15 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
           >
             Wszystkie
           </button>
-          {technologies.map((technology, index) => (
+          <Capsules
+            array={technologies}
+            selectedItem={selectedTechnologies}
+            onClick={changeTechnologies}
+          />
+          {/* {technologies.map((technology) => (
             <button
               type='button'
-              key={index}
+              key={uuid()}
               className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedTechnologies.includes(technology.toLowerCase())
                   ? 'bg-green-500 text-white'
@@ -86,7 +98,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             >
               {technology}
             </button>
-          ))}
+          ))} */}
         </div>
       </div>
       <div className='mt-3'>
@@ -104,10 +116,15 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
           >
             Wszystkie
           </button>
-          {cities.map((city, index) => (
+          <Capsules
+            array={cities}
+            onClick={changeCity}
+            selectedItem={selectedCity}
+          />
+          {/* {cities.map((city) => (
             <button
               type='button'
-              key={index}
+              key={uuid()}
               className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedCity.includes(city.toLowerCase())
                   ? 'bg-green-500 text-white'
@@ -117,7 +134,7 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             >
               {city}
             </button>
-          ))}
+          ))} */}
           <button
             type='button'
             id='rest-city'
@@ -148,10 +165,10 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
           >
             wszystkie
           </button>
-          {seniorities.map((seniority, index) => (
+          {/* {seniorities.map((seniority) => (
             <button
               type='button'
-              key={index}
+              key={uuid()}
               className={`p-3 lg:px-3 lg:py-2 rounded-lg mr-1 my-1 ${
                 selectedSeniority.includes(seniority.toLowerCase())
                   ? 'bg-green-500 text-white'
@@ -161,7 +178,12 @@ const Filters: React.FC<{ close?: () => void }> = ({ close }) => {
             >
               {seniority}
             </button>
-          ))}
+          ))} */}
+          <Capsules
+            array={seniorities}
+            onClick={changeSeniority}
+            selectedItem={selectedSeniority}
+          />
         </div>
       </div>
       <button

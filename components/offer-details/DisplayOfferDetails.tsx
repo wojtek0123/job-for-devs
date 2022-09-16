@@ -3,6 +3,7 @@ import Image from 'next/image';
 import detailsBg from '../../public/images/details-bg.jpg';
 import DisplayAsTextOrList from './DisplayAsTextOrList';
 import ReturnButton from '../return-button/ReturnButton';
+import { v4 as uuid } from 'uuid';
 
 const DisplayOfferDetails: React.FC<{
   offer: FormData | OfferDataDetails;
@@ -100,9 +101,9 @@ const DisplayOfferDetails: React.FC<{
             Technologie
           </p>
           <div className='flex flex-wrap items-center text-black col-start-2 col-end-3 text-base'>
-            {offer.technologies.map((technology, index) => (
+            {offer.technologies.map((technology) => (
               <span
-                key={index}
+                key={uuid()}
                 className='bg-gray-200 rounded-lg p-3 text-lg mr-2 my-1 shadow'
               >
                 {technology}

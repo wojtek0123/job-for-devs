@@ -3,6 +3,7 @@ import Link from 'next/link';
 import usePagination from '../../hooks/usePagination';
 import { useMutation } from '@apollo/client';
 import { DELETE_OFFER } from '../../graphql/queries';
+import { v4 as uuid } from 'uuid';
 
 const skeletons: number[] = [];
 const NUMBER_OF_SKELETONS = 20;
@@ -44,7 +45,7 @@ const DisplayOffers: React.FC<{
         {skeletons.map((index) => (
           <div
             className='animate-pulse'
-            key={index}
+            key={uuid()}
             data-testid={`skeleton${index}`}
           >
             <div className='bg-gray-200 text-black rounded-lg w-full px-5 py-4 mt-5 cursor-pointer shadow-lg'>
@@ -266,7 +267,7 @@ const DisplayOffers: React.FC<{
             </div>
           </Link>
         ) : (
-          <div className='hidden' key={index}></div>
+          <div className='hidden' key={uuid()}></div>
         )
       )}
       <div className='w-full flex items-center justify-around mt-5'>

@@ -29,10 +29,10 @@ interface IFiltersContext {
   loading: boolean;
   error: Error | undefined;
   refetch: () => void;
-  changeCategory: (event: React.FormEvent<HTMLButtonElement>) => void;
-  changeTechnologies: (event: React.FormEvent<HTMLButtonElement>) => void;
-  changeSeniority: (event: React.FormEvent<HTMLButtonElement>) => void;
-  changeCity: (event: React.FormEvent<HTMLButtonElement>) => void;
+  changeCategory: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  changeTechnologies: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  changeSeniority: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  changeCity: (event: React.MouseEvent<HTMLButtonElement>) => void;
   changeTitle: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onFilter: (event: React.FormEvent) => void;
 }
@@ -79,7 +79,7 @@ export const FiltersContextProvider: React.FC<{
   };
 
   const changeTechnologiesHandler = (
-    event: React.FormEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     if (event.currentTarget.id === 'clear-technologies') {
       setSelectedTechnologies([]);
@@ -106,7 +106,7 @@ export const FiltersContextProvider: React.FC<{
   };
 
   const changeValueHandler = (
-    event: React.FormEvent<HTMLButtonElement>,
+    event: React.MouseEvent<HTMLButtonElement>,
     id: resetButtonIds,
     fn: (value: string) => void
   ): void => {
@@ -206,12 +206,12 @@ export const FiltersContextProvider: React.FC<{
     loading,
     error,
     refetch,
-    changeCategory: (event: React.FormEvent<HTMLButtonElement>) =>
+    changeCategory: (event: React.MouseEvent<HTMLButtonElement>) =>
       changeValueHandler(event, 'clear-category', setSelectedCategory),
     changeTechnologies: changeTechnologiesHandler,
-    changeCity: (event: React.FormEvent<HTMLButtonElement>) =>
+    changeCity: (event: React.MouseEvent<HTMLButtonElement>) =>
       changeValueHandler(event, 'clear-city', setSelectedCity),
-    changeSeniority: (event: React.FormEvent<HTMLButtonElement>) =>
+    changeSeniority: (event: React.MouseEvent<HTMLButtonElement>) =>
       changeValueHandler(event, 'clear-seniority', setSelectedSeniority),
     changeTitle: changeTitleHandler,
     onFilter: filterByTechnologiesCitySeniority,
