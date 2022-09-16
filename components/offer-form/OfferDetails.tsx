@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Offer, IFirstStepData, FormData } from '../../helpers/types';
 import { technologies, seniorities, categories } from '../../helpers/constants';
-import Link from 'next/link';
 import StepsContext from '../../context/steps-context';
 import ErrorMessage from './ErrorMessage';
 import {
@@ -9,6 +8,7 @@ import {
   checkIsLengthIsGreaterThanZero,
 } from '../../utils/functions';
 import Notification from '../notification/Notification';
+import { useRouter } from 'next/router';
 
 const TypeOfDayJobs = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
@@ -17,6 +17,7 @@ const OfferDetails: React.FC<{
   onFirstStep: (firstStepData: IFirstStepData) => void;
   formData: FormData;
 }> = ({ onFirstStep, formData }) => {
+  const router = useRouter();
   const { nextStep } = useContext(StepsContext);
 
   const [selectedCategory, setSelectedCategory] = useState(
@@ -432,11 +433,13 @@ const OfferDetails: React.FC<{
       <div
         className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
       >
-        <Link href='/'>
-          <a className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center hover:bg-slate-200 transition-colors duration-300  border border-gray-200 capitalize'>
-            <span className='capitalize'>powrót</span>
-          </a>
-        </Link>
+        <button
+          type='button'
+          className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 flex justify-center items-center hover:bg-slate-200 transition-colors duration-300  border border-gray-200 capitalize'
+          onClick={() => router.back()}
+        >
+          Powrót
+        </button>
 
         <button
           type='button'

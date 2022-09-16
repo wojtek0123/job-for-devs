@@ -1,27 +1,21 @@
-import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import OfferDetails from '../../components/new-offer/OfferDetails';
-import OfferInfo from '../../components/new-offer/OfferInfo';
-import ComapnyInfo from '../../components/new-offer/CompanyInfo';
+import { ReactElement, useState } from 'react';
 import {
-  FormData,
-  ISecondStepData,
-  IThirdStepData,
-  IFirstStepData,
-  INotification,
   IUserID,
+  OfferDataDetails,
+  FormData,
+  INotification,
 } from '../../helpers/types';
-import DisplayOfferDetails from '../../components/offer-details/DisplayOfferDetails';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_OFFER, GET_USER_ID } from '../../graphql/queries';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import StepsContext, { stepsInfo } from '../../context/steps-context';
 import { NextPageWithLayout } from '../_app';
 import Layout from '../../components/layouts/layout';
+import OfferForm from '../../components/offer-form/OfferForm';
 import Notification from '../../components/notification/Notification';
+import { redirectTo } from '../../utils/functions';
 
 const NewOffer: NextPageWithLayout = () => {
-  const { step, previousStep, jumpToStep } = useContext(StepsContext);
   const router = useRouter();
   const { data: session, status } = useSession({
     required: true,
@@ -30,22 +24,11 @@ const NewOffer: NextPageWithLayout = () => {
     },
   });
   const [addOffer] = useMutation(ADD_OFFER);
+  const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState<INotification>({
     message: '',
     isError: false,
   });
-  const [showNotification, setShowNotification] = useState(false);
-
-  const [formData, setFormData] = useState<FormData | {}>({});
-
-  async function showNoti(id: string): Promise<void> {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 4000);
-    });
-
-    const offerId: string = id;
-    await router.push(`/offer/${offerId}`);
-  }
 
   if (status === 'loading') {
     return <div>Sprawdzanie uprawnień!</div>;
@@ -57,32 +40,31 @@ const NewOffer: NextPageWithLayout = () => {
     },
   });
 
-  const createNewOffer = async (event: React.FormEvent): Promise<void> => {
-    event.preventDefault();
-
+  const onAddOffer = async (
+    addedOffer: OfferDataDetails | FormData
+  ): Promise<void> => {
     try {
-      const data: FormData = Object.assign({}, formData as FormData);
       const newOffer = await addOffer({
         variables: {
-          category: data.category,
-          location: data.location,
-          jobTitle: data.jobTitle,
-          companyName: data.companyName,
-          typeOfDayJob: data.typeOfDayJob,
-          seniority: data.seniority,
-          street: data.street,
-          building: data.building,
-          house: data.house,
-          city: data.city,
-          minSalary: data.minSalary,
-          maxSalary: data.maxSalary,
-          exactSalary: data.exactSalary,
-          technologies: data.technologies,
-          description: data.description,
-          obligations: data.obligations,
-          requirements: data.requirements,
-          advantages: data.advantages,
-          benefits: data.benefits,
+          category: addedOffer.category,
+          location: addedOffer.location,
+          jobTitle: addedOffer.jobTitle,
+          companyName: addedOffer.companyName,
+          typeOfDayJob: addedOffer.typeOfDayJob,
+          seniority: addedOffer.seniority,
+          street: addedOffer.street,
+          building: addedOffer.building,
+          house: addedOffer.house,
+          city: addedOffer.city,
+          minSalary: addedOffer.minSalary,
+          maxSalary: addedOffer.maxSalary,
+          exactSalary: addedOffer.exactSalary,
+          technologies: addedOffer.technologies,
+          description: addedOffer.description,
+          obligations: addedOffer.obligations,
+          requirements: addedOffer.requirements,
+          advantages: addedOffer.advantages,
+          benefits: addedOffer.benefits,
           userId: userId?.userId.id,
         },
       });
@@ -99,91 +81,22 @@ const NewOffer: NextPageWithLayout = () => {
       setTimeout(() => {
         setShowNotification(false);
       }, 4000);
-      await showNoti(newOffer.data.addOffer.id);
+      await redirectTo(`/offer/${newOffer.data?.addOffer.id as string}`);
     } catch (error) {
       setNotification({ message: 'Coś poszło nie tak', isError: true });
       setTimeout(() => setShowNotification(false), 4000);
     }
   };
 
-  useEffect(() => jumpToStep(1), []);
-  useEffect(() => {
-    document.documentElement.scrollTop = 0;
-  }, [formData]);
-
-  const firstStepHandler = (firstStepData: IFirstStepData): void => {
-    setFormData(Object.assign({}, formData, firstStepData));
-  };
-
-  const secondStepHandler = (secondStepData: ISecondStepData): void => {
-    setFormData(Object.assign({}, formData, secondStepData));
-  };
-
-  const thirdStepHandler = (thirdStepData: IThirdStepData): void => {
-    setFormData(Object.assign({}, formData, thirdStepData));
-  };
-
-  const content = {
-    1: (
-      <OfferDetails
-        onFirstStep={firstStepHandler}
-        formData={formData as FormData}
-      />
-    ),
-    2: (
-      <OfferInfo
-        onSecondStep={secondStepHandler}
-        formData={formData as FormData}
-      />
-    ),
-    3: (
-      <ComapnyInfo
-        onThirdStep={thirdStepHandler}
-        formData={formData as FormData}
-      />
-    ),
-    4: <DisplayOfferDetails offer={formData as FormData} review={true} />,
-  }[step];
-
   return (
-    <form
-      className='grid grid-cols-1 md:grid-cols-2 w-full max-w-7xl mx-auto px-5 2xl:px-0'
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      onSubmit={createNewOffer}
-    >
+    <>
       <Notification
         isError={notification.isError}
         message={notification.message}
         show={showNotification}
       />
-      {content}
-      {step !== stepsInfo.length && (
-        <div className='col-span-2 flex items-center'>
-          *<span className='w-[0.35rem] h-[0.05rem] mx-1 bg-black block'></span>
-          pole wymagane
-        </div>
-      )}
-      {step === stepsInfo.length && (
-        <div
-          className={`flex w-full justify-center items-center bg-white py-4 md:col-span-2`}
-        >
-          <button
-            type='button'
-            onClick={previousStep}
-            className='bg-white text-black px-8 py-1 rounded-lg text-lg mx-3 hover:bg-slate-200 transition-colors duration-300 border border-gray-200 capitalize'
-          >
-            Wstecz
-          </button>
-
-          <button
-            type='submit'
-            className='bg-green-500 text-white px-8 py-1 rounded-lg text-lg mx-3 hover:bg-green-600 transition-colors duration-300 capitalize'
-          >
-            Opublikuj
-          </button>
-        </div>
-      )}
-    </form>
+      <OfferForm onOffer={onAddOffer} />
+    </>
   );
 };
 

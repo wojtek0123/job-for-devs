@@ -162,3 +162,56 @@ export const GET_OFFER = gql`
     }
   }
 `;
+
+export const EDIT_OFFER = gql`
+  mutation EditOffer(
+    $id: String
+    $advantages: String
+    $benefits: String
+    $building: String
+    $category: String
+    $city: String
+    $companyName: String
+    $description: String
+    $exactSalary: String
+    $house: String
+    $jobTitle: String
+    $location: String
+    $maxSalary: String
+    $minSalary: String
+    $obligations: String
+    $requirements: String
+    $seniority: String
+    $street: String
+    $technologies: [String]
+    $typeOfDayJob: String
+    $userId: String
+  ) {
+    editOffer(
+      id: $id
+      advantages: $advantages
+      benefits: $benefits
+      building: $building
+      category: $category
+      city: $city
+      companyName: $companyName
+      description: $description
+      exactSalary: $exactSalary
+      house: $house
+      jobTitle: $jobTitle
+      location: $location
+      maxSalary: $maxSalary
+      minSalary: $minSalary
+      obligations: $obligations
+      requirements: $requirements
+      seniority: $seniority
+      street: $street
+      technologies: $technologies
+      userId: $userId
+      typeOfDayJob: $typeOfDayJob
+    ) {
+      id
+      userId
+    }
+  }
+`;

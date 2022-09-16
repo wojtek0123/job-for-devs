@@ -1,3 +1,5 @@
+import router from "next/router";
+
 export const handleInputData = (
   event:
     | React.ChangeEvent<HTMLInputElement>
@@ -24,3 +26,11 @@ export const checkIsLengthIsGreaterThanZero = (
 
   return counter;
 };
+
+export async function redirectTo(path: string): Promise<void> {
+  await new Promise((resolve) => {
+    setTimeout(resolve, 4000);
+  });
+
+  await router.push(`${path}`);
+}

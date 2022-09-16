@@ -109,6 +109,29 @@ export const typeDefs = gql`
     ): Application
     changeName(userId: String, name: String): User
     deleteOffer(id: String): Offer
+    editOffer(
+      id: String
+      category: String
+      technologies: [String]
+      minSalary: String
+      maxSalary: String
+      exactSalary: String
+      location: String
+      typeOfDayJob: String
+      seniority: String
+      benefits: String
+      jobTitle: String
+      description: String
+      obligations: String
+      requirements: String
+      advantages: String
+      companyName: String
+      city: String
+      street: String
+      building: String
+      house: String
+      userId: String
+    ): Offer
   }
 `;
 
@@ -189,28 +212,7 @@ export const resolvers = {
   Mutation: {
     addOffer: (_parent: any, args: Offer, context: Context) => {
       return context.prisma.offer.create({
-        data: {
-          category: args.category,
-          location: args.location,
-          jobTitle: args.jobTitle,
-          companyName: args.companyName,
-          typeOfDayJob: args.typeOfDayJob,
-          seniority: args.seniority,
-          street: args.street,
-          building: args.building,
-          house: args.house,
-          city: args.city,
-          minSalary: args.minSalary,
-          maxSalary: args.maxSalary,
-          exactSalary: args.exactSalary,
-          technologies: args.technologies,
-          description: args.description,
-          obligations: args.obligations,
-          requirements: args.requirements,
-          advantages: args.advantages,
-          benefits: args.benefits,
-          userId: args.userId,
-        },
+        data: JSON.parse(JSON.stringify(args)),
       });
     },
     apply: (_parent: any, args: Application, context: Context) => {
@@ -239,6 +241,33 @@ export const resolvers = {
         where: { id: args.id },
         include: {
           application: true,
+        },
+      });
+    },
+    editOffer: (_parent: any, args: Offer, context: Context) => {
+      return context.prisma.offer.update({
+        where: { id: args.id },
+        data: {
+          category: args.category,
+          technologies: args.technologies,
+          minSalary: args.minSalary,
+          maxSalary: args.maxSalary,
+          exactSalary: args.exactSalary,
+          location: args.location,
+          typeOfDayJob: args.typeOfDayJob,
+          seniority: args.seniority,
+          benefits: args.benefits,
+          jobTitle: args.jobTitle,
+          description: args.description,
+          obligations: args.obligations,
+          requirements: args.requirements,
+          advantages: args.advantages,
+          companyName: args.companyName,
+          city: args.city,
+          street: args.street,
+          building: args.building,
+          house: args.house,
+          userId: args.userId
         },
       });
     },
