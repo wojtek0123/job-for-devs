@@ -9,9 +9,6 @@ const DisplayOfferDetails: React.FC<{
   offer: FormData | OfferDataDetails;
   review: boolean;
 }> = ({ offer, review }) => {
-  if (offer === undefined) {
-    return <p>Nie prawidłowy objekt</p>;
-  }
   const displaySalary =
     offer.exactSalary === ''
       ? `${offer.minSalary} - ${offer.maxSalary}`

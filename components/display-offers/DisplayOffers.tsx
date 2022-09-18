@@ -118,10 +118,7 @@ const DisplayOffers: React.FC<{
             <div>
               <div className='bg-gray-200 text-black rounded-lg w-full px-5 py-2 mt-5 cursor-pointer shadow-lg relative'>
                 {showUtilities && (
-                  <div
-                    className='hidden lg:flex absolute left-0 -translate-x-full -translate-y-1/2 top-1/2 bottom-0 flex-col justify-center'
-                    data-testId='utility'
-                  >
+                  <div className='hidden lg:flex absolute left-0 -translate-x-full -translate-y-1/2 top-1/2 bottom-0 flex-col justify-center'>
                     <Link href={`/applications/${offer.id}`}>
                       <a className='h-5 w-5 fill-black hover:fill-green-500 transition-colors cursor-default duration-300 my-2 mr-1'>
                         <svg className='cursor-pointer' viewBox='0 0 576 512'>
@@ -222,10 +219,7 @@ const DisplayOffers: React.FC<{
                 </div>
               </div>
               {showUtilities && (
-                <div
-                  className='flex lg:hidden mt-4 items-center justify-between max-w-lg mx-auto'
-                  data-testId='utility'
-                >
+                <div className='flex lg:hidden mt-4 items-center justify-between max-w-lg mx-auto'>
                   <Link
                     href={`/applications/${offer.id}`}
                     title='Zobacz aplikacje'
