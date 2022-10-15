@@ -40,7 +40,7 @@ const Login: NextPage = () => {
         setNotification({ message: 'Błąd logowania', isError: true });
         return;
       }
-      setNotification({ message: 'Email wysłany', isError: false });
+      setNotification({ message: 'Email wysłany. Sprawdź spam', isError: false });
     } catch (error) {
       setNotification({ message: 'Błąd logowania', isError: true });
       console.error(error);
