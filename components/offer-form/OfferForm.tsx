@@ -19,17 +19,9 @@ const OfferForm: React.FC<{
   const { step, previousStep, jumpToStep } = useContext(StepsContext);
   const [formData, setFormData] = useState<FormData | {}>(offer ?? {});
 
-  const firstStepHandler = (firstStepData: IFirstStepData): void => {
-    setFormData(Object.assign({}, formData, firstStepData));
-  };
-
-  const secondStepHandler = (secondStepData: ISecondStepData): void => {
-    setFormData(Object.assign({}, formData, secondStepData));
-  };
-
-  const thirdStepHandler = (thirdStepData: IThirdStepData): void => {
-    setFormData(Object.assign({}, formData, thirdStepData));
-  };
+  const stepHandler = (stepData: IFirstStepData | ISecondStepData | IThirdStepData): void => {
+    setFormData(Object.assign({}, formData, stepData))
+  }
 
   const createNewOffer = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
@@ -41,19 +33,19 @@ const OfferForm: React.FC<{
   const content = {
     1: (
       <OfferDetails
-        onFirstStep={firstStepHandler}
+        onFirstStep={stepHandler}
         formData={formData as FormData}
       />
     ),
     2: (
       <OfferInfo
-        onSecondStep={secondStepHandler}
+        onSecondStep={stepHandler}
         formData={formData as FormData}
       />
     ),
     3: (
       <ComapnyInfo
-        onThirdStep={thirdStepHandler}
+        onThirdStep={stepHandler}
         formData={formData as FormData}
       />
     ),
