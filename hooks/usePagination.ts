@@ -8,9 +8,20 @@ const usePagination = (
   showMore: () => void;
   showLess: () => void;
 } => {
-  const [numberOfElements, setNumberOfElement] = useState(arrayLength < 0 ? 0 : take);
+  let initialState: number;
+  if (arrayLength < 0) {
+    initialState = 0;
+  } else if (take < 0) {
+    initialState = arrayLength;
+  } else {
+    initialState = take;
+  }
+  const [numberOfElements, setNumberOfElement] = useState(initialState);
 
   const showMore = (): void => {
+    if (take < 0) {
+      return;
+    }
     if (numberOfElements + take >= arrayLength) {
       setNumberOfElement(arrayLength);
       return;
@@ -19,11 +30,14 @@ const usePagination = (
   };
 
   const showLess = (): void => {
+    if (take < 0) {
+      return;
+    }
     if (numberOfElements <= take) {
       return;
     }
-    if (numberOfElements - take <= 0) {
-      setNumberOfElement(0);
+    if (numberOfElements - take <= take) {
+      setNumberOfElement(take);
       return;
     }
     setNumberOfElement((prevState) => prevState - take);
