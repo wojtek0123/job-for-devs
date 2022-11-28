@@ -4,7 +4,15 @@ Fullstack application for developers who want to find a job or hire someone.
 
 live server: https://job-for-devs.vercel.app/
 
-User can:
+## Table of contents
+
+- [Features](#user-can)
+- [Built with](#built-with)
+- [Screenshots](#screenshots)
+- [Installation](#installation-on-local-machine)
+- [Todo](#things-to-do)
+
+## User can:
 - login
 - add new offer
 - apply for existing offer
@@ -25,7 +33,7 @@ User can:
 - prettier
 - next-auth
 
-## Screenshot
+## Screenshots
 ![home page](https://user-images.githubusercontent.com/87533043/189962776-70ad9dee-a767-47d9-bd3a-a0264e52c950.png)
 ![offer details page](https://user-images.githubusercontent.com/87533043/189962807-fd833482-0996-41cd-ba56-4b9e481cd708.png)
 ![new offer page](https://user-images.githubusercontent.com/87533043/189962843-12a97a32-0dfe-49f1-9c61-106b69838608.png)
@@ -33,7 +41,7 @@ User can:
 ![applications page](https://user-images.githubusercontent.com/87533043/189962881-b40fdf71-fafb-429f-98e7-6e0ebe906f11.png)
 
 
-Installation on local machine 
+## Installation on local machine 
 ```bash
 git clone https://github.com/wojtek0123/job-for-devs.git
 npm install
