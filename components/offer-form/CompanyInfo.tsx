@@ -13,7 +13,7 @@ import Capsules from 'components/capsules/Capsules';
 
 const citiesLowerCase = cities.map((city) => city.toLowerCase());
 
-const ComapnyInfo: React.FC<{
+const CompanyInfo: React.FC<{
   onThirdStep: (data: IThirdStepData) => void;
   formData: FormData;
 }> = ({ onThirdStep, formData }) => {
@@ -216,4 +216,4 @@ const ComapnyInfo: React.FC<{
   );
 };
 
-export default ComapnyInfo;
+export default CompanyInfo;

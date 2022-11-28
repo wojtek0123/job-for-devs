@@ -18,9 +18,9 @@ const DisplayOffers: React.FC<{
   loading: boolean;
   showUtilities: boolean;
   refetch?: () => void;
-}> = ({ offers = [], loading, error, showUtilities, refetch }) => {
+}> = ({ offers, loading, error, showUtilities, refetch }) => {
   const { numberOfElements, showLess, showMore } = usePagination(
-    offers.length,
+    offers?.length ?? 0,
     PAGINATION_TAKE
   );
   const [deleteOffer] = useMutation(DELETE_OFFER, {
@@ -31,7 +31,7 @@ const DisplayOffers: React.FC<{
     },
   });
 
-  if (error) {
+  if (!offers || error) {
     return (
       <p className='text-center mt-10 text-2xl px-2'>
         Przepraszamy za problemy! Błąd przy wczytywaniu danych.

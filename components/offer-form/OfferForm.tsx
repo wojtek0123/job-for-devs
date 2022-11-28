@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import OfferDetails from './OfferDetails';
 import OfferInfo from './OfferInfo';
-import ComapnyInfo from './CompanyInfo';
+import CompanyInfo from './CompanyInfo';
 import DisplayOfferDetails from '../offer-details/DisplayOfferDetails';
 import {
   FormData,
@@ -44,7 +44,7 @@ const OfferForm: React.FC<{
       />
     ),
     3: (
-      <ComapnyInfo
+      <CompanyInfo
         onThirdStep={stepHandler}
         formData={formData as FormData}
       />
