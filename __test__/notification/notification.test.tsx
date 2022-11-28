@@ -28,6 +28,6 @@ describe('Notification component', () => {
       />
     );
     const message = screen.queryByText(/something went wrong/i);
-    expect(message).not.toBeInTheDocument();
+    expect(message).toHaveClass('translate-y-full');
   });
 });
