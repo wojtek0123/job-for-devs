@@ -14,6 +14,7 @@ import Layout from '../../components/layouts/layout';
 import OfferForm from '../../components/offer-form/OfferForm';
 import Notification from '../../components/notification/Notification';
 import { redirectTo } from '../../utils/functions';
+import PermissionMessageCheck from '../../components/permission-message-check/PermissionMessageCheck';
 
 const NewOffer: NextPageWithLayout = () => {
   const router = useRouter();
@@ -30,13 +31,9 @@ const NewOffer: NextPageWithLayout = () => {
     isError: false,
   });
 
-  if (status === 'loading') {
-    return <div>Sprawdzanie uprawnień!</div>;
-  }
-
   const { data: userId } = useQuery<IUserID>(GET_USER_ID, {
     variables: {
-      email: session.user?.email,
+      email: session?.user?.email,
     },
   });
 
@@ -68,9 +65,6 @@ const NewOffer: NextPageWithLayout = () => {
           userId: userId?.userId.id,
         },
       });
-      if (newOffer.errors) {
-        throw new Error('Something went wrong');
-      }
       setShowNotification(true);
       setNotification({
         message:
@@ -87,6 +81,10 @@ const NewOffer: NextPageWithLayout = () => {
       setTimeout(() => setShowNotification(false), 4000);
     }
   };
+
+  if (status === 'loading') {
+    return <PermissionMessageCheck />;
+  }
 
   return (
     <>

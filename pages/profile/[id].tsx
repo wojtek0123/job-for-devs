@@ -16,6 +16,7 @@ import Notification from '../../components/notification/Notification';
 import { OfferData, IUserID } from '../../helpers/types';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useRouter } from 'next/router';
+import PermissionMessageCheck from '../../components/permission-message-check/PermissionMessageCheck';
 
 interface IApplication {
   applications: Array<{
@@ -50,16 +51,10 @@ const Profile: NextPageWithLayout = () => {
     },
   });
 
-  if (status === 'loading') {
-    return (
-      <div className='w-full text-center text-2xl'>Sprawdzanie uprawnień!</div>
-    );
-  }
-
   const [parent] = useAutoAnimate<HTMLDivElement>();
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [nameInput, setNameInput] = useState('');
-  const [name, setName] = useState(session.user?.name ?? 'Brak danych');
+  const [name, setName] = useState(session?.user?.name ?? 'Brak danych');
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
@@ -68,7 +63,7 @@ const Profile: NextPageWithLayout = () => {
 
   const { data: userId } = useQuery<IUserID>(GET_USER_ID, {
     variables: {
-      email: session.user?.email,
+      email: session?.user?.email,
     },
   });
   const [editName] = useMutation(EDIT_NAME);
@@ -124,9 +119,6 @@ const Profile: NextPageWithLayout = () => {
           name: enteredName,
         },
       });
-      if (data.errors) {
-        throw new Error('Coś poszło nie tak');
-      }
       setName(data.data.changeName.name);
       setShowNotification(true);
       setNotification({
@@ -161,6 +153,12 @@ const Profile: NextPageWithLayout = () => {
       await refetchApplications();
     })();
   }, []);
+
+  if (status === 'loading') {
+    return (
+      <PermissionMessageCheck />
+    );
+  }
 
   return (
     <div className='px-5 mt-5 max-w-7xl mx-auto w-full 2xl:px-0'>

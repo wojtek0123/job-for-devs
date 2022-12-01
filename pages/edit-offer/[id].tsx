@@ -95,8 +95,6 @@ const EditOffer: NextPageWithLayout<EditOfferProps> = ({ offer, user }) => {
   const onEditOffer = async (
     editedOffer: OfferDataDetails | FormData
   ): Promise<void> => {
-    console.log(editedOffer);
-
     try {
       const editedOfferData = await editOffer({
         variables: {
@@ -123,9 +121,6 @@ const EditOffer: NextPageWithLayout<EditOfferProps> = ({ offer, user }) => {
           userId: user.id,
         },
       });
-      if (editedOfferData.errors) {
-        throw new Error('Something went wrong');
-      }
       setShowNotification(true);
       setNotification({
         message:
@@ -137,8 +132,8 @@ const EditOffer: NextPageWithLayout<EditOfferProps> = ({ offer, user }) => {
       setTimeout(() => {
         setShowNotification(false);
       }, 4000);
-      const pathSeqment = editedOfferData.data?.editOffer.userId;
-      await redirectTo(`/profile/${pathSeqment as string}`);
+      const pathSegment = editedOfferData.data?.editOffer.userId;
+      await redirectTo(`/profile/${pathSegment as string}`);
     } catch (error) {
       setNotification({ message: 'Coś poszło nie tak', isError: true });
       setTimeout(() => setShowNotification(false), 4000);
