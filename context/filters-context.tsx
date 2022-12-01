@@ -165,17 +165,17 @@ export const FiltersContextProvider: React.FC<{
         cities.every((city) => offer.city !== city.toLowerCase())
       );
 
-      const filtredRestCity = restCity.filter((offer) =>
+      const filteredRestCity = restCity.filter((offer) =>
         [...Object.keys(filtersRestCity)].every(
           (key) =>
             offer[key]
               .toString()
               .toLowerCase()
-              .includes(filtersRestCity[key]) || filtersRestCity[key] === ''
-        )
+              .includes(filtersRestCity[key]) || filtersRestCity[key] === '',
+        ),
       );
 
-      setOffers(filtredRestCity);
+      setOffers(filteredRestCity);
       return;
     }
 
