@@ -9,7 +9,7 @@ import ErrorMessage from './ErrorMessage';
 import Notification from '../notification/Notification';
 
 const OfferInfo: React.FC<{
-  onSecondStep: (data: ISecondStepData) => void;
+  onSecondStep: (data: Partial<FormData>) => void;
   formData: FormData;
 }> = ({ onSecondStep, formData }) => {
   const { nextStep, previousStep } = useContext(StepsContext);
@@ -45,7 +45,7 @@ const OfferInfo: React.FC<{
       return;
     }
 
-    const secondStepData: ISecondStepData = {
+    const secondStepData: Partial<FormData> = {
       description: enteredDescription.trim(),
       requirements: enteredRequirements.trim(),
       obligations: enteredObligations.trim(),

@@ -16,7 +16,7 @@ const typeOfDayJobs = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
 
 const OfferDetails: React.FC<{
-  onFirstStep: (firstStepData: IFirstStepData) => void;
+  onFirstStep: (firstStepData: Partial<FormData>) => void;
   formData: FormData;
 }> = ({ onFirstStep, formData }) => {
   const router = useRouter();
@@ -138,7 +138,7 @@ const OfferDetails: React.FC<{
       return;
     }
 
-    const firstStepData: IFirstStepData = {
+    const firstStepData: Partial<FormData> = {
       category: selectedCategory,
       technologies: selectedTechnologies,
       minSalary: enteredMinSalary,

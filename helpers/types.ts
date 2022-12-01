@@ -85,61 +85,9 @@ export interface FormData {
   house: string;
 }
 
-export interface SecondStepError {
-  [index: string]: string;
-  obligations: string;
-  requirements: string;
-}
-
-export interface FirstStepError {
-  [index: string]: string;
-  category: string;
-  technologies: string;
-  minSalary: string;
-  location: string;
-  seniority: string;
-  jobTitle: string;
-}
-
-export interface ThirdStepError {
-  [index: string]: string;
-  companyName: string;
-  city: string;
-  street: string;
-  building: string;
-}
-
 export interface INotification {
   message: string;
   isError: boolean;
-}
-
-export interface IFirstStepData {
-  category: string;
-  technologies: string[];
-  minSalary: string;
-  maxSalary: string;
-  exactSalary: string;
-  location: string;
-  typeOfDayJob: string;
-  seniority: string;
-  benefits: string;
-  jobTitle: string;
-}
-
-export interface ISecondStepData {
-  description: string;
-  obligations: string;
-  requirements: string;
-  advantages: string;
-}
-
-export interface IThirdStepData {
-  companyName: string;
-  city: string;
-  street: string;
-  building: string;
-  house: string;
 }
 
 export interface IUserID {

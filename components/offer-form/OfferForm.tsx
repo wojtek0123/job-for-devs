@@ -5,9 +5,6 @@ import CompanyInfo from './CompanyInfo';
 import DisplayOfferDetails from '../offer-details/DisplayOfferDetails';
 import {
   FormData,
-  ISecondStepData,
-  IThirdStepData,
-  IFirstStepData,
   OfferDataDetails,
 } from '../../helpers/types';
 import StepsContext, { stepsInfo } from '../../context/steps-context';
@@ -19,7 +16,7 @@ const OfferForm: React.FC<{
   const { step, previousStep, jumpToStep } = useContext(StepsContext);
   const [formData, setFormData] = useState<FormData | {}>(offer ?? {});
 
-  const stepHandler = (stepData: IFirstStepData | ISecondStepData | IThirdStepData): void => {
+  const stepHandler = (stepData: Partial<FormData>): void => {
     setFormData(Object.assign({}, formData, stepData))
   }
 

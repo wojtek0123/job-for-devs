@@ -14,7 +14,7 @@ import Capsules from 'components/capsules/Capsules';
 const citiesLowerCase = cities.map((city) => city.toLowerCase());
 
 const CompanyInfo: React.FC<{
-  onThirdStep: (data: IThirdStepData) => void;
+  onThirdStep: (data: Partial<FormData>) => void;
   formData: FormData;
 }> = ({ onThirdStep, formData }) => {
   const { nextStep, previousStep } = useContext(StepsContext);
@@ -54,7 +54,7 @@ const CompanyInfo: React.FC<{
       return;
     }
 
-    const thirdStepData: IThirdStepData = {
+    const thirdStepData: Partial<FormData> = {
       companyName: enteredCompanyName.trim(),
       city: selectedCity.trim(),
       street: enteredStreet.trim(),
