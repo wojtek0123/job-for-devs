@@ -55,7 +55,7 @@ const OfferDetails: React.FC<{
   );
 
   const [showErrors, setShowErrors] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
+  const [showNotificationOnSmallerDevice, setShowNotificationOnSmallerDevice] = useState(false);
   const {errorMessage, numberOfErrors} = useSalaryError(enteredMinSalary, enteredMaxSalary, enteredExactSalary);
 
   const handleTechnologies = (
@@ -96,8 +96,8 @@ const OfferDetails: React.FC<{
     counter += numberOfErrors;
     if (counter !== 0) {
       setShowErrors(true);
-      setShowNotification(true);
-      setTimeout(() => setShowNotification(false), 2000);
+      setShowNotificationOnSmallerDevice(true);
+      setTimeout(() => setShowNotificationOnSmallerDevice(false), 2000);
       return;
     }
 
@@ -319,7 +319,7 @@ const OfferDetails: React.FC<{
         <Notification
           isError={true}
           message={'Popraw błędy'}
-          show={showNotification}
+          show={showNotificationOnSmallerDevice}
         />
       </div>
       <div
