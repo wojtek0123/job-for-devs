@@ -7,7 +7,7 @@ import {
 } from '../../utils/functions';
 import ErrorMessage from './ErrorMessage';
 import StepsContext from '../../context/steps-context';
-import { FormData, IThirdStepData } from '../../helpers/types';
+import { FormData } from '../../helpers/types';
 import Notification from '../notification/Notification';
 import Capsules from 'components/capsules/Capsules';
 

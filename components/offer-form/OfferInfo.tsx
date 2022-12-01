@@ -4,7 +4,7 @@ import {
   handleInputData,
 } from '../../utils/functions';
 import StepsContext from '../../context/steps-context';
-import { FormData, ISecondStepData } from '../../helpers/types';
+import { FormData } from '../../helpers/types';
 import ErrorMessage from './ErrorMessage';
 import Notification from '../notification/Notification';
 

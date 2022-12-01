@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { IFirstStepData, FormData } from '../../helpers/types';
+import { FormData } from '../../helpers/types';
 import { technologies, seniorities, categories } from '../../helpers/constants';
 import StepsContext from '../../context/steps-context';
 import ErrorMessage from './ErrorMessage';
@@ -11,6 +11,7 @@ import {
 import Notification from '../notification/Notification';
 import { useRouter } from 'next/router';
 import Capsules from 'components/capsules/Capsules';
+import useSalaryError from '../../hooks/useSalaryError';
 
 const typeOfDayJobs = ['pełny etat', 'połowa etatu', 'częściowy etat'];
 const locations = ['stacjonarnie', 'zdalnie', 'hybrydowo'];
@@ -53,9 +54,9 @@ const OfferDetails: React.FC<{
     formData?.jobTitle ?? ''
   );
 
-  const [salaryError, setSalaryError] = useState('');
   const [showErrors, setShowErrors] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const {errorMessage, numberOfErrors} = useSalaryError(enteredMinSalary, enteredMaxSalary, enteredExactSalary);
 
   const handleTechnologies = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -78,59 +79,21 @@ const OfferDetails: React.FC<{
   };
 
   const onNextStep = (): void => {
-    const requiredFields = [
+    let counter = 0;
+    const requiredFieldsWithoutSalary = [
       selectedCategory,
       selectedTechnologies,
       selectedLocation,
       selectedSeniority,
       enteredJobTitle,
     ];
-    let counter = 0;
 
-    requiredFields.forEach(
+    requiredFieldsWithoutSalary.forEach(
       (requiredField) =>
         (counter = checkIsLengthIsGreaterThanZero(requiredField, counter))
     );
 
-    if (
-      enteredMinSalary === '' &&
-      enteredMaxSalary === '' &&
-      enteredExactSalary === ''
-    ) {
-      counter += 1;
-      setSalaryError('To pole jest wymagane');
-    }
-
-    if (
-      enteredExactSalary !== '' &&
-      (enteredMinSalary !== '' || enteredMaxSalary !== '')
-    ) {
-      counter += 1;
-      setSalaryError('Wybierz widełki lub dokładną wartość');
-    }
-
-    if (enteredMinSalary !== '' && enteredMaxSalary !== '') {
-      if (enteredMinSalary >= enteredMaxSalary) {
-        counter += 1;
-        setSalaryError('Wartość maks. musi być większa od min.');
-      }
-    }
-
-    if (
-      (enteredMinSalary === '' && enteredMaxSalary !== '') ||
-      (enteredMinSalary !== '' && enteredMaxSalary === '')
-    ) {
-      counter += 1;
-      setSalaryError('Uzupełnij widełki lub wpisz tylko dokładną wartość');
-    }
-
-    if (
-      (enteredMinSalary !== '' && enteredMaxSalary !== '') ||
-      enteredExactSalary !== ''
-    ) {
-      setSalaryError('');
-    }
-
+    counter += numberOfErrors;
     if (counter !== 0) {
       setShowErrors(true);
       setShowNotification(true);
@@ -248,17 +211,7 @@ const OfferDetails: React.FC<{
             onChange={(event) => handleInputData(event, setExactSalary)}
           />
         </div>
-        {showErrors && (
-          <small className='col-span-2 text-left md:text-right text-red-600 h-4'>
-            {(enteredMinSalary !== '' && enteredMaxSalary !== '') ||
-            enteredExactSalary !== ''
-              ? ''
-              : salaryError}
-          </small>
-        )}
-        {!showErrors && (
-          <small className='col-span-2 text-left md:text-right text-red-600 h-4'></small>
-        )}
+        <ErrorMessage isVisible={showErrors} message={errorMessage} />
       </div>
       <hr className='hidden md:block mb-3 col-span-2' />
 
